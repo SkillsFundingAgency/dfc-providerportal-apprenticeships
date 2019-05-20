@@ -118,55 +118,36 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             return await client.UpsertDocumentAsync(uri, document);
         }
 
-        public List<Apprenticeship> GetDocumentsByUKPRN(DocumentClient client, string collectionId, int UKPRN)
+        public List<StandardsAndFrameworks> GetDocumentsBySearch(DocumentClient client, string collectionId, string search)
         {
             Throw.IfNull(client, nameof(client));
             Throw.IfNullOrWhiteSpace(collectionId, nameof(collectionId));
-            Throw.IfNull(UKPRN, nameof(UKPRN));
+            Throw.IfNullOrWhiteSpace(search, nameof(search));
 
             Uri uri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, collectionId);
             FeedOptions options = new FeedOptions { EnableCrossPartitionQuery = true, MaxItemCount = -1 };
 
-            List<Apprenticeship> docs = client.CreateDocumentQuery<Apprenticeship>(uri, options)
-                                             .Where(x => x.ProviderUKPRN == UKPRN)
-                                             .ToList(); // .AsEnumerable();
+            List<StandardsAndFrameworks> docs = new List<StandardsAndFrameworks>();
+            switch (collectionId)
+            {
+                case "standards":
+                    {
+                        docs = client.CreateDocumentQuery<StandardsAndFrameworks>(uri, options)
+                                      .Where(x => x.StandardName.Contains(search))
+                                      .ToList();
+                        break;
+                    }
+                case "frameworks":
+                    {
+                        docs = client.CreateDocumentQuery<StandardsAndFrameworks>(uri, options)
+                                      .Where(x => x.NasTitle.Contains(search))
+                                      .ToList();
+                        break;
+                    }
+            }
 
             return docs;
         }
-
-        //public async Task<List<string>> DeleteDocumentsByUKPRN(DocumentClient client, string collectionId, int UKPRN)
-        //{
-        //    Throw.IfNull(client, nameof(client));
-        //    Throw.IfNullOrWhiteSpace(collectionId, nameof(collectionId));
-        //    Throw.IfNull(UKPRN, nameof(UKPRN));
-
-        //    Uri uri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, collectionId);
-        //    FeedOptions options = new FeedOptions { EnableCrossPartitionQuery = true, MaxItemCount = -1 };
-
-        //    List<Apprenticeship> docs = client.CreateDocumentQuery<Apprenticeship>(uri, options)
-        //                                     .Where(x => x.ProviderUKPRN == UKPRN)
-        //                                     .ToList();
-
-        //    var responseList = new List<string>();
-
-        //    foreach (var doc in docs)
-        //    {
-        //        Uri docUri = UriFactory.CreateDocumentUri(_settings.DatabaseId, collectionId, doc.id.ToString());
-        //        var result = await client.DeleteDocumentAsync(docUri, new RequestOptions() { PartitionKey = new PartitionKey(doc.ProviderUKPRN) });
-
-        //        if (result.StatusCode == HttpStatusCode.NoContent)
-        //        {
-        //            responseList.Add($"Course with LARS ( { doc.LearnAimRef } ) and Title ( { doc.QualificationCourseTitle } ) was deleted.");
-        //        }
-        //        else
-        //        {
-        //            responseList.Add($"Course with LARS ( { doc.LearnAimRef } ) and Title ( { doc.QualificationCourseTitle } ) wasn't deleted. StatusCode: ( { result.StatusCode } )");
-        //        }
-
-        //    }
-
-        //    return responseList;
-        //}
 
     }
 }

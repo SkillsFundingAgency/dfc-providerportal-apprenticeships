@@ -1,7 +1,6 @@
-﻿using Dfc.ProviderPortal.Apprenticeships.Interfaces;
+﻿using Dfc.ProviderPortal.Apprenticeships.Interfaces.Apprenticeships;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Models.Enums
 {
