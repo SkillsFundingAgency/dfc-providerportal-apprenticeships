@@ -7,6 +7,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Models
 {
     public class StandardsAndFrameworks : IStandardsAndFrameworks
     {
+        public Guid id { get; set; }
         public int? StandardCode { get; set; }
         public string Version { get; set; }
         public string StandardName { get; set; }

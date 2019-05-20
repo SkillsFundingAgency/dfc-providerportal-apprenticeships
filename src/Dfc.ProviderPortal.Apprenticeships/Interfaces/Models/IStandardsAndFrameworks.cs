@@ -16,6 +16,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Models
         string OtherBodyApprovalRequired  { get; }
 
         //Generic
+        Guid id { get; set; } // Cosmos DB id
         DateTime EffectiveFrom { get; }
         DateTime? CreatedDateTimeUtc { get; }
         DateTime? ModifiedDateTimeUtc { get; }
