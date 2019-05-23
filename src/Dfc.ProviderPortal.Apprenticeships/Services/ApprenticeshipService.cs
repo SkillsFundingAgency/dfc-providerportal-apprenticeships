@@ -28,7 +28,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
             Throw.IfNull(settings, nameof(settings));
             _cosmosDbHelper = cosmosDbHelper;
             _settings = settings.Value;
-
         }
         public async Task<IApprenticeship> AddApprenticeship(IApprenticeship apprenticeship)
         {
@@ -63,5 +62,24 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
             return persisted;
         }
+        public async Task<IApprenticeship> GetApprenticeshipById(Guid id)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentException($"Cannot be an empty {nameof(Guid)}", nameof(id));
+
+            Apprenticeship persisted = null;
+
+            using (var client = _cosmosDbHelper.GetClient())
+            {
+                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
+                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
+
+                var doc = _cosmosDbHelper.GetDocumentById(client, _settings.ApprenticeshipCollectionId, id);
+                persisted = _cosmosDbHelper.DocumentTo<Apprenticeship>(doc);
+            }
+
+            return persisted;
+        }
+
     }
 }
