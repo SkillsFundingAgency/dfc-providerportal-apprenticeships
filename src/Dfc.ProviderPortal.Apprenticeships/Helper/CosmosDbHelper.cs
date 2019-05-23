@@ -118,7 +118,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             return await client.UpsertDocumentAsync(uri, document);
         }
 
-        public List<StandardsAndFrameworks> GetDocumentsBySearch(DocumentClient client, string collectionId, string search)
+        public List<StandardsAndFrameworks> GetStandardsAndFrameworksBySearch(DocumentClient client, string collectionId, string search)
         {
             Throw.IfNull(client, nameof(client));
             Throw.IfNullOrWhiteSpace(collectionId, nameof(collectionId));

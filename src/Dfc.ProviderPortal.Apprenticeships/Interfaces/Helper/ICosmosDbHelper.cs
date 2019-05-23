@@ -18,7 +18,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Helper
         IEnumerable<T> DocumentsTo<T>(IEnumerable<Document> documents);
         Document GetDocumentById<T>(DocumentClient client, string collectionId, T id);
         Task<Document> UpdateDocumentAsync(DocumentClient client, string collectionId, object document);
-        List<StandardsAndFrameworks> GetDocumentsBySearch(DocumentClient client, string collectionId, string search);
+        List<StandardsAndFrameworks> GetStandardsAndFrameworksBySearch(DocumentClient client, string collectionId, string search);
         //Task<List<string>> DeleteDocumentsByUKPRN(DocumentClient client, string collectionId, int UKPRN);
     }
 }
