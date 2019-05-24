@@ -80,6 +80,45 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
             return persisted;
         }
+        public async Task<IEnumerable<IApprenticeship>> GetApprenticeshipByUKPRN(int UKPRN)
+        {
+            Throw.IfNull<int>(UKPRN, nameof(UKPRN));
+            Throw.IfLessThan(0, UKPRN, nameof(UKPRN));
+
+            IEnumerable<Apprenticeship> persisted = null;
+            using (var client = _cosmosDbHelper.GetClient())
+            {
+                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
+                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
+
+                var docs = _cosmosDbHelper.GetApprenticeshipByUKPRN(client, _settings.ApprenticeshipCollectionId, UKPRN);
+                persisted = docs;
+            }
+
+            return persisted;
+        }
+
+        public async Task<IApprenticeship> Update(IApprenticeship apprenticeship)
+        {
+
+
+            Throw.IfNull(apprenticeship, nameof(apprenticeship));
+
+            Apprenticeship updated = null;
+
+            using (var client = _cosmosDbHelper.GetClient())
+            {
+                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
+                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
+
+                var updatedDocument = await _cosmosDbHelper.UpdateDocumentAsync(client, _settings.ApprenticeshipCollectionId, apprenticeship);
+                updated = _cosmosDbHelper.DocumentTo<Apprenticeship>(updatedDocument);
+            }
+
+            return updated;
+
+        }
+
 
     }
 }
