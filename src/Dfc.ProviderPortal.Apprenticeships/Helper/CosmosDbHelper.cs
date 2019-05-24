@@ -145,7 +145,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                         break;
                     }
             }
-
             return docs;
         }
 
