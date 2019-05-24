@@ -21,7 +21,7 @@
         }
       },
       "storageConnectionString": {
-        "type": "string",
+        "type": "securestring",
         "metadata": {
           "description": "Connection string for the storage account to store function app files"
         }
