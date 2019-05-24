@@ -59,7 +59,7 @@ steps:
   displayName: dotnet publish
   inputs:
     command: publish
-    projects: 'src/Dfc.ProviderPortal.ReferenceData/Dfc.ProviderPortal.ReferenceData.csproj'
+    projects: 'src\Dfc.ProviderPortal.Apprenticeships\Dfc.ProviderPortal.Apprenticeships.csproj'
     configuration: ${{ variables.buildConfiguration }}
     arguments: '--output $(Build.ArtifactStagingDirectory)'
     publishWebProjects: false
