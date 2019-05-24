@@ -11,5 +11,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Services
     {
         Task<IEnumerable<IStandardsAndFrameworks>> StandardsAndFrameworksSearch(string search);
         Task<IApprenticeship> AddApprenticeship(IApprenticeship apprenticeship);
+        Task<IApprenticeship> GetApprenticeshipById(Guid id);
     }
 }
