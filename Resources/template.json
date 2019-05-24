@@ -119,7 +119,7 @@
     },
     "resources": [{
         "apiVersion": "2017-05-10",
-        "name": "pprefapprenticeshipAppInsights",
+        "name": "ppapprenticeshipAppInsights",
         "type": "Microsoft.Resources/deployments",
         "properties": {
           "mode": "Incremental",
@@ -139,10 +139,10 @@
       },
       {
         "apiVersion": "2017-05-10",
-        "name": "pprefapprenticeshipAppService",
+        "name": "ppapprenticeshipAppService",
         "type": "Microsoft.Resources/deployments",
         "dependsOn": [
-          "pprefapprenticeshipAppInsights"
+          "ppapprenticeshipAppInsights"
         ],
         "properties": {
           "mode": "Incremental",
@@ -167,7 +167,7 @@
               "value": [
                 {
                   "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                  "value": "[reference('pprefapprenticeshipAppInsights').outputs.InstrumentationKey.value]"
+                  "value": "[reference('ppapprenticeshipAppInsights').outputs.InstrumentationKey.value]"
                 },
                 {
                   "name": "FUNCTIONS_EXTENSION_VERSION",
@@ -226,7 +226,7 @@
         }
       },
       {
-        "name": "pprefapprenticeshipApimProduct",
+        "name": "ppapprenticeshipApimProduct",
         "type": "Microsoft.Resources/deployments",
         "apiVersion": "2017-05-10",
         "resourceGroup": "[parameters('ApimResourceGroup')]",
@@ -244,18 +244,18 @@
               "value": "[parameters('ApimServiceName')]"
             },
             "productDisplayName": {
-              "value": "Apprenticeships"
+              "value": "Apprenticeships "
             }
           }
         }
       },
       {
-        "name": "pprefapprenticeshipApimApi",
+        "name": "ppapprenticeshipApimApi",
         "type": "Microsoft.Resources/deployments",
         "apiVersion": "2017-05-10",
         "resourceGroup": "[parameters('ApimResourceGroup')]",
         "dependsOn": [
-          "pprefapprenticeshipApimProduct"
+          "ppapprenticeshipApimProduct"
         ],
         "properties": {
           "mode": "Incremental",
@@ -265,7 +265,7 @@
           },
           "parameters": {
             "apimProductInstanceName": {
-              "value": "[reference('pprefapprenticeshipApimProduct').outputs.ApimProductInstanceName.value]"
+              "value": "[reference('ppapprenticeshipApimProduct').outputs.ApimProductInstanceName.value]"
             },
             "apimServiceName": {
               "value": "[parameters('ApimServiceName')]"
@@ -291,7 +291,7 @@
       },
       "appInsightInstrumentationKey": {
         "type": "string",
-        "value": "[reference('pprefapprenticeshipAppInsights').outputs.InstrumentationKey.value]"
+        "value": "[reference('ppapprenticeshipAppInsights').outputs.InstrumentationKey.value]"
       }
     }
   }
