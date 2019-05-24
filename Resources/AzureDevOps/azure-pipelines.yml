@@ -69,4 +69,4 @@ steps:
   displayName: Publish Artifact
   inputs:
      pathtoPublish: $(Build.ArtifactStagingDirectory)
-     artifactName: Dfc.ProviderPortal.ReferenceData
+     artifactName: Dfc.ProviderPortal.Apprenticeships

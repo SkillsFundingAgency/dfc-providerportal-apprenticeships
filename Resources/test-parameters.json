@@ -3,16 +3,16 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
       "functionAppPrefix": {
-        "value": "dfc-foo-prov-ref"
+        "value": "dfc-foo-provapprentice-ref"
       },
       "appServicePlanName": {
-        "value": "dfc-dev-prov-asp"
+        "value": "dfc-dev-provapprentice-asp"
       },
       "appServicePlanResourceGroup": {
         "value": "dfc-test-template-rg"
       },
       "storageConnectionString": {
-        "value": "DefaultEndpointsProtocol=https;AccountName=dfcfooprovstr;AccountKey=this_is_not_a_real_account==;EndpointSuffix=core.windows.net"
+        "value": "DefaultEndpointsProtocol=https;AccountName=dfcfooprovapprenticestr;AccountKey=this_is_not_a_real_account==;EndpointSuffix=core.windows.net"
       },
       "ApimServiceName": {
         "value": "dfc-foo-shared-apim"
@@ -24,7 +24,7 @@
         "value": "myapi"
       },
       "cosmosDbFqdn": {
-        "value": "https://dfc-foo-prov-cdb.documents.azure.com/"
+        "value": "https://dfc-foo-provapprentice-cdb.documents.azure.com/"
       },
       "cosmosDbKey": {
         "value": "not-a-real-key"

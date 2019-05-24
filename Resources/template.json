@@ -119,7 +119,7 @@
     },
     "resources": [{
         "apiVersion": "2017-05-10",
-        "name": "pprefdataAppInsights",
+        "name": "pprefapprenticeshipAppInsights",
         "type": "Microsoft.Resources/deployments",
         "properties": {
           "mode": "Incremental",
@@ -139,10 +139,10 @@
       },
       {
         "apiVersion": "2017-05-10",
-        "name": "pprefdataAppService",
+        "name": "pprefapprenticeshipAppService",
         "type": "Microsoft.Resources/deployments",
         "dependsOn": [
-          "pprefdataAppInsights"
+          "pprefapprenticeshipAppInsights"
         ],
         "properties": {
           "mode": "Incremental",
@@ -167,7 +167,7 @@
               "value": [
                 {
                   "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                  "value": "[reference('pprefdataAppInsights').outputs.InstrumentationKey.value]"
+                  "value": "[reference('pprefapprenticeshipAppInsights').outputs.InstrumentationKey.value]"
                 },
                 {
                   "name": "FUNCTIONS_EXTENSION_VERSION",
@@ -226,7 +226,7 @@
         }
       },
       {
-        "name": "pprefdataApimProduct",
+        "name": "pprefapprenticeshipApimProduct",
         "type": "Microsoft.Resources/deployments",
         "apiVersion": "2017-05-10",
         "resourceGroup": "[parameters('ApimResourceGroup')]",
@@ -244,18 +244,18 @@
               "value": "[parameters('ApimServiceName')]"
             },
             "productDisplayName": {
-              "value": "Reference Data"
+              "value": "Apprenticeships"
             }
           }
         }
       },
       {
-        "name": "pprefdataApimApi",
+        "name": "pprefapprenticeshipApimApi",
         "type": "Microsoft.Resources/deployments",
         "apiVersion": "2017-05-10",
         "resourceGroup": "[parameters('ApimResourceGroup')]",
         "dependsOn": [
-          "pprefdataApimProduct"
+          "pprefapprenticeshipApimProduct"
         ],
         "properties": {
           "mode": "Incremental",
@@ -265,7 +265,7 @@
           },
           "parameters": {
             "apimProductInstanceName": {
-              "value": "[reference('pprefdataApimProduct').outputs.ApimProductInstanceName.value]"
+              "value": "[reference('pprefapprenticeshipApimProduct').outputs.ApimProductInstanceName.value]"
             },
             "apimServiceName": {
               "value": "[parameters('ApimServiceName')]"
@@ -291,7 +291,7 @@
       },
       "appInsightInstrumentationKey": {
         "type": "string",
-        "value": "[reference('pprefdataAppInsights').outputs.InstrumentationKey.value]"
+        "value": "[reference('pprefapprenticeshipAppInsights').outputs.InstrumentationKey.value]"
       }
     }
   }
