@@ -29,6 +29,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
             _cosmosDbHelper = cosmosDbHelper;
             _settings = settings.Value;
         }
+
         public async Task<IApprenticeship> AddApprenticeship(IApprenticeship apprenticeship)
         {
             Throw.IfNull(apprenticeship, nameof(apprenticeship));
