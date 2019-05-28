@@ -29,22 +29,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
             _cosmosDbHelper = cosmosDbHelper;
             _settings = settings.Value;
         }
-        public async Task<IApprenticeship> AddApprenticeship(IApprenticeship apprenticeship)
-        {
-            Throw.IfNull(apprenticeship, nameof(apprenticeship));
 
-            Apprenticeship persisted;
-
-            using (var client = _cosmosDbHelper.GetClient())
-            {
-                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
-                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
-                var doc = await _cosmosDbHelper.CreateDocumentAsync(client, _settings.ApprenticeshipCollectionId, apprenticeship);
-                persisted = _cosmosDbHelper.DocumentTo<Apprenticeship>(doc);
-            }
-
-            return persisted;
-        }
         public async Task<IApprenticeship> AddApprenticeship(IApprenticeship apprenticeship)
         {
             Throw.IfNull(apprenticeship, nameof(apprenticeship));
