@@ -100,6 +100,21 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
 
             return doc;
         }
+        public List<Apprenticeship> GetApprenticeshipByUKPRN(DocumentClient client, string collectionId, int UKPRN)
+        {
+            Throw.IfNull(client, nameof(client));
+            Throw.IfNullOrWhiteSpace(collectionId, nameof(collectionId));
+            Throw.IfNull(UKPRN, nameof(UKPRN));
+
+            Uri uri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, collectionId);
+            FeedOptions options = new FeedOptions { EnableCrossPartitionQuery = true, MaxItemCount = -1 };
+
+            List<Apprenticeship> docs = client.CreateDocumentQuery<Apprenticeship>(uri, options)
+                                             .Where(x => x.ProviderUKPRN == UKPRN)
+                                             .ToList(); // .AsEnumerable();
+
+            return docs;
+        }
 
 
         public async Task<Document> UpdateDocumentAsync(
@@ -118,7 +133,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             return await client.UpsertDocumentAsync(uri, document);
         }
 
-        public List<StandardsAndFrameworks> GetDocumentsBySearch(DocumentClient client, string collectionId, string search)
+        public List<StandardsAndFrameworks> GetStandardsAndFrameworksBySearch(DocumentClient client, string collectionId, string search)
         {
             Throw.IfNull(client, nameof(client));
             Throw.IfNullOrWhiteSpace(collectionId, nameof(collectionId));
@@ -145,7 +160,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                         break;
                     }
             }
-
             return docs;
         }
 
