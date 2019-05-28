@@ -8,5 +8,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Settings
     {
         string StandardsCollectionId { get; }
         string FrameworkCollectionId { get; }
+        string ApprenticeshipCollectionId { get; }
     }
 }

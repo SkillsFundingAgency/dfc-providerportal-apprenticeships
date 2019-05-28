@@ -1,4 +1,5 @@
-﻿using Dfc.ProviderPortal.Apprenticeships.Models;
+﻿using Dfc.ProviderPortal.Apprenticeships.Interfaces.Apprenticeships;
+using Dfc.ProviderPortal.Apprenticeships.Models;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using System;
@@ -16,9 +17,10 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Helper
         Task<Document> CreateDocumentAsync(DocumentClient client, string collectionId, object document);
         T DocumentTo<T>(Document document);
         IEnumerable<T> DocumentsTo<T>(IEnumerable<Document> documents);
+        List<Apprenticeship> GetApprenticeshipByUKPRN(DocumentClient client, string collectionId, int UKPRN);
         Document GetDocumentById<T>(DocumentClient client, string collectionId, T id);
         Task<Document> UpdateDocumentAsync(DocumentClient client, string collectionId, object document);
-        List<StandardsAndFrameworks> GetDocumentsBySearch(DocumentClient client, string collectionId, string search);
+        List<StandardsAndFrameworks> GetStandardsAndFrameworksBySearch(DocumentClient client, string collectionId, string search);
         //Task<List<string>> DeleteDocumentsByUKPRN(DocumentClient client, string collectionId, int UKPRN);
     }
 }
