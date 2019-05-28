@@ -244,7 +244,7 @@
               "value": "[parameters('ApimServiceName')]"
             },
             "productDisplayName": {
-              "value": "Apprenticeships "
+              "value": "Apprenticeships"
             }
           }
         }
