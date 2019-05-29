@@ -9,6 +9,5 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Settings
         string EndpointUri { get; }
         string PrimaryKey { get; }
         string DatabaseId { get; }
-        int RecentCount { get; }
     }
 }

@@ -54,10 +54,10 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
             {
                 await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
                 await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.StandardsCollectionId);
-                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.FrameworkCollectionId);
+                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.FrameworksCollectionId);
 
                 var standardDocs = _cosmosDbHelper.GetStandardsAndFrameworksBySearch(client, _settings.StandardsCollectionId, search);
-                var frameworkDocs = _cosmosDbHelper.GetStandardsAndFrameworksBySearch(client, _settings.FrameworkCollectionId, search);
+                var frameworkDocs = _cosmosDbHelper.GetStandardsAndFrameworksBySearch(client, _settings.FrameworksCollectionId, search);
                 persisted = standardDocs.Concat(frameworkDocs);
             }
 
