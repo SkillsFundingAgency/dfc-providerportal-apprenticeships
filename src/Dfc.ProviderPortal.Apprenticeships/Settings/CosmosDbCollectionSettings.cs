@@ -8,7 +8,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Settings
     public class CosmosDbCollectionSettings : ICosmosDbCollectionSettings
     {
         public string StandardsCollectionId { get; set; }
-        public string FrameworkCollectionId { get; set; }
+        public string FrameworksCollectionId { get; set; }
         public string ApprenticeshipCollectionId { get; set; }
     }
 }

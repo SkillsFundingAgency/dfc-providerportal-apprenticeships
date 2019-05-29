@@ -1,0 +1,60 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "functionAppPrefix": {
+        "value": "__functionAppPrefix__"
+      },
+      "appServicePlanName": {
+        "value": "__providerPortalAppServicePlan__"
+      },
+      "appServicePlanResourceGroup": {
+        "value": "__providerPortalResourceGroup__"
+      },
+      "storageConnectionString": {
+        "value": "__providerPortalStorageConnectionStr__"
+      },
+      "ApimServiceName": {
+        "value": "__apimServiceName__"
+      },
+      "apimResourceGroup": {
+        "value": "__sharedResourceGroup__"
+      },
+      "ApiName": {
+        "value": "__apiName__"
+      },
+      "apiSuffix": {
+        "value": "__apiSuffix__"
+      },
+      "cosmosDbFqdn": {
+        "value": "__providerPortalCosmosDbFqdn__"
+      },
+      "cosmosDbKey": {
+        "value": "__providerPortalCosmosDBPrimaryKey__"
+      },
+      "cosmosDbDatabase": {
+        "value": "__providerPortalCosmosDbAccDatabaseName__"
+      },
+      "cosmosDbCollectionFeChoices": {
+        "value": "__cosmosDbCollectionFeChoices__"
+      },
+      "cosmosDbCollectionFrameworks": {
+        "value": "__cosmosDbCollectionFrameworks__"
+      },
+      "cosmosDbCollectionProgTypes": {
+        "value": "__cosmosDbCollectionProgTypes__"
+      },
+      "cosmosDbCollectionSsaTier1s": {
+        "value": "__cosmosDbCollectionSsaTier1s__"
+      },
+      "cosmosDbCollectionSsaTier2s": {
+        "value": "__cosmosDbCollectionSsaTier2s__"
+      },
+      "cosmosDbCollectionStandards": {
+        "value": "__cosmosDbCollectionStandards__"
+      },
+      "cosmosDbCollectionStandardsSectorCodes": {
+        "value": "__cosmosDbCollectionStandardsSectorCodes__"
+      }
+    }
+  }

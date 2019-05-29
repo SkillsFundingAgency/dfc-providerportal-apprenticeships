@@ -100,6 +100,21 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
 
             return doc;
         }
+        public List<Apprenticeship> GetApprenticeshipByUKPRN(DocumentClient client, string collectionId, int UKPRN)
+        {
+            Throw.IfNull(client, nameof(client));
+            Throw.IfNullOrWhiteSpace(collectionId, nameof(collectionId));
+            Throw.IfNull(UKPRN, nameof(UKPRN));
+
+            Uri uri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, collectionId);
+            FeedOptions options = new FeedOptions { EnableCrossPartitionQuery = true, MaxItemCount = -1 };
+
+            List<Apprenticeship> docs = client.CreateDocumentQuery<Apprenticeship>(uri, options)
+                                             .Where(x => x.ProviderUKPRN == UKPRN)
+                                             .ToList(); // .AsEnumerable();
+
+            return docs;
+        }
 
 
         public async Task<Document> UpdateDocumentAsync(
@@ -133,7 +148,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                 case "standards":
                     {
                         docs = client.CreateDocumentQuery<StandardsAndFrameworks>(uri, options)
-                                      .Where(x => x.StandardName.Contains(search))
+                                      .Where(x => x.StandardName.ToLower().Contains(search.ToLower()))
                                       .ToList();
 
                         docs.All(x => x.ApprenticeshipType == Models.Enums.ApprenticeshipType.StandardCode);
@@ -142,7 +157,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                 case "frameworks":
                     {
                         docs = client.CreateDocumentQuery<StandardsAndFrameworks>(uri, options)
-                                      .Where(x => x.NasTitle.Contains(search))
+                                      .Where(x => x.NasTitle.ToLower().Contains(search.ToLower()))
                                       .ToList();
                         docs.All(x => x.ApprenticeshipType == Models.Enums.ApprenticeshipType.FrameworkCode);
 
