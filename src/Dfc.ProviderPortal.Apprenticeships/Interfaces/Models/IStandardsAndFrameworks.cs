@@ -14,6 +14,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Models
         string StandardName { get; }
         string StandardSectorCode { get; }
         string URLLink { get; }
+        string NotionalEndLevel { get; }
         string OtherBodyApprovalRequired  { get; }
 
         //Generic
