@@ -148,14 +148,14 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                 case "standards":
                     {
                         docs = client.CreateDocumentQuery<StandardsAndFrameworks>(uri, options)
-                                      .Where(x => x.StandardName.Contains(search))
+                                      .Where(x => x.StandardName.ToLower().Contains(search.ToLower()))
                                       .ToList();
                         break;
                     }
                 case "frameworks":
                     {
                         docs = client.CreateDocumentQuery<StandardsAndFrameworks>(uri, options)
-                                      .Where(x => x.NasTitle.Contains(search))
+                                      .Where(x => x.NasTitle.ToLower().Contains(search.ToLower()))
                                       .ToList();
                         break;
                     }
