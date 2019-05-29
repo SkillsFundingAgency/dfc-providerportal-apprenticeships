@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dfc.ProviderPortal.Apprenticeships.Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,6 +17,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Models
         string OtherBodyApprovalRequired  { get; }
 
         //Generic
+        ApprenticeshipType ApprenticeshipType { get; }
         Guid id { get; set; } // Cosmos DB id
         DateTime EffectiveFrom { get; }
         DateTime? CreatedDateTimeUtc { get; }

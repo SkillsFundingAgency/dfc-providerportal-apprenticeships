@@ -150,6 +150,8 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                         docs = client.CreateDocumentQuery<StandardsAndFrameworks>(uri, options)
                                       .Where(x => x.StandardName.ToLower().Contains(search.ToLower()))
                                       .ToList();
+
+                        docs.Select(x => { x.ApprenticeshipType = Models.Enums.ApprenticeshipType.StandardCode; return x; }).ToList();
                         break;
                     }
                 case "frameworks":
@@ -157,6 +159,8 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                         docs = client.CreateDocumentQuery<StandardsAndFrameworks>(uri, options)
                                       .Where(x => x.NasTitle.ToLower().Contains(search.ToLower()))
                                       .ToList();
+                        docs.Select(x => { x.ApprenticeshipType = Models.Enums.ApprenticeshipType.FrameworkCode; return x; }).ToList();
+
                         break;
                     }
             }
