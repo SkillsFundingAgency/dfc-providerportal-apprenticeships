@@ -1,4 +1,5 @@
 ﻿using Dfc.ProviderPortal.Apprenticeships.Interfaces.Models;
+using Dfc.ProviderPortal.Apprenticeships.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,6 +17,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Models
         public string OtherBodyApprovalRequired { get; set; }
 
         //Generic
+        public ApprenticeshipType ApprenticeshipType { get; set; }
         public DateTime EffectiveFrom { get; set; }
         public DateTime? CreatedDateTimeUtc { get; set; }
         public DateTime? ModifiedDateTimeUtc { get; set; }
