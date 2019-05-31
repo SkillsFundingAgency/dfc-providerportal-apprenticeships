@@ -4,8 +4,10 @@ using Dfc.ProviderPortal.Apprenticeships.Interfaces.Models;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Settings;
 using Dfc.ProviderPortal.Apprenticeships.Models;
+using Dfc.ProviderPortal.Apprenticeships.Models.Enums;
 using Dfc.ProviderPortal.Apprenticeships.Settings;
 using Dfc.ProviderPortal.Packages;
+using Microsoft.Azure.Documents;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -56,9 +58,9 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
                 await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.StandardsCollectionId);
                 await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.FrameworksCollectionId);
 
-                var standardDocs = _cosmosDbHelper.GetStandardsAndFrameworksBySearch(client, _settings.StandardsCollectionId, "", search);
-                var frameworkDocs = _cosmosDbHelper.GetStandardsAndFrameworksBySearch(client, _settings.FrameworksCollectionId, _settings.ProgTypesCollectionId, search);
-
+                var standardDocs = _cosmosDbHelper.GetStandardsAndFrameworksBySearch(client, _settings.StandardsCollectionId, search);
+                var frameworkDocs = _cosmosDbHelper.GetStandardsAndFrameworksBySearch(client, _settings.FrameworksCollectionId, search);
+                frameworkDocs = _cosmosDbHelper.GetProgTypesForFramework(client, _settings.ProgTypesCollectionId, frameworkDocs);
                 
                 persisted = standardDocs.Concat(frameworkDocs);
             }
@@ -83,6 +85,44 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
             return persisted;
         }
+        public async Task<IStandardsAndFrameworks> GetStandardsAndFrameworksById(Guid id, int type)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentException($"Cannot be an empty {nameof(Guid)}", nameof(id));
+
+            StandardsAndFrameworks persisted = null;
+
+            using (var client = _cosmosDbHelper.GetClient())
+            {
+                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
+                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.StandardsCollectionId);
+                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.FrameworksCollectionId);
+
+                Document doc = null;
+                switch((ApprenticeshipType)type)
+                {
+                    case ApprenticeshipType.StandardCode:
+                        {
+                            doc = _cosmosDbHelper.GetDocumentById(client, _settings.StandardsCollectionId, id);
+                            persisted = _cosmosDbHelper.DocumentTo<StandardsAndFrameworks>(doc);
+                            break;
+                        }
+                    case ApprenticeshipType.FrameworkCode:
+                        {
+                            doc = _cosmosDbHelper.GetDocumentById(client, _settings.FrameworksCollectionId, id);
+                            List<StandardsAndFrameworks> docs = new List<StandardsAndFrameworks>();
+                            docs.Add(_cosmosDbHelper.DocumentTo<StandardsAndFrameworks>(doc));
+                            docs = _cosmosDbHelper.GetProgTypesForFramework(client, _settings.ProgTypesCollectionId, docs);
+                            persisted = docs[0];
+                            break;
+                        }
+                }
+                
+            }
+
+            return persisted;
+        }
+
         public async Task<IEnumerable<IApprenticeship>> GetApprenticeshipByUKPRN(int UKPRN)
         {
             Throw.IfNull<int>(UKPRN, nameof(UKPRN));
