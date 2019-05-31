@@ -133,7 +133,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             return await client.UpsertDocumentAsync(uri, document);
         }
 
-        public List<StandardsAndFrameworks> GetStandardsAndFrameworksBySearch(DocumentClient client, string collectionId, string search)
+        public List<StandardsAndFrameworks> GetStandardsAndFrameworksBySearch(DocumentClient client, string collectionId, string additionalCollectionId, string search)
         {
             Throw.IfNull(client, nameof(client));
             Throw.IfNullOrWhiteSpace(collectionId, nameof(collectionId));
@@ -161,16 +161,18 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                                       .ToList();
                         docs.Select(x => { x.ApprenticeshipType = Models.Enums.ApprenticeshipType.FrameworkCode; return x; }).ToList();
 
-                        Uri progTypeUri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, "progtypes");
+                        Uri progTypeUri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, additionalCollectionId);
+                        List<ProgType> progType = new List<ProgType>();
+
                         foreach (var doc in docs)
-                        {
-                            List<ProgType> progType = new List<ProgType>();
+                        {    
                             progType = client.CreateDocumentQuery<ProgType>(progTypeUri, options)
                                 .Where(x => x.ProgTypeId == doc.ProgType).ToList();
 
-                            
-                            
+                            doc.ProgTypeDesc = progType[0].ProgTypeDesc;
+                            doc.ProgTypeDesc2 = progType[0].ProgTypeDesc2;
                         }
+
                         break;
                     }
                 default:

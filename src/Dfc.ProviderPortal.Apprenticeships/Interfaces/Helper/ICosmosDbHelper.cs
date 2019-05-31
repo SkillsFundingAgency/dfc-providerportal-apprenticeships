@@ -20,7 +20,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Helper
         List<Apprenticeship> GetApprenticeshipByUKPRN(DocumentClient client, string collectionId, int UKPRN);
         Document GetDocumentById<T>(DocumentClient client, string collectionId, T id);
         Task<Document> UpdateDocumentAsync(DocumentClient client, string collectionId, object document);
-        List<StandardsAndFrameworks> GetStandardsAndFrameworksBySearch(DocumentClient client, string collectionId, string search);
+        List<StandardsAndFrameworks> GetStandardsAndFrameworksBySearch(DocumentClient client, string collectionId, string additonalCollectionId, string search);
         //Task<List<string>> DeleteDocumentsByUKPRN(DocumentClient client, string collectionId, int UKPRN);
     }
 }
