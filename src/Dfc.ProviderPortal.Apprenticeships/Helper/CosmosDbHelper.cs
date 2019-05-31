@@ -133,7 +133,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             return await client.UpsertDocumentAsync(uri, document);
         }
 
-        public List<StandardsAndFrameworks> GetStandardsAndFrameworksBySearch(DocumentClient client, string collectionId, string additionalCollectionId, string search)
+        public List<StandardsAndFrameworks> GetStandardsAndFrameworksBySearch(DocumentClient client, string collectionId, string search)
         {
             Throw.IfNull(client, nameof(client));
             Throw.IfNullOrWhiteSpace(collectionId, nameof(collectionId));
@@ -161,17 +161,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                                       .ToList();
                         docs.Select(x => { x.ApprenticeshipType = Models.Enums.ApprenticeshipType.FrameworkCode; return x; }).ToList();
 
-                        Uri progTypeUri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, additionalCollectionId);
-                        List<ProgType> progType = new List<ProgType>();
-
-                        foreach (var doc in docs)
-                        {    
-                            progType = client.CreateDocumentQuery<ProgType>(progTypeUri, options)
-                                .Where(x => x.ProgTypeId == doc.ProgType).ToList();
-
-                            doc.ProgTypeDesc = progType[0].ProgTypeDesc;
-                            doc.ProgTypeDesc2 = progType[0].ProgTypeDesc2;
-                        }
 
                         break;
                     }
@@ -181,6 +170,34 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                         docs.Select(x => { x.ApprenticeshipType = Models.Enums.ApprenticeshipType.FrameworkCode; return x; }).ToList();
                         break;
                     }
+            }
+            return docs;
+        }
+
+        public List<StandardsAndFrameworks> GetProgTypesForFramework(DocumentClient client, string collectionId, List<StandardsAndFrameworks> docs)
+        {
+            Throw.IfNull(client, nameof(client));
+            Throw.IfNullOrWhiteSpace(collectionId, nameof(collectionId));
+            Throw.IfNullOrEmpty(docs, nameof(docs));
+            Uri uri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, collectionId);
+            FeedOptions options = new FeedOptions { EnableCrossPartitionQuery = true, MaxItemCount = -1 };
+
+            
+
+            foreach (var doc in docs)
+            {
+                List<ProgType> progType = new List<ProgType>();
+
+                progType = client.CreateDocumentQuery<ProgType>(uri, options)
+                    .Where(x => x.ProgTypeId == doc.ProgType).ToList();
+
+                if (!string.IsNullOrEmpty(progType[0].ProgTypeId.ToString()))
+                {
+                    doc.ProgTypeDesc = progType[0].ProgTypeDesc;
+                    doc.ProgTypeDesc2 = progType[0].ProgTypeDesc2;
+                }
+
+
             }
             return docs;
         }

@@ -12,6 +12,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Services
         Task<IEnumerable<IStandardsAndFrameworks>> StandardsAndFrameworksSearch(string search);
         Task<IApprenticeship> AddApprenticeship(IApprenticeship apprenticeship);
         Task<IApprenticeship> GetApprenticeshipById(Guid id);
+        Task<IStandardsAndFrameworks> GetStandardsAndFrameworksById(Guid id, int type);
         Task<IEnumerable<IApprenticeship>> GetApprenticeshipByUKPRN(int UKPRN);
         Task<IApprenticeship> Update(IApprenticeship apprenticeship);
     }
