@@ -6,8 +6,8 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Settings
 {
     public interface ICosmosDbSettings
     {
-        string EndpointUri { get; }
-        string PrimaryKey { get; }
-        string DatabaseId { get; }
+        string EndpointUri { get; set; }
+        string PrimaryKey { get; set; }
+        string DatabaseId { get; set; }
     }
 }

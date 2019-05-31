@@ -161,6 +161,22 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                                       .ToList();
                         docs.Select(x => { x.ApprenticeshipType = Models.Enums.ApprenticeshipType.FrameworkCode; return x; }).ToList();
 
+                        Uri progTypeUri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, "progtypes");
+                        foreach (var doc in docs)
+                        {
+                            List<ProgType> progType = new List<ProgType>();
+                            progType = client.CreateDocumentQuery<ProgType>(progTypeUri, options)
+                                .Where(x => x.ProgTypeId == doc.ProgType).ToList();
+
+                            
+                            
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        
+                        docs.Select(x => { x.ApprenticeshipType = Models.Enums.ApprenticeshipType.FrameworkCode; return x; }).ToList();
                         break;
                     }
             }
