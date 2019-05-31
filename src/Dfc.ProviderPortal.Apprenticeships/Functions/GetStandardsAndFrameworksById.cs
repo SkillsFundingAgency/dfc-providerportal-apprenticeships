@@ -57,9 +57,5 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
             }
         }
 
-        private static int ApprenticeshipType(int fromQueryType)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
