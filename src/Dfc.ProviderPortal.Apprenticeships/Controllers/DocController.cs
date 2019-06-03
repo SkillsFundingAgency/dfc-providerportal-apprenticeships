@@ -33,6 +33,17 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
             return Ok();
         }
 
+        [Route("GetStandardsAndFrameworksById")]
+        [HttpGet]
+        [ProducesResponseType(typeof(StandardsAndFrameworks), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GetStandardsAndFrameworksById(Guid id, int type, [Required]string code)
+        {
+            return Ok();
+        }
+
         [Route("SearchApprenticeshipById")]
         [HttpGet]
         [ProducesResponseType(typeof(Apprenticeship), StatusCodes.Status200OK)]
