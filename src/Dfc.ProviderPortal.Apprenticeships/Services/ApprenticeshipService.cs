@@ -60,7 +60,11 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
                 var standardDocs = _cosmosDbHelper.GetStandardsAndFrameworksBySearch(client, _settings.StandardsCollectionId, search);
                 var frameworkDocs = _cosmosDbHelper.GetStandardsAndFrameworksBySearch(client, _settings.FrameworksCollectionId, search);
-                frameworkDocs = _cosmosDbHelper.GetProgTypesForFramework(client, _settings.ProgTypesCollectionId, frameworkDocs);
+                if(frameworkDocs.Count > 0)
+                {
+                    frameworkDocs = _cosmosDbHelper.GetProgTypesForFramework(client, _settings.ProgTypesCollectionId, frameworkDocs);
+                }
+                
                 
                 persisted = standardDocs.Concat(frameworkDocs);
             }
