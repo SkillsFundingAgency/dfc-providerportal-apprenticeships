@@ -143,31 +143,34 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             FeedOptions options = new FeedOptions { EnableCrossPartitionQuery = true, MaxItemCount = -1 };
 
             List<StandardsAndFrameworks> docs = new List<StandardsAndFrameworks>();
+            var formattedSearch = FormatSearchTerm(search);
+            var allDocs = client.CreateDocumentQuery<StandardsAndFrameworks>(uri, options).ToList();
+
             switch (collectionId)
             {
                 case "standards":
                     {
-                        docs = client.CreateDocumentQuery<StandardsAndFrameworks>(uri, options)
-                                      .Where(x => x.StandardName.ToLower().Contains(search.ToLower()))
-                                      .ToList();
-
+                        docs = (from string s in formattedSearch
+                                           from StandardsAndFrameworks saf
+                                           in allDocs where saf.StandardName.ToLower().Contains(s)
+                                           group saf by saf.StandardName into grouped
+                                           where grouped.Count() == formattedSearch.Count
+                                           select grouped.FirstOrDefault()).ToList();
                         docs.Select(x => { x.ApprenticeshipType = Models.Enums.ApprenticeshipType.StandardCode; return x; }).ToList();
                         break;
                     }
                 case "frameworks":
                     {
-                        docs = client.CreateDocumentQuery<StandardsAndFrameworks>(uri, options)
-                                      .Where(x => x.NasTitle.ToLower().Contains(search.ToLower()))
-                                      .ToList();
+                        docs = (from string s in formattedSearch
+                                from StandardsAndFrameworks saf
+                                in allDocs
+                                where saf.NasTitle.ToLower().Contains(s)
+                                group saf by saf.NasTitle into grouped
+                                where grouped.Count() == formattedSearch.Count
+                                select grouped.FirstOrDefault()).ToList();
                         docs.Select(x => { x.ApprenticeshipType = Models.Enums.ApprenticeshipType.FrameworkCode; return x; }).ToList();
 
 
-                        break;
-                    }
-                default:
-                    {
-                        
-                        docs.Select(x => { x.ApprenticeshipType = Models.Enums.ApprenticeshipType.FrameworkCode; return x; }).ToList();
                         break;
                     }
             }
@@ -202,5 +205,18 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             return docs;
         }
 
+        internal static List<string> FormatSearchTerm(string searchTerm)
+        {
+            Throw.IfNullOrWhiteSpace(searchTerm, nameof(searchTerm));
+
+            var split = searchTerm
+                .ToLower()
+                .Split(' ')
+                .Select(x => x.Trim())
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .ToList();
+
+            return split;
+        }
     }
 }
