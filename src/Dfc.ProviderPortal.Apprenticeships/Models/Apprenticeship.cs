@@ -11,7 +11,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Models
 
         public int? ApprenticeshipId { get; set; } // For backwards compatibility with Tribal
         public int? TribalProviderId { get; set; } // For backwards compatibility with Tribal
-
+        public string ApprenticeshipTitle { get; set; }
         public Guid ProviderId { get; set; } // ???
         public int ProviderUKPRN { get; set; } // As we are trying to inforce unique UKPRN per Provider
 
