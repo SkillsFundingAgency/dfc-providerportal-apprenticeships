@@ -69,7 +69,7 @@
           "description": "Cosmos DB database name for app settings"
         }
       },
-      "cosmosDbCollectionFeChoices": {
+      "cosmosDbCollectionApprenticeship": {
         "type": "string",
         "metadata": {
           "description": "Cosmos DB collection name for app settings"
@@ -87,25 +87,7 @@
           "description": "Cosmos DB collection name for app settings"
         }
       },
-      "cosmosDbCollectionSsaTier1s": {
-        "type": "string",
-        "metadata": {
-          "description": "Cosmos DB collection name for app settings"
-        }
-      },
-      "cosmosDbCollectionSsaTier2s": {
-        "type": "string",
-        "metadata": {
-          "description": "Cosmos DB collection name for app settings"
-        }
-      },
       "cosmosDbCollectionStandards": {
-        "type": "string",
-        "metadata": {
-          "description": "Cosmos DB collection name for app settings"
-        }
-      },
-      "cosmosDbCollectionStandardsSectorCodes": {
         "type": "string",
         "metadata": {
           "description": "Cosmos DB collection name for app settings"
@@ -190,32 +172,20 @@
                   "value": "[parameters('cosmosDBdatabase')]"
                 },
                 {
-                  "name": "CosmosDbCollectionSettings__FeChoicesCollectionId",
-                  "value": "[parameters('cosmosDbCollectionFeChoices')]"
+                  "name": "CosmosDbCollectionSettings__ApprenticeshipCollectionId",
+                  "value": "[parameters('cosmosDbCollectionApprenticeship')]"
                 },
                 {
                   "name": "CosmosDbCollectionSettings__FrameworksCollectionId",
                   "value": "[parameters('cosmosDbCollectionFrameworks')]"
                 },
                 {
-                  "name": "CosmosDbCollectionSettings__ProgTypesCollectionId",
-                  "value": "[parameters('cosmosDbCollectionProgTypes')]"
-                },
-                {
-                  "name": "CosmosDbCollectionSettings__SectorSubjectAreaTier1sCollectionId",
-                  "value": "[parameters('cosmosDbCollectionSsaTier1s')]"
-                },
-                {
-                  "name": "CosmosDbCollectionSettings__SectorSubjectAreaTier2sCollectionId",
-                  "value": "[parameters('cosmosDbCollectionSsaTier2s')]"
-                },
-                {
                   "name": "CosmosDbCollectionSettings__StandardsCollectionId",
                   "value": "[parameters('cosmosDbCollectionStandards')]"
                 },
                 {
-                  "name": "CosmosDbCollectionSettings__StandardSectorCodesCollectionId",
-                  "value": "[parameters('cosmosDbCollectionStandardsSectorCodes')]"
+                  "name": "CosmosDbCollectionSettings__ProgTypesCollectionId",
+                  "value": "[parameters('cosmosDbCollectionProgTypes')]"
                 }
               ]
             },

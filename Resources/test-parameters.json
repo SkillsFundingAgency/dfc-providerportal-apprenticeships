@@ -32,8 +32,8 @@
       "cosmosDbDatabase": {
         "value": "mydb"
       },
-      "cosmosDbCollectionFeChoices": {
-        "value": "fechoices"
+      "cosmosDbCollectionApprenticeship": {
+        "value": "apprenticeship"
       },
       "cosmosDbCollectionFrameworks": {
         "value": "frameworks"
@@ -41,17 +41,8 @@
       "cosmosDbCollectionProgTypes": {
         "value": "progtypes"
       },
-      "cosmosDbCollectionSsaTier1s": {
-        "value": "sectorsubjectareatier1s"
-      },
-      "cosmosDbCollectionSsaTier2s": {
-        "value": "sectorsubjectareatier2s"
-      },
       "cosmosDbCollectionStandards": {
         "value": "standards"
-      },
-      "cosmosDbCollectionStandardsSectorCodes": {
-        "value": "standardsectorcodes"
       }
     }
   }
