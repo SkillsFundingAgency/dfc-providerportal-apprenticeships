@@ -44,13 +44,13 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
             return Ok();
         }
 
-        [Route("SearchApprenticeshipById")]
+        [Route("GetApprenticeshipById")]
         [HttpGet]
         [ProducesResponseType(typeof(Apprenticeship), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult SearchApprenticeshipById(Guid id, [Required]string code)
+        public IActionResult GetApprenticeshipById(Guid id, [Required]string code)
         {
             return Ok();
         }
