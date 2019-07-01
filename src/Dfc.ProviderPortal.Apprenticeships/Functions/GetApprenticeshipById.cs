@@ -15,7 +15,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
 {
     public static class SearchApprenticeshipById
     {
-        [FunctionName("SearchApprenticeshipById")]
+        [FunctionName("GetApprenticeshipById")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
             ILogger log,
