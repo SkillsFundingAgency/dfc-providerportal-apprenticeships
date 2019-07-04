@@ -12,7 +12,8 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Services
@@ -166,6 +167,42 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
         }
 
+        public async Task<HttpResponseMessage> ChangeApprenticeshipStatusForUKPRNSelection(int UKPRN, RecordStatus CurrentStatus, RecordStatus StatusToBeChangedTo)
+        {
+            Throw.IfNull<int>(UKPRN, nameof(UKPRN));
+            Throw.IfLessThan(0, UKPRN, nameof(UKPRN));
 
+            var allApprenticeships = GetApprenticeshipByUKPRN(UKPRN).Result;
+            var apprenticeshipsToBeChanged = allApprenticeships.Where(x => x.RecordStatus == CurrentStatus).ToList();
+
+            try
+            {
+                foreach (var apprenticeship in apprenticeshipsToBeChanged)
+                {
+                    apprenticeship.RecordStatus = StatusToBeChangedTo;
+                    var result = Update(apprenticeship);
+                }
+
+                return new HttpResponseMessage(HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                return new HttpResponseMessage(HttpStatusCode.ExpectationFailed);
+            }
+        }
+
+        public async Task<List<string>> DeleteBulkUploadApprenticeships(int UKPRN)
+        {
+            Throw.IfNull<int>(UKPRN, nameof(UKPRN));
+            Throw.IfLessThan(0, UKPRN, nameof(UKPRN));
+
+            List<string> results = null;
+            using (var client = _cosmosDbHelper.GetClient())
+            {
+                results = await _cosmosDbHelper.DeleteBulkUploadApprenticeships(client, _settings.ApprenticeshipCollectionId, UKPRN);
+            }
+
+            return results;
+        }
     }
 }

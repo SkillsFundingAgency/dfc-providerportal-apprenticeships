@@ -2,8 +2,10 @@
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Models;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Dfc.ProviderPortal.Apprenticeships.Models.Enums;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Services
 {
@@ -15,5 +17,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Services
         Task<IStandardsAndFrameworks> GetStandardsAndFrameworksById(Guid id, int type);
         Task<IEnumerable<IApprenticeship>> GetApprenticeshipByUKPRN(int UKPRN);
         Task<IApprenticeship> Update(IApprenticeship apprenticeship);
+        Task<HttpResponseMessage> ChangeApprenticeshipStatusForUKPRNSelection(int UKPRN, RecordStatus CurrentStatus, RecordStatus StatusToBeChangedTo);
+        Task<List<string>> DeleteBulkUploadApprenticeships(int UKPRN);
     }
 }
