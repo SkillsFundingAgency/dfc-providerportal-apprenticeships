@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Dfc.ProviderPortal.Apprenticeships.Models.Enums;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Helper
 {
@@ -203,6 +204,40 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
 
             }
             return docs;
+        }
+
+        public async Task<List<string>> DeleteBulkUploadApprenticeships(DocumentClient client, string collectionId, int UKPRN)
+        {
+            Throw.IfNull(client, nameof(client));
+            Throw.IfNullOrWhiteSpace(collectionId, nameof(collectionId));
+            Throw.IfNull(UKPRN, nameof(UKPRN));
+
+            Uri uri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, collectionId);
+            FeedOptions options = new FeedOptions { EnableCrossPartitionQuery = true, MaxItemCount = -1 };
+
+            List<Apprenticeship> docs = client.CreateDocumentQuery<Apprenticeship>(uri, options)
+                .Where(x => x.ProviderUKPRN == UKPRN && (x.RecordStatus == RecordStatus.BulkUploadPending ||
+                                                         x.RecordStatus == RecordStatus.BulkUploadReadyToGoLive)).ToList();
+
+            var responseList = new List<string>();
+
+            foreach (var doc in docs)
+            {
+                Uri docUri = UriFactory.CreateDocumentUri(_settings.DatabaseId, collectionId, doc.id.ToString());
+                var result = await client.DeleteDocumentAsync(docUri);
+
+                if (result.StatusCode == HttpStatusCode.NoContent)
+                {
+                    responseList.Add($"Apprenticeship with Title ( { doc.ApprenticeshipTitle } ) was deleted.");
+                }
+                else
+                {
+                    responseList.Add($"Course with Title ( { doc.ApprenticeshipTitle } ) wasn't deleted. StatusCode: ( { result.StatusCode } )");
+                }
+
+            }
+
+            return responseList;
         }
 
         internal static List<string> FormatSearchTerm(string searchTerm)

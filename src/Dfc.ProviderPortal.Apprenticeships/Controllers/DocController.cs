@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Dfc.ProviderPortal.Apprenticeships.Functions;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Controllers
 {
@@ -75,5 +76,27 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
         {
             return Ok();
         }
+
+        [Route("ChangeRecordStatusForUKPRNSelection")]
+        [HttpPost]
+        [ProducesResponseType(typeof(ChangeApprenticeshipStatusForUKPRNSelection), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult ChangeRecordStatusForUKPRNSelection(int UKPRN, [Required]string code)
+        {
+            return Ok();
+        }
+
+        [Route("DeleteBulkUploadCourses")]
+        [HttpGet]
+        [ProducesResponseType(typeof(DeleteBulkUploadApprenticeships), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult DeleteBulkUploadCourses(int UKPRN, [Required]string code)
+        {
+            return Ok();
+        }
+        
     }
 }
