@@ -18,7 +18,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
     {
         [FunctionName("UpdateApprenticeship")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequestMessage req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequestMessage req,
             ILogger log,
             [Inject] IApprenticeshipService apprenticeshipService)
         {
