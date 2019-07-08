@@ -15,7 +15,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
     public static class DeleteBulkUploadApprenticeships
     {
         [FunctionName("DeleteBulkUploadApprenticeships")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = null)]
+        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]
             HttpRequestMessage req,
             ILogger log,
             [Inject] IApprenticeshipService coursesService)

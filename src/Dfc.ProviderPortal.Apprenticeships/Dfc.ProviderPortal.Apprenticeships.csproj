@@ -2,6 +2,8 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <AzureFunctionsVersion>v2</AzureFunctionsVersion>
+    <AssemblyVersion>1.0.19189.1347</AssemblyVersion>
+    <FileVersion>1.0.19189.1347</FileVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Dfc.ProviderPortal.Packages" Version="0.1.1" />

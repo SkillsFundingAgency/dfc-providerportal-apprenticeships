@@ -18,7 +18,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
         [ProducesResponseType(typeof(Apprenticeship), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult AddApprenticeship([Required]string code)
+        public IActionResult AddApprenticeship()
         {
             return Ok();
         }
@@ -29,7 +29,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetApprenticeshipByUKPRN(string UKPRN, [Required]string code)
+        public IActionResult GetApprenticeshipByUKPRN(string UKPRN)
         {
             return Ok();
         }
@@ -40,7 +40,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetStandardsAndFrameworksById(Guid id, int type, [Required]string code)
+        public IActionResult GetStandardsAndFrameworksById(Guid id, int type)
         {
             return Ok();
         }
@@ -51,7 +51,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetApprenticeshipById(Guid id, [Required]string code)
+        public IActionResult GetApprenticeshipById(Guid id)
         {
             return Ok();
         }
@@ -62,7 +62,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult StandardsAndFrameworksSearch(string search, [Required]string code)
+        public IActionResult StandardsAndFrameworksSearch(string search)
         {
             return Ok();
         }
@@ -72,7 +72,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
         [ProducesResponseType(typeof(Apprenticeship), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult UpdateApprenticeship(Apprenticeship apprenticeship, [Required]string code)
+        public IActionResult UpdateApprenticeship(Apprenticeship apprenticeship)
         {
             return Ok();
         }
@@ -82,7 +82,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
         [ProducesResponseType(typeof(ChangeApprenticeshipStatusForUKPRNSelection), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult ChangeRecordStatusForUKPRNSelection(int UKPRN, [Required]string code)
+        public IActionResult ChangeRecordStatusForUKPRNSelection(int UKPRN)
         {
             return Ok();
         }
@@ -93,7 +93,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult DeleteBulkUploadCourses(int UKPRN, [Required]string code)
+        public IActionResult DeleteBulkUploadCourses(int UKPRN)
         {
             return Ok();
         }
