@@ -29,7 +29,7 @@ steps:
 # ARM template
 - template: AzureDevOpsTemplates/Build/dfc-arm-build.yml@dfc-devops
   parameters:
-    ArmTemplateRoot: '$(System.DefaultWorkingDirectory)\Resources'
+    ArmTemplateRoot: '$(System.DefaultWorkingDirectory)\Resources\ArmTemplates'
 
 # restore
 - task: DotNetCoreCLI@2
