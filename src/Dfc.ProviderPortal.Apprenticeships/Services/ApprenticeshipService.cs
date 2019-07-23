@@ -204,5 +204,19 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
             return results;
         }
+
+        public async Task<List<string>> DeleteApprenticeshipsByUKPRN(int UKPRN)
+        {
+            Throw.IfNull<int>(UKPRN, nameof(UKPRN));
+            Throw.IfLessThan(0, UKPRN, nameof(UKPRN));
+
+            List<string> results = null;
+            using (var client = _cosmosDbHelper.GetClient())
+            {
+                results = await _cosmosDbHelper.DeleteDocumentsByUKPRN(client, _settings.ApprenticeshipCollectionId, UKPRN);
+            }
+
+            return results;
+        }
     }
 }
