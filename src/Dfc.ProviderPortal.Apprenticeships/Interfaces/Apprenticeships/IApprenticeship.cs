@@ -35,7 +35,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Apprenticeships
         string ContactWebsite { get; set; }
 
         IEnumerable<ApprenticeshipLocation> ApprenticeshipLocations { get; set; }
-
+        IEnumerable<string> Regions { get; set; }
         // Standard auditing properties 
         RecordStatus RecordStatus { get; set; }
         DateTime CreatedDate { get; set; }
