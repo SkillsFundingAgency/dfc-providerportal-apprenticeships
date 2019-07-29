@@ -21,6 +21,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Models.Enums
         public int ProviderId { get; set; }
         public ApprenticeshipLocationType ApprenticeshipLocationType { get; set; }
         public LocationType LocationType { get; set; }
+        public string[] Regions { get; set; }
         public int? Radius { get; set; }
         // Standard auditing properties 
         public RecordStatus RecordStatus { get; set; }

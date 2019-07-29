@@ -23,6 +23,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Apprenticeships
         int ProviderId { get; set; }
         ApprenticeshipLocationType ApprenticeshipLocationType { get; set; }
         LocationType LocationType { get; set; }
+        string[] Regions { get; set; }
         int? Radius { get; set; }
         // Standard auditing properties 
         RecordStatus RecordStatus { get; set; }
