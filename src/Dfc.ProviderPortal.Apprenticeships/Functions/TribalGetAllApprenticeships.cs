@@ -22,14 +22,15 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
                                                     [Inject] IApprenticeshipService apprenticeshipService)
         {
             string fromQuery = req.Query["UKPRN"];
-            List<Apprenticeship> persisted = null;
+            List<Apprenticeship> apprenticeships = null;
             try
             {
-                persisted = (List<Apprenticeship>)await apprenticeshipService.GetApprenticeshipCollection();
-                if (persisted == null)
+                apprenticeships = (List<Apprenticeship>)await apprenticeshipService.GetApprenticeshipCollection();
+                if (apprenticeships == null)
                     return new NotFoundObjectResult("Could not retrieve apprenticeships");
 
-                return new OkObjectResult(persisted);
+                var test = apprenticeshipService.ApprenticeshipsToProviders(apprenticeships);
+                return new OkObjectResult(apprenticeships);
 
             }
             catch (Exception e)

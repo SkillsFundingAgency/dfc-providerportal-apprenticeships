@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Dfc.ProviderPortal.Apprenticeships.Models.Enums;
+using Dfc.ProviderPortal.Apprenticeships.Interfaces.Tribal;
+using Dfc.ProviderPortal.Apprenticeships.Models;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Services
 {
@@ -21,5 +23,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Services
         Task<List<string>> DeleteBulkUploadApprenticeships(int UKPRN);
         Task<List<string>> DeleteApprenticeshipsByUKPRN(int UKPRN);
         Task<IEnumerable<IApprenticeship>> GetApprenticeshipCollection();
+        Task<IEnumerable<IProvider>> ApprenticeshipsToProviders(List<Apprenticeship> apprenticeships);
     }
 }

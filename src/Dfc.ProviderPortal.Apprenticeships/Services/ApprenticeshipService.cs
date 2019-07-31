@@ -3,8 +3,10 @@ using Dfc.ProviderPortal.Apprenticeships.Interfaces.Helper;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Models;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Settings;
+using Dfc.ProviderPortal.Apprenticeships.Interfaces.Tribal;
 using Dfc.ProviderPortal.Apprenticeships.Models;
 using Dfc.ProviderPortal.Apprenticeships.Models.Enums;
+using Dfc.ProviderPortal.Apprenticeships.Models.Tribal;
 using Dfc.ProviderPortal.Apprenticeships.Settings;
 using Dfc.ProviderPortal.Packages;
 using Microsoft.Azure.Documents;
@@ -230,5 +232,17 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
             
         }
+        public async Task<IEnumerable<IProvider>> ApprenticeshipsToProviders(List<Apprenticeship> apprenticeships)
+        {
+            List<Provider> providers = new List<Provider>();
+            List<string> listOfProviderUKPRN = new List<string>();
+
+            listOfProviderUKPRN = apprenticeships.Select(x => x.ProviderUKPRN.ToString())
+                                                 .Distinct()
+                                                 .ToList();
+
+            return providers;
+        }
+       
     }
 }
