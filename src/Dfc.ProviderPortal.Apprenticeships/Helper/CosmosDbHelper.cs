@@ -13,6 +13,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Dfc.ProviderPortal.Apprenticeships.Models.Enums;
+using Microsoft.Azure.Documents.Linq;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Helper
 {
@@ -274,6 +275,15 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             return responseList;
         }
 
+        public List<Apprenticeship> GetApprenticeshipCollection(DocumentClient client, string collectionId)
+        {
+
+            Uri uri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, collectionId);
+            FeedOptions options = new FeedOptions { EnableCrossPartitionQuery = true, MaxItemCount = -1 };
+
+            return client.CreateDocumentQuery<Apprenticeship>(uri, options).ToList();
+            
+        }
         internal static List<string> FormatSearchTerm(string searchTerm)
         {
             Throw.IfNullOrWhiteSpace(searchTerm, nameof(searchTerm));

@@ -20,5 +20,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Services
         Task<HttpResponseMessage> ChangeApprenticeshipStatusForUKPRNSelection(int UKPRN, RecordStatus CurrentStatus, RecordStatus StatusToBeChangedTo);
         Task<List<string>> DeleteBulkUploadApprenticeships(int UKPRN);
         Task<List<string>> DeleteApprenticeshipsByUKPRN(int UKPRN);
+        Task<IEnumerable<IApprenticeship>> GetApprenticeshipCollection();
     }
 }

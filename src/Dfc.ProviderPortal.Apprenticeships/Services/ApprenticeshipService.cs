@@ -218,5 +218,17 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
             return results;
         }
+        public async Task<IEnumerable<IApprenticeship>> GetApprenticeshipCollection()
+        {
+            using (var client = _cosmosDbHelper.GetClient())
+            {
+                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
+                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
+
+                return _cosmosDbHelper.GetApprenticeshipCollection(client, _settings.ApprenticeshipCollectionId);
+            }
+
+            
+        }
     }
 }
