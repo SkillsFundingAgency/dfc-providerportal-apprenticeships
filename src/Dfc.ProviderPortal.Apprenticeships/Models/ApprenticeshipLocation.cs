@@ -1,4 +1,5 @@
 ﻿using Dfc.ProviderPortal.Apprenticeships.Interfaces.Apprenticeships;
+using Dfc.ProviderPortal.Apprenticeships.Models.Tribal;
 using System;
 using System.Collections.Generic;
 
