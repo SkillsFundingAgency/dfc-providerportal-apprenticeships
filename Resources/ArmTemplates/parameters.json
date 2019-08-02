@@ -49,6 +49,12 @@
       },
       "cosmosDbCollectionStandards": {
         "value": "__cosmosDbCollectionStandards__"
+      },
+      "providerServiceSettingsApiUrl": {
+        "value": "__providerServiceSettingsApiUrl__"
+      },
+      "providerServiceSettingsApiKey": {
+        "value": "__providerServiceSettingsApiKey__"
       }
     }
   }
