@@ -98,6 +98,18 @@
         "metadata": {
           "description": "Cosmos DB collection name for app settings"
         }
+      },
+      "providerServiceSettingsApiUrl": {
+        "type": "string",
+        "metadata": {
+          "description": "Provider API service url"
+        }
+      },
+      "providerServiceSettingsApiKey": {
+        "type": "string",
+        "metadata": {
+          "description": "Provider API service key"
+        }
       }
     },
     "variables": {
@@ -193,6 +205,14 @@
                 {
                   "name": "CosmosDbCollectionSettings__ProgTypesCollectionId",
                   "value": "[parameters('cosmosDbCollectionProgTypes')]"
+                },
+                {
+                  "name": "ProviderServiceSettings__ApiUrl",
+                  "value": "[parameters('providerServiceSettingsApiUrl')]"
+                },
+                {
+                  "name": "ProviderServiceSettings__ApiKey",
+                  "value": "[parameters('providerServiceSettingsApiKey')]"
                 }
               ]
             },
