@@ -1,9 +1,6 @@
-﻿using Dfc.ProviderPortal.Apprenticeships.Interfaces.Apprenticeships;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Dfc.ProviderPortal.Apprenticeships.Interfaces.Tribal;
 
-namespace Dfc.ProviderPortal.Apprenticeships.Models
+namespace Dfc.ProviderPortal.Apprenticeships.Models.Tribal
 {
     public class Address : IAddress
     {

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Dfc.ProviderPortal.Apprenticeships.Functions;
+using Dfc.ProviderPortal.Apprenticeships.Models.Tribal;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Controllers
 {
@@ -108,6 +109,24 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
         {
             return Ok();
         }
-
+        [Route("TribalGetAllApprenticeships")]
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<TribalProvider>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult TribalGetAllApprenticeships()
+        {
+            return Ok();
+        }
+        [Route("TribalGetProviderByUKPRN")]
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<TribalProvider>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult TribalGetProviderByUKPRN(string UKPRN)
+        {
+            return Ok();
+        }
     }
 }
