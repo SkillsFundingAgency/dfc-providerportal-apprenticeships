@@ -128,5 +128,24 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
         {
             return Ok();
         }
+        [Route("GetUpdatedApprenticeships")]
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<Apprenticeship>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GetUpdatedApprenticeships()
+        {
+            return Ok();
+        }
+        [Route("GetUpdatedApprenticeshipsAsProvider")]
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<TribalProvider>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GetUpdatedApprenticeshipsAsProvider()
+        {
+            return Ok();
+        }
     }
 }
