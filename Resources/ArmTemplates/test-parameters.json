@@ -46,6 +46,12 @@
       },
       "cosmosDbCollectionStandards": {
         "value": "standards"
+      },
+      "providerServiceSettingsApiUrl": {
+        "value": "https://apim-instance/some/path/to/api"
+      },
+      "providerServiceSettingsApiKey": {
+        "value": "not-a-real-api-key"
       }
     }
   }
