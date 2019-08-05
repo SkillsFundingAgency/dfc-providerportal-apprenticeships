@@ -1,9 +1,10 @@
 ﻿using Dfc.ProviderPortal.Apprenticeships.Interfaces.Apprenticeships;
+using Dfc.ProviderPortal.Apprenticeships.Models.Enums;
 using Dfc.ProviderPortal.Apprenticeships.Models.Tribal;
 using System;
 using System.Collections.Generic;
 
-namespace Dfc.ProviderPortal.Apprenticeships.Models.Enums
+namespace Dfc.ProviderPortal.Apprenticeships.Models
 {
     public class ApprenticeshipLocation : IApprenticeshipLocation
     {

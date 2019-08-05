@@ -13,7 +13,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Tribal
         int? Level { get; set; }
 
         List<ILocationRef> Locations { get; set; }
-        int PathwayCode { get; set; }
+        int? PathwayCode { get; set; }
 
         string FrameworkInfoUrl { get; set; }
 

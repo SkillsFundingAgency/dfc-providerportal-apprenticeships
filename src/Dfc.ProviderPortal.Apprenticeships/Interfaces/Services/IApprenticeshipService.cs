@@ -23,6 +23,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Services
         Task<List<string>> DeleteBulkUploadApprenticeships(int UKPRN);
         Task<List<string>> DeleteApprenticeshipsByUKPRN(int UKPRN);
         Task<IEnumerable<IApprenticeship>> GetApprenticeshipCollection();
-        Task<IEnumerable<IProvider>> ApprenticeshipsToProviders(List<Apprenticeship> apprenticeships);
+        IEnumerable<ITribalProvider> ApprenticeshipsToTribalProviders(List<Apprenticeship> apprenticeships);
     }
 }

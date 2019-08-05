@@ -7,30 +7,37 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Dfc.ProviderPortal.Packages.AzureFunctions.DependencyInjection;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
 using Dfc.ProviderPortal.Apprenticeships.Models;
 using System.Collections.Generic;
+using Dfc.ProviderPortal.Packages.AzureFunctions.DependencyInjection;
 using Dfc.ProviderPortal.Apprenticeships.Models.Tribal;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Functions
 {
-    public static class TribalGetAllApprenticeships
+    public static class TribalGetProviderByUKPRN
     {
-        [FunctionName("TribalGetAllApprenticeships")]
+        [FunctionName("TribalGetProviderByUKPRN")]
         public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
                                                     ILogger log,
                                                     [Inject] IApprenticeshipService apprenticeshipService)
         {
             string fromQuery = req.Query["UKPRN"];
-            List<Apprenticeship> apprenticeships = null;
+            List<Apprenticeship> persisted = null;
+
+            if (string.IsNullOrWhiteSpace(fromQuery))
+                return new BadRequestObjectResult($"Empty or missing UKPRN value.");
+
+            if (!int.TryParse(fromQuery, out int UKPRN))
+                return new BadRequestObjectResult($"Invalid UKPRN value, expected a valid integer");
+
             try
             {
-                apprenticeships = (List<Apprenticeship>)await apprenticeshipService.GetApprenticeshipCollection();
-                if (apprenticeships == null)
-                    return new NotFoundObjectResult("Could not retrieve apprenticeships");
+                persisted = (List<Apprenticeship>)await apprenticeshipService.GetApprenticeshipByUKPRN(UKPRN);
+                if (persisted == null)
+                    return new NotFoundObjectResult(UKPRN);
 
-                var tribalProviders = (List<TribalProvider>) apprenticeshipService.ApprenticeshipsToTribalProviders(apprenticeships);
+                var tribalProviders = (List<TribalProvider>)apprenticeshipService.ApprenticeshipsToTribalProviders(persisted);
                 return new OkObjectResult(tribalProviders);
 
             }

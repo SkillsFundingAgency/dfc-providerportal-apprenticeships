@@ -1,22 +1,23 @@
-﻿using System;
+﻿using Dfc.ProviderPortal.Apprenticeships.Models.Tribal;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Tribal
 {
-    public interface IProvider
+    public interface ITribalProvider
     {
         int Id { get; set; }
         string Email { get; set; }
         double? EmployerSatisfaction { get; set; }
-        List<IFramework> Frameworks { get; set; }
+        List<Framework> Frameworks { get; set; }
         double? LearnerSatisfaction { get; set; }
-        List<ILocation> Locations { get; set; }
+        List<Location> Locations { get; set; }
         string MarketingInfo { get; set; }
         string Name { get; set; }
         bool NationalProvider { get; set; }
         string Phone { get; set; }
-        List<IStandard> Standards { get; set; }
+        List<Standard> Standards { get; set; }
         int UKPRN { get; set; }
         string Website { get; set; }
     }

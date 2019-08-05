@@ -5,19 +5,19 @@ using System.Text;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Models.Tribal
 {
-    public class Provider : IProvider
+    public class TribalProvider : ITribalProvider
     {
         public int Id { get; set; }
         public string Email { get; set; }
         public double? EmployerSatisfaction { get; set; }
-        public List<IFramework> Frameworks { get; set; }
+        public List<Framework> Frameworks { get; set; }
         public double? LearnerSatisfaction { get; set; }
-        public List<ILocation> Locations { get; set; }
+        public List<Location> Locations { get; set; }
         public string MarketingInfo { get; set; }
         public string Name { get; set; }
         public bool NationalProvider { get; set; }
         public string Phone { get; set; }
-        public List<IStandard> Standards { get; set; }
+        public List<Standard> Standards { get; set; }
         public int UKPRN { get; set; }
         public string Website { get; set; }
 
