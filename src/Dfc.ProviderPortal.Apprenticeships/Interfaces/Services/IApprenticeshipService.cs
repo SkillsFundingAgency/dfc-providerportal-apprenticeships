@@ -24,5 +24,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Services
         Task<List<string>> DeleteApprenticeshipsByUKPRN(int UKPRN);
         Task<IEnumerable<IApprenticeship>> GetApprenticeshipCollection();
         IEnumerable<ITribalProvider> ApprenticeshipsToTribalProviders(List<Apprenticeship> apprenticeships);
+        Task<IEnumerable<IApprenticeship>> GetUpdatedApprenticeships();
     }
 }

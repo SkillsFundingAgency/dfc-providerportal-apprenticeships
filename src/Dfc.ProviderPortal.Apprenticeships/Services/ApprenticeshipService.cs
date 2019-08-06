@@ -267,6 +267,22 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
             }
             return providers;
         }
+        public async Task<IEnumerable<IApprenticeship>> GetUpdatedApprenticeships()
+        {
+            IEnumerable<Apprenticeship> persisted = null;
+            DateTime dateToCheckAgainst = DateTime.Now.Subtract(TimeSpan.FromDays(1));
+            using (var client = _cosmosDbHelper.GetClient())
+            {
+                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
+                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
+
+                var docs = _cosmosDbHelper.GetApprenticeshipCollection(client, _settings.ApprenticeshipCollectionId);
+                persisted = docs.Where(x => x.UpdatedDate.HasValue && x.UpdatedDate > dateToCheckAgainst ||
+                                       x.CreatedDate > dateToCheckAgainst).ToList();
+            }
+
+            return persisted;
+        }
         internal IEnumerable<Provider> GetProviderDetails(string UKPRN)
         {
             return new ProviderServiceWrapper(_providerServiceSettings).GetProviderByUKPRN(UKPRN);
