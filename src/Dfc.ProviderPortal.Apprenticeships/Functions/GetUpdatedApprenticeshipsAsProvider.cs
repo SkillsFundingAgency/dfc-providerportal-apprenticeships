@@ -12,6 +12,7 @@ using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
 using Dfc.ProviderPortal.Apprenticeships.Models;
 using System.Collections.Generic;
 using Dfc.ProviderPortal.Apprenticeships.Models.Tribal;
+using System.Linq;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Functions
 {
@@ -30,7 +31,19 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
                 persisted = (List<Apprenticeship>)await apprenticeshipService.GetUpdatedApprenticeships();
                 if (persisted == null)
                     return new EmptyResult();
-                var providers = apprenticeshipService.ApprenticeshipsToTribalProviders(persisted);
+                var listOfProviderUKPRN = persisted.Select(x => x.ProviderUKPRN.ToString())
+                                                 .Distinct()
+                                                 .ToList();
+                List<Apprenticeship> totalList = new List<Apprenticeship>();
+                foreach (var ukprn in listOfProviderUKPRN)
+                {
+                    var results = apprenticeshipService.GetApprenticeshipByUKPRN(int.Parse(ukprn)).Result;
+                    if (results.Any())
+                    {
+                        totalList.AddRange((List<Apprenticeship>)results);
+                    }
+                }
+                var providers = apprenticeshipService.ApprenticeshipsToTribalProviders(totalList);
                 return new OkObjectResult(providers);
 
             }
