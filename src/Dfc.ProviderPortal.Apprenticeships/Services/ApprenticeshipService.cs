@@ -277,7 +277,8 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
                 await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
 
                 var docs = _cosmosDbHelper.GetApprenticeshipCollection(client, _settings.ApprenticeshipCollectionId);
-                persisted = docs.Where(x => x.UpdatedDate.HasValue && x.UpdatedDate > dateToCheckAgainst).ToList();
+                persisted = docs.Where(x => x.UpdatedDate.HasValue && x.UpdatedDate > dateToCheckAgainst ||
+                                       x.CreatedDate > dateToCheckAgainst).ToList();
             }
 
             return persisted;
