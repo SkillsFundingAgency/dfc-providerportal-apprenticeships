@@ -8,6 +8,7 @@ using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -61,7 +62,11 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             Throw.IfNullOrWhiteSpace(collectionId, nameof(collectionId));
 
             var uri = UriFactory.CreateDatabaseUri(_settings.DatabaseId);
-            var coll = new DocumentCollection { Id = collectionId };
+            var coll = new DocumentCollection { Id = collectionId, PartitionKey = new PartitionKeyDefinition(){Paths = new Collection<string>()
+            {
+                "/ProviderUKPRN"
+            }
+            }};
 
             return await client.CreateDocumentCollectionIfNotExistsAsync(uri, coll);
         }
