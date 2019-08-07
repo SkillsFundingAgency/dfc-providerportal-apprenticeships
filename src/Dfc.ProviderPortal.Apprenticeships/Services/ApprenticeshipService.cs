@@ -2,6 +2,7 @@
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Apprenticeships;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Helper;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Models;
+using Dfc.ProviderPortal.Apprenticeships.Interfaces.Models.Regions;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Settings;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Tribal;
@@ -259,6 +260,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
                     var tribalProvider = CreateTribalProviderFromProvider(providerDetailsList.FirstOrDefault());
                     var apprenticeshipLocations = providerApprenticeships.Where(x => x.ApprenticeshipLocations != null)
                                                  .SelectMany(x => x.ApprenticeshipLocations);
+                    
                     tribalProvider.Locations = ApprenticeshipLocationsToLocations(apprenticeshipLocations);
                     tribalProvider.Standards = ApprenticeshipsToStandards(providerApprenticeships.Where(x => x.StandardCode.HasValue));
                     tribalProvider.Frameworks = ApprenticeshipsToFrameworks(providerApprenticeships.Where(x => x.FrameworkCode.HasValue));
@@ -312,15 +314,23 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
             {
                 foreach (var location in locations)
                 {
-                    tribalLocations.Add(new Location
+                    if(location.Regions != null)
                     {
-                        //ID to add
-                        Address = location.Address != null ? location.Address : new Address(),
-                        Email = location.Address != null ? location.Address.Email : string.Empty,
-                        Name = location.Name,
-                        Phone = location.Phone,
-                        Website = location.Address != null ? location.Address.Website : string.Empty
-                    });
+                        tribalLocations.AddRange(RegionsToLocations(location.Regions));
+                    }
+                    else
+                    {
+                        tribalLocations.Add(new Location
+                        {
+                            //ID to add
+                            Address = location.Address != null ? location.Address : new Address(),
+                            Email = location.Address != null ? location.Address.Email : string.Empty,
+                            Name = location.Name,
+                            Phone = location.Phone,
+                            Website = location.Address != null ? location.Address.Website : string.Empty
+                        });
+                    }
+
                 }
             }
 
@@ -371,6 +381,26 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
                 });
             }
             return frameworks;
+        }
+        internal List<Location> RegionsToLocations(string[] regionCodes)
+        {
+            List<Location> apprenticeshipLocations = new List<Location>();
+            var regions = new SelectRegionModel().RegionItems.SelectMany(x => x.SubRegion.Where(y => regionCodes.Contains(y.Id)));
+            foreach(var region in regions)
+            {
+                Location location = new Location
+                {
+                    Name = region.SubRegionName,
+                    Address = new Address
+                    {
+                        Latitude = region.Latitude,
+                        Longitude = region.Longitude
+                    },
+                    
+                };
+                apprenticeshipLocations.Add(location);
+            }
+            return apprenticeshipLocations;
         }
         
 
