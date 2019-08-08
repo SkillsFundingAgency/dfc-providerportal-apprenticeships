@@ -63,7 +63,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult StandardsAndFrameworksSearch(string search)
+        public IActionResult StandardsAndFrameworksSearch(string search, string UKPRN)
         {
             return Ok();
         }
