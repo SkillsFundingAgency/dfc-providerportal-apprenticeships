@@ -24,7 +24,14 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
             [Inject] IApprenticeshipService apprenticeshipService)
         {
             string search = req.Query["search"];
+            string fromUKPRN = req.Query["UKPRN"];
             IEnumerable<IStandardsAndFrameworks> standardsAndFrameworks = null;
+
+            if (string.IsNullOrWhiteSpace(fromUKPRN))
+                return new BadRequestObjectResult($"Empty or missing UKPRN value.");
+
+            if (!int.TryParse(fromUKPRN, out int UKPRN))
+                return new BadRequestObjectResult($"Invalid UKPRN value, expected a valid integer");
 
             if (string.IsNullOrWhiteSpace(search))
             {
@@ -34,7 +41,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
             try
             {
                 standardsAndFrameworks =  await apprenticeshipService.StandardsAndFrameworksSearch(search);
-
+                standardsAndFrameworks = apprenticeshipService.CheckForDuplicateApprenticeships(standardsAndFrameworks, UKPRN);
                 if (standardsAndFrameworks == null)
                 {
                     return new NotFoundObjectResult(search);

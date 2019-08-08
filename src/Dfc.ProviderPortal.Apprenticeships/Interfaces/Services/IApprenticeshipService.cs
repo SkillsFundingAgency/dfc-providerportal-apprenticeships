@@ -25,5 +25,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Services
         Task<IEnumerable<IApprenticeship>> GetApprenticeshipCollection();
         IEnumerable<ITribalProvider> ApprenticeshipsToTribalProviders(List<Apprenticeship> apprenticeships);
         Task<IEnumerable<IApprenticeship>> GetUpdatedApprenticeships();
+        IEnumerable<IStandardsAndFrameworks> CheckForDuplicateApprenticeships(IEnumerable<IStandardsAndFrameworks> standardsAndFrameworks, int UKPRN);
     }
 }
