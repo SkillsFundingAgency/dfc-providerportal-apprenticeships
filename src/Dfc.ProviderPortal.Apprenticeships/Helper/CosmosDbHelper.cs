@@ -8,11 +8,13 @@ using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Dfc.ProviderPortal.Apprenticeships.Models.Enums;
+using Microsoft.Azure.Documents.Linq;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Helper
 {
@@ -60,7 +62,11 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             Throw.IfNullOrWhiteSpace(collectionId, nameof(collectionId));
 
             var uri = UriFactory.CreateDatabaseUri(_settings.DatabaseId);
-            var coll = new DocumentCollection { Id = collectionId };
+            var coll = new DocumentCollection { Id = collectionId, PartitionKey = new PartitionKeyDefinition(){Paths = new Collection<string>()
+            {
+                "/ProviderUKPRN"
+            }
+            }};
 
             return await client.CreateDocumentCollectionIfNotExistsAsync(uri, coll);
         }
@@ -240,6 +246,49 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             return responseList;
         }
 
+        public async Task<List<string>> DeleteDocumentsByUKPRN(DocumentClient client, string collectionId, int UKPRN)
+        {
+            Throw.IfNull(client, nameof(client));
+            Throw.IfNullOrWhiteSpace(collectionId, nameof(collectionId));
+            Throw.IfNull(UKPRN, nameof(UKPRN));
+
+            Uri uri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, collectionId);
+            FeedOptions options = new FeedOptions { EnableCrossPartitionQuery = true, MaxItemCount = -1 };
+
+            List<Apprenticeship> docs = client.CreateDocumentQuery<Apprenticeship>(uri, options)
+                .Where(x => x.ProviderUKPRN == UKPRN)
+                .ToList();
+
+            var responseList = new List<string>();
+
+            foreach (var doc in docs)
+            {
+                Uri docUri = UriFactory.CreateDocumentUri(_settings.DatabaseId, collectionId, doc.id.ToString());
+                var result = await client.DeleteDocumentAsync(docUri, new RequestOptions() { PartitionKey = new PartitionKey(doc.ProviderUKPRN) });
+
+                if (result.StatusCode == HttpStatusCode.NoContent)
+                {
+                    responseList.Add($"Apprenticeship with Title ( { doc.ApprenticeshipTitle } ) was deleted.");
+                }
+                else
+                {
+                    responseList.Add($"Apprenticeship with Title ( { doc.ApprenticeshipTitle } ) wasn't deleted. StatusCode: ( { result.StatusCode } )");
+                }
+
+            }
+
+            return responseList;
+        }
+
+        public List<Apprenticeship> GetApprenticeshipCollection(DocumentClient client, string collectionId)
+        {
+
+            Uri uri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, collectionId);
+            FeedOptions options = new FeedOptions { EnableCrossPartitionQuery = true, MaxItemCount = -1 };
+
+            return client.CreateDocumentQuery<Apprenticeship>(uri, options).ToList();
+            
+        }
         internal static List<string> FormatSearchTerm(string searchTerm)
         {
             Throw.IfNullOrWhiteSpace(searchTerm, nameof(searchTerm));

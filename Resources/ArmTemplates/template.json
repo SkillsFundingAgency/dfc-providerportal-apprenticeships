@@ -26,22 +26,28 @@
           "description": "Connection string for the storage account to store function app files"
         }
       },
-      "ApimServiceName": {
+      "apimServiceName": {
         "type": "string",
         "metadata": {
           "description": "APIM name"
         }
       },
-      "ApimResourceGroup": {
+      "apimResourceGroup": {
         "type": "string",
         "metadata": {
           "description": "Resource group where the APIM is located"
         }
       },
-      "ApiName": {
+      "apiName": {
         "type": "string",
         "metadata": {
           "description": "API name"
+        }
+      },
+      "apiProductDisplayName": {
+        "type": "string",
+        "metadata": {
+          "description": "The display name for the projects APIM product"
         }
       },
       "apiSuffix": {
@@ -92,6 +98,18 @@
         "metadata": {
           "description": "Cosmos DB collection name for app settings"
         }
+      },
+      "providerServiceSettingsApiUrl": {
+        "type": "string",
+        "metadata": {
+          "description": "Provider API service url"
+        }
+      },
+      "providerServiceSettingsApiKey": {
+        "type": "string",
+        "metadata": {
+          "description": "Provider API service key"
+        }
       }
     },
     "variables": {
@@ -99,7 +117,8 @@
       "functionAppName": "[concat(parameters('functionAppPrefix'),'-fa')]",
       "appInsightName": "[concat(parameters('functionAppPrefix'),'-ai')]"
     },
-    "resources": [{
+    "resources": [
+      {
         "apiVersion": "2017-05-10",
         "name": "ppapprenticeshipAppInsights",
         "type": "Microsoft.Resources/deployments",
@@ -186,6 +205,14 @@
                 {
                   "name": "CosmosDbCollectionSettings__ProgTypesCollectionId",
                   "value": "[parameters('cosmosDbCollectionProgTypes')]"
+                },
+                {
+                  "name": "ProviderServiceSettings__ApiUrl",
+                  "value": "[parameters('providerServiceSettingsApiUrl')]"
+                },
+                {
+                  "name": "ProviderServiceSettings__ApiKey",
+                  "value": "[parameters('providerServiceSettingsApiKey')]"
                 }
               ]
             },
@@ -199,7 +226,7 @@
         "name": "ppapprenticeshipApimProduct",
         "type": "Microsoft.Resources/deployments",
         "apiVersion": "2017-05-10",
-        "resourceGroup": "[parameters('ApimResourceGroup')]",
+        "resourceGroup": "[parameters('apimResourceGroup')]",
         "properties": {
           "mode": "Incremental",
           "templateLink": {
@@ -208,13 +235,13 @@
           },
           "parameters": {
             "allowAnonymousAccess": {
-              "value": true
+              "value": false
             },
             "apimServiceName": {
-              "value": "[parameters('ApimServiceName')]"
+              "value": "[parameters('apimServiceName')]"
             },
             "productDisplayName": {
-              "value": "Apprenticeships"
+              "value": "[parameters('apiProductDisplayName')]"
             }
           }
         }
@@ -223,7 +250,7 @@
         "name": "ppapprenticeshipApimApi",
         "type": "Microsoft.Resources/deployments",
         "apiVersion": "2017-05-10",
-        "resourceGroup": "[parameters('ApimResourceGroup')]",
+        "resourceGroup": "[parameters('apimResourceGroup')]",
         "dependsOn": [
           "ppapprenticeshipApimProduct"
         ],
@@ -238,7 +265,7 @@
               "value": "[reference('ppapprenticeshipApimProduct').outputs.ApimProductInstanceName.value]"
             },
             "apimServiceName": {
-              "value": "[parameters('ApimServiceName')]"
+              "value": "[parameters('apimServiceName')]"
             },
             "apiName": {
               "value": "[parameters('apiName')]"

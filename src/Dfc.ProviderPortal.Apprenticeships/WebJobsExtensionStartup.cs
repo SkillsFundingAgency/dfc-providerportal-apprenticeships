@@ -10,8 +10,6 @@ using Microsoft.Azure.WebJobs.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 [assembly: WebJobsStartup(typeof(WebJobsExtensionStartup), "Web Jobs Extension Startup")]
 
@@ -32,6 +30,7 @@ namespace Dfc.ProviderPortal.Apprenticeships
             builder.Services.AddSingleton<IConfiguration>(configuration);
             builder.Services.Configure<CosmosDbSettings>(configuration.GetSection(nameof(CosmosDbSettings)));
             builder.Services.Configure<CosmosDbCollectionSettings>(configuration.GetSection(nameof(CosmosDbCollectionSettings)));
+            builder.Services.Configure<ProviderServiceSettings>(configuration.GetSection(nameof(ProviderServiceSettings)));
             builder.Services.AddScoped<ICosmosDbHelper, CosmosDbHelper>();
             builder.Services.AddScoped<IApprenticeshipService, ApprenticeshipService>();
 

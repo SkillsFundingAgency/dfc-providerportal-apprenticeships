@@ -14,14 +14,17 @@
       "storageConnectionString": {
         "value": "DefaultEndpointsProtocol=https;AccountName=dfcfooppapprenticestr;AccountKey=this_is_not_a_real_account==;EndpointSuffix=core.windows.net"
       },
-      "ApimServiceName": {
+      "apimServiceName": {
         "value": "dfc-foo-shared-apim"
       },
       "apimResourceGroup": {
         "value": "dfc-test-template-rg"
       },
-      "ApiName": {
+      "apiName": {
         "value": "myapi"
+      },
+      "apiProductDisplayName": {
+        "value": "Find a course"
       },
       "cosmosDbFqdn": {
         "value": "https://dfc-foo-ppapprentice-cdb.documents.azure.com/"
@@ -43,6 +46,12 @@
       },
       "cosmosDbCollectionStandards": {
         "value": "standards"
+      },
+      "providerServiceSettingsApiUrl": {
+        "value": "https://apim-instance/some/path/to/api"
+      },
+      "providerServiceSettingsApiKey": {
+        "value": "not-a-real-api-key"
       }
     }
   }

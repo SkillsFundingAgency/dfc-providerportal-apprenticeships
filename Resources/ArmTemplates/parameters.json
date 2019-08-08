@@ -14,13 +14,16 @@
       "storageConnectionString": {
         "value": "__providerPortalStorageConnectionStr__"
       },
-      "ApimServiceName": {
+      "apimServiceName": {
         "value": "__apimServiceName__"
       },
       "apimResourceGroup": {
         "value": "__sharedResourceGroup__"
       },
-      "ApiName": {
+      "apiProductDisplayName": {
+        "value": "__apiProductDisplayName__"
+      },
+      "apiName": {
         "value": "__apiName__"
       },
       "apiSuffix": {
@@ -46,6 +49,12 @@
       },
       "cosmosDbCollectionStandards": {
         "value": "__cosmosDbCollectionStandards__"
+      },
+      "providerServiceSettingsApiUrl": {
+        "value": "__providerServiceSettingsApiUrl__"
+      },
+      "providerServiceSettingsApiKey": {
+        "value": "__providerServiceSettingsApiKey__"
       }
     }
   }

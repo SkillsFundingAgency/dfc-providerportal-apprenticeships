@@ -1,7 +1,7 @@
-﻿using Dfc.ProviderPortal.Apprenticeships.Models.Enums;
+﻿using Dfc.ProviderPortal.Apprenticeships.Models;
+using Dfc.ProviderPortal.Apprenticeships.Models.Enums;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Apprenticeships
 {
@@ -35,7 +35,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Apprenticeships
         string ContactWebsite { get; set; }
 
         IEnumerable<ApprenticeshipLocation> ApprenticeshipLocations { get; set; }
-
         // Standard auditing properties 
         RecordStatus RecordStatus { get; set; }
         DateTime CreatedDate { get; set; }
