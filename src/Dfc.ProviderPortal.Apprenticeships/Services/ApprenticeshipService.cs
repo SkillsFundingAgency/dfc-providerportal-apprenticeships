@@ -76,12 +76,45 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
                 {
                     frameworkDocs = _cosmosDbHelper.GetProgTypesForFramework(client, _settings.ProgTypesCollectionId, frameworkDocs);
                 }
-                
+                var apprenticeshipsForUKPRN = 
                 
                 persisted = standardDocs.Concat(frameworkDocs);
             }
 
             return persisted;
+        }
+        public IEnumerable<IStandardsAndFrameworks> CheckForDuplicateApprenticeships(IEnumerable<IStandardsAndFrameworks> standardsAndFrameworks, int UKPRN)
+        {
+            Throw.IfNull<int>(UKPRN, nameof(UKPRN));
+            Throw.IfLessThan(0, UKPRN, nameof(UKPRN));
+
+            if(standardsAndFrameworks != null)
+            {
+                var apprenticeships = GetApprenticeshipByUKPRN(UKPRN).Result.Where(x => x.RecordStatus == RecordStatus.Live);
+                if (apprenticeships.Any())
+                {
+                    foreach(var item in standardsAndFrameworks)
+                    {
+                        var anyApprenticeshipForStandards = apprenticeships.Where(x => x.StandardCode.HasValue && 
+                                                                      x.StandardCode == item.StandardCode && 
+                                                                      x.Version.ToString() == item.Version);
+                        if (anyApprenticeshipForStandards.Any())
+                        {
+                            item.AlreadyCreated = true;
+                        }
+                        var anyApprenticeshipForFrameworks = apprenticeships.Where(x => x.FrameworkCode.HasValue &&
+                                                                                   x.FrameworkCode == item.FrameworkCode &&
+                                                                                   x.ProgType == item.ProgType &&
+                                                                                   x.PathwayCode == item.PathwayCode);
+                        if(anyApprenticeshipForFrameworks.Any())
+                        {
+                            item.AlreadyCreated = true;
+                        }
+                    }
+                }
+            }
+
+            return standardsAndFrameworks;
         }
         public async Task<IApprenticeship> GetApprenticeshipById(Guid id)
         {
