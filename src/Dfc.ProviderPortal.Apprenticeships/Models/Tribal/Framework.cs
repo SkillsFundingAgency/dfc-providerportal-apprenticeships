@@ -10,11 +10,8 @@ namespace Dfc.ProviderPortal.Apprenticeships.Models.Tribal
         public IContact Contact { get; set; }
         public int FrameworkCode { get; set; }
         public int? ProgType { get; set; }
-
         public int? Level { get; set; }
-
-        public int GetProgType => (ProgType ?? Level) ?? 0;
-        public List<ILocationRef> Locations { get; set; }
+        public List<LocationRef> Locations { get; set; }
 
         public int? PathwayCode { get; set; }
 

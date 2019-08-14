@@ -27,19 +27,24 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
     public class ApprenticeshipService : IApprenticeshipService
     {
         private readonly ICosmosDbHelper _cosmosDbHelper;
+        private readonly ITribalHelper _tribalHelper;
         private readonly ICosmosDbCollectionSettings _settings;
         private readonly IProviderServiceSettings _providerServiceSettings;
 
 
         public ApprenticeshipService(
             ICosmosDbHelper cosmosDbHelper,
+            ITribalHelper tribalHelper,
             IOptions<CosmosDbCollectionSettings> settings,
             IOptions<ProviderServiceSettings> providerServiceSettings)
         {
             Throw.IfNull(cosmosDbHelper, nameof(cosmosDbHelper));
+            Throw.IfNull(tribalHelper, nameof(tribalHelper));
             Throw.IfNull(settings, nameof(settings));
             Throw.IfNull(providerServiceSettings, nameof(providerServiceSettings));
+
             _cosmosDbHelper = cosmosDbHelper;
+            _tribalHelper = tribalHelper;
             _settings = settings.Value;
             _providerServiceSettings = providerServiceSettings.Value;
         }
@@ -290,13 +295,13 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
                 if(providerDetailsList != null && providerDetailsList.Count() > 0)
                 {
                     
-                    var tribalProvider = CreateTribalProviderFromProvider(providerDetailsList.FirstOrDefault());
+                    var tribalProvider = _tribalHelper.CreateTribalProviderFromProvider(providerDetailsList.FirstOrDefault());
                     var apprenticeshipLocations = providerApprenticeships.Where(x => x.ApprenticeshipLocations != null)
                                                  .SelectMany(x => x.ApprenticeshipLocations);
                     
-                    tribalProvider.Locations = ApprenticeshipLocationsToLocations(apprenticeshipLocations);
-                    tribalProvider.Standards = ApprenticeshipsToStandards(providerApprenticeships.Where(x => x.StandardCode.HasValue));
-                    tribalProvider.Frameworks = ApprenticeshipsToFrameworks(providerApprenticeships.Where(x => x.FrameworkCode.HasValue));
+                    tribalProvider.Locations = _tribalHelper.ApprenticeshipLocationsToLocations(apprenticeshipLocations);
+                    tribalProvider.Standards = _tribalHelper.ApprenticeshipsToStandards(providerApprenticeships.Where(x => x.StandardCode.HasValue));
+                    tribalProvider.Frameworks = _tribalHelper.ApprenticeshipsToFrameworks(providerApprenticeships.Where(x => x.FrameworkCode.HasValue));
                     providers.Add(tribalProvider);
                 }
             }
@@ -322,121 +327,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
         {
             return new ProviderServiceWrapper(_providerServiceSettings).GetProviderByUKPRN(UKPRN);
         }
-        internal TribalProvider CreateTribalProviderFromProvider(Provider provider)
-        {
-            var contactDetails = provider.ProviderContact.FirstOrDefault();
 
-            return new TribalProvider
-            {
-                Id = int.Parse(provider.UnitedKingdomProviderReferenceNumber),
-                Email = contactDetails != null ? contactDetails.ContactEmail : string.Empty,
-                EmployerSatisfaction = 0.0,
-                LearnerSatisfaction = 0.0,
-                MarketingInfo = provider.MarketingInformation,
-                Name = provider.ProviderName,
-                NationalProvider = provider.NationalApprenticeshipProvider,
-                UKPRN = int.Parse(provider.UnitedKingdomProviderReferenceNumber),
-                Website = contactDetails != null ? contactDetails.ContactWebsiteAddress : string.Empty
-            };
-
-        }
-        internal List<Location> ApprenticeshipLocationsToLocations(IEnumerable<ApprenticeshipLocation> locations)
-        {
-            List<Location> tribalLocations = new List<Location>();
-            if (locations.Any())
-            {
-                foreach (var location in locations)
-                {
-                    if(location.Regions != null)
-                    {
-                        tribalLocations.AddRange(RegionsToLocations(location.Regions));
-                    }
-                    else
-                    {
-                        tribalLocations.Add(new Location
-                        {
-                            //ID to add
-                            Address = location.Address != null ? location.Address : new Address(),
-                            Email = location.Address != null ? location.Address.Email : string.Empty,
-                            Name = location.Name,
-                            Phone = location.Phone,
-                            Website = location.Address != null ? location.Address.Website : string.Empty
-                        });
-                    }
-
-                }
-            }
-
-            return tribalLocations;
-        }
-        internal List<Standard> ApprenticeshipsToStandards(IEnumerable<Apprenticeship> apprenticeships)
-        {
-            List<Standard> standards = new List<Standard>();
-            foreach(var apprenticeship in apprenticeships)
-            {
-                standards.Add(new Standard
-                {
-                    StandardCode = apprenticeship.StandardCode.Value,
-                    MarketingInfo = apprenticeship.MarketingInformation,
-                    StandardInfoUrl = apprenticeship.Url,
-                    Contact = new Contact
-                    {
-                        ContactUsUrl = apprenticeship.Url,
-                        Email = apprenticeship.ContactEmail,
-                        Phone = apprenticeship.ContactTelephone
-                    },
-                    //Locations = new List<ILocationRef>
-                });
-            }
-            return standards;
-        }
-        internal List<Framework> ApprenticeshipsToFrameworks(IEnumerable<Apprenticeship> apprenticeships)
-        {
-            List<Framework> frameworks = new List<Framework>();
-
-            foreach(var apprenticeship in apprenticeships)
-            {
-                frameworks.Add(new Framework
-                {
-                    FrameworkCode = apprenticeship.FrameworkCode.Value,
-                    FrameworkInfoUrl = apprenticeship.Url,
-                    Level = !string.IsNullOrEmpty(apprenticeship.NotionalNVQLevelv2) ? int.Parse(apprenticeship.NotionalNVQLevelv2) : (int?)null,
-                    //Locations
-                    MarketingInfo = apprenticeship.MarketingInformation,
-                    PathwayCode = apprenticeship.PathwayCode.HasValue ? apprenticeship.PathwayCode.Value : (int?) null,
-                    ProgType = apprenticeship.ProgType.HasValue ? apprenticeship.ProgType.Value : (int?)null,
-                    Contact = new Contact
-                    {
-                        ContactUsUrl = apprenticeship.ContactWebsite,
-                        Email = apprenticeship.ContactEmail,
-                        Phone = apprenticeship.ContactTelephone
-                    }
-                });
-            }
-            return frameworks;
-        }
-        internal List<Location> RegionsToLocations(string[] regionCodes)
-        {
-            List<Location> apprenticeshipLocations = new List<Location>();
-            var regions = new SelectRegionModel().RegionItems.SelectMany(x => x.SubRegion.Where(y => regionCodes.Contains(y.Id)));
-            foreach(var region in regions)
-            {
-                Location location = new Location
-                {
-                    Name = region.SubRegionName,
-                    Address = new Address
-                    {
-                        Latitude = region.Latitude,
-                        Longitude = region.Longitude
-                    },
-                    
-                };
-                apprenticeshipLocations.Add(location);
-            }
-            return apprenticeshipLocations;
-        }
-        
-
-       
     }
 }
