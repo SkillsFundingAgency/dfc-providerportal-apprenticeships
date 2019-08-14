@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Dfc.ProviderPortal.Apprenticeships.Models.Tribal;
+using System.Collections.Generic;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Tribal
 {
@@ -12,7 +13,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Tribal
 
         int? Level { get; set; }
 
-        List<ILocationRef> Locations { get; set; }
+        List<LocationRef> Locations { get; set; }
         int? PathwayCode { get; set; }
 
         string FrameworkInfoUrl { get; set; }

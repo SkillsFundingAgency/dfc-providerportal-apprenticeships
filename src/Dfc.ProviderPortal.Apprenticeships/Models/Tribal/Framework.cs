@@ -14,7 +14,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Models.Tribal
         public int? Level { get; set; }
 
         public int GetProgType => (ProgType ?? Level) ?? 0;
-        public List<ILocationRef> Locations { get; set; }
+        public List<LocationRef> Locations { get; set; }
 
         public int? PathwayCode { get; set; }
 

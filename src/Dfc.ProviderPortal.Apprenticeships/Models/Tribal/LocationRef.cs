@@ -7,29 +7,11 @@ namespace Dfc.ProviderPortal.Apprenticeships.Models.Tribal
 {
     public class LocationRef : ILocationRef
     {
-        /// <summary>
-        ///     Optional.
-        /// </summary>
-        public List<string> DeliveryModes { get; set; }
-
-        /// <summary>
-        ///     Required.
-        /// </summary>
-        public int ID { get; set; }
-
-        /// <summary>
-        ///     Optional.
-        /// </summary>
+        public List<int> DeliveryModes { get; set; }
+        public int? ID { get; set; }
+        public Guid GuidID { get; set; }
         public string MarketingInfo { get; set; }
-
-        /// <summary>
-        ///     Optional.
-        /// </summary>
         public int Radius { get; set; }
-
-        /// <summary>
-        ///     Optional.
-        /// </summary>
         public string StandardInfoUrl { get; set; }
 
     }

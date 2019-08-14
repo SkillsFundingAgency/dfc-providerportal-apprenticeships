@@ -32,6 +32,7 @@ namespace Dfc.ProviderPortal.Apprenticeships
             builder.Services.Configure<CosmosDbCollectionSettings>(configuration.GetSection(nameof(CosmosDbCollectionSettings)));
             builder.Services.Configure<ProviderServiceSettings>(configuration.GetSection(nameof(ProviderServiceSettings)));
             builder.Services.AddScoped<ICosmosDbHelper, CosmosDbHelper>();
+            builder.Services.AddScoped<ITribalHelper, TribalHelper>();
             builder.Services.AddScoped<IApprenticeshipService, ApprenticeshipService>();
 
 
