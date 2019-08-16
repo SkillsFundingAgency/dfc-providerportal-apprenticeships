@@ -1,6 +1,7 @@
 ﻿using Dfc.ProviderPortal.Apprenticeships.Interfaces.Helper;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Models.Regions;
 using Dfc.ProviderPortal.Apprenticeships.Models;
+using Dfc.ProviderPortal.Apprenticeships.Models.Enums;
 using Dfc.ProviderPortal.Apprenticeships.Models.Providers;
 using Dfc.ProviderPortal.Apprenticeships.Models.Tribal;
 using System;
@@ -45,8 +46,9 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                     {
                         tribalLocations.Add(new Location
                         {
+                            ID = location.TribalId ?? (int?) null,
                             GuidID = location.Id,
-                            Address = location.Address != null ? location.Address : new Address(),
+                            Address = location.Address != null ? location.Address : null,
                             Email = location.Address != null ? location.Address.Email : string.Empty,
                             Name = location.Name,
                             Phone = location.Phone,
@@ -115,9 +117,11 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             {
                 Location location = new Location
                 {
+                    ID = region.ApiLocationId,
                     Name = region.SubRegionName,
                     Address = new Address
                     {
+                        Address1 = region.SubRegionName,
                         Latitude = region.Latitude,
                         Longitude = region.Longitude
                     },
@@ -130,19 +134,68 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
         internal List<LocationRef> CreateLocationRef(IEnumerable<ApprenticeshipLocation> locations, Apprenticeship apprenticeship)
         {
             List<LocationRef> locationRefs = new List<LocationRef>();
+            var subRegionItemModels = new SelectRegionModel().RegionItems.SelectMany(x => x.SubRegion);
             foreach(var location in locations)
             {
-                locationRefs.Add(new LocationRef
+                if(location.Regions != null)
                 {
-                    GuidID = location.Id,
-                    DeliveryModes = location.DeliveryModes,
-                    Radius = location.Radius.HasValue ? location.Radius.Value : 0,
-                    MarketingInfo = apprenticeship.MarketingInformation,
-                    StandardInfoUrl = apprenticeship.Url
-                });
+                    foreach(var region in location.Regions)
+                    {
+                        locationRefs.Add(new LocationRef
+                        {
+                            ID = subRegionItemModels.Where(x => x.Id == region).Select(y => y.ApiLocationId.Value).FirstOrDefault(),
+                            GuidID = location.Id,
+                            DeliveryModes = ConvertToApprenticeshipDeliveryModes(location.DeliveryModes),
+                            Radius = location.Radius.HasValue ? location.Radius.Value : 0
+                        }) ;
+                    }
+                }
+                else
+                {
+                    locationRefs.Add(new LocationRef
+                    {
+                        ID = location.LocationId,
+                        GuidID = location.Id,
+                        DeliveryModes = ConvertToApprenticeshipDeliveryModes(location.DeliveryModes),
+                        Radius = location.Radius.HasValue ? location.Radius.Value : 0
+                    });
+                }
+
             }
             return locationRefs;
 
+        }
+        internal List<int> ConvertToApprenticeshipDeliveryModes(List<int> courseDirectoryModes)
+        {
+            List<int> tribalList = new List<int>();
+            foreach (var mode in courseDirectoryModes)
+            {
+                switch(mode)
+                {
+                    case (int)ApprenticeShipDeliveryLocation.DayRelease:
+                        {
+                            tribalList.Add((int)TribalDeliveryModes.DayRelease);
+                            break;
+                        }
+                    case (int)ApprenticeShipDeliveryLocation.BlockRelease:
+                        {
+                            tribalList.Add((int)TribalDeliveryModes.BlockRelease);
+                            break;
+                        }
+                    case (int)ApprenticeShipDeliveryLocation.EmployerAddress:
+                        {
+                            tribalList.Add((int)TribalDeliveryModes.EmployerBased);
+                            break;
+                        }
+
+                }
+            }
+            if(courseDirectoryModes.Count == 0)
+            {
+                tribalList.Add((int)TribalDeliveryModes.EmployerBased);
+            }
+            tribalList.Sort();
+            return tribalList;
         }
     }
 }
