@@ -289,7 +289,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
                                                  .ToList();
             foreach(var ukprn in listOfProviderUKPRN)
             {
-                var providerApprenticeships = apprenticeships.Where(x => x.ProviderUKPRN.ToString() == ukprn).ToList();
+                var providerApprenticeships = apprenticeships.Where(x => x.ProviderUKPRN.ToString() == ukprn && x.RecordStatus == RecordStatus.Live).ToList();
 
                 var providerDetailsList = GetProviderDetails(ukprn);
                 if(providerDetailsList != null && providerDetailsList.Count() > 0)
@@ -318,7 +318,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
                 var docs = _cosmosDbHelper.GetApprenticeshipCollection(client, _settings.ApprenticeshipCollectionId);
                 persisted = docs.Where(x => x.UpdatedDate.HasValue && x.UpdatedDate > dateToCheckAgainst ||
-                                       x.CreatedDate > dateToCheckAgainst).ToList();
+                                       x.CreatedDate > dateToCheckAgainst && x.RecordStatus == RecordStatus.Live).ToList();
             }
 
             return persisted;
