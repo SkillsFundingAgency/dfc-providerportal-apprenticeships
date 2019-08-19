@@ -46,9 +46,8 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                     {
                         tribalLocations.Add(new Location
                         {
-                            ID = location.TribalId ?? (int?) null,
-                            GuidID = location.Id,
-                            Address = location.Address != null ? location.Address : null,
+                            ID = location.TribalId ?? location.LocationId,
+                            Address = location.Address ?? null,
                             Email = location.Address != null ? location.Address.Email : string.Empty,
                             Name = location.Name,
                             Phone = location.Phone,
@@ -78,7 +77,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                         Email = apprenticeship.ContactEmail,
                         Phone = apprenticeship.ContactTelephone
                     },
-                    Locations = CreateLocationRef(apprenticeship.ApprenticeshipLocations, apprenticeship)
+                    Locations = CreateLocationRef(apprenticeship.ApprenticeshipLocations)
                 });
             }
             return standards;
@@ -104,7 +103,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                         Email = apprenticeship.ContactEmail,
                         Phone = apprenticeship.ContactTelephone
                     },
-                    Locations = CreateLocationRef(apprenticeship.ApprenticeshipLocations, apprenticeship)
+                    Locations = CreateLocationRef(apprenticeship.ApprenticeshipLocations)
                 });
             }
             return frameworks;
@@ -131,7 +130,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             }
             return apprenticeshipLocations;
         }
-        internal List<LocationRef> CreateLocationRef(IEnumerable<ApprenticeshipLocation> locations, Apprenticeship apprenticeship)
+        internal List<LocationRef> CreateLocationRef(IEnumerable<ApprenticeshipLocation> locations)
         {
             List<LocationRef> locationRefs = new List<LocationRef>();
             var subRegionItemModels = new SelectRegionModel().RegionItems.SelectMany(x => x.SubRegion);
@@ -144,7 +143,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                         locationRefs.Add(new LocationRef
                         {
                             ID = subRegionItemModels.Where(x => x.Id == region).Select(y => y.ApiLocationId.Value).FirstOrDefault(),
-                            GuidID = location.Id,
                             DeliveryModes = ConvertToApprenticeshipDeliveryModes(location.DeliveryModes),
                             Radius = location.Radius.HasValue ? location.Radius.Value : 0
                         }) ;
@@ -154,8 +152,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                 {
                     locationRefs.Add(new LocationRef
                     {
-                        ID = location.LocationId,
-                        GuidID = location.Id,
+                        ID = location.TribalId ?? location.LocationId,
                         DeliveryModes = ConvertToApprenticeshipDeliveryModes(location.DeliveryModes),
                         Radius = location.Radius.HasValue ? location.Radius.Value : 0
                     });

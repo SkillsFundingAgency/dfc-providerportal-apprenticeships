@@ -8,7 +8,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Tribal
     {
         List<int> DeliveryModes { get; set; }
         int? ID { get; set; }
-        Guid GuidID { get; set; }
         int Radius { get; set; }
     }
 }
