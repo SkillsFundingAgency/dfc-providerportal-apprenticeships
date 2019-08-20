@@ -130,7 +130,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                     {
                         Address1 = region.SubRegionName,
                         Latitude = region.Latitude,
-                        Longitude = region.Longitude,
+                        Longitude = region.Longitude
                         
                     },
                     
@@ -155,7 +155,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                             ID = subRegionItemModels.Where(x => x.Id == region).Select(y => y.ApiLocationId.Value).FirstOrDefault(),
                             DeliveryModes = ConvertToApprenticeshipDeliveryModes(location.DeliveryModes),
                             Radius = 10
-                        }) ;
+                        });
                     }
                 }
                 else
