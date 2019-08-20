@@ -290,7 +290,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
             foreach(var ukprn in listOfProviderUKPRN)
             {
                 var providerApprenticeships = apprenticeships.Where(x => x.ProviderUKPRN.ToString() == ukprn && x.RecordStatus == RecordStatus.Live).ToList();
-
+                
                 var providerDetailsList = GetProviderDetails(ukprn);
                 if(providerDetailsList != null && providerDetailsList.Count() > 0)
                 {
@@ -299,7 +299,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
                     var apprenticeshipLocations = providerApprenticeships.Where(x => x.ApprenticeshipLocations != null)
                                                  .SelectMany(x => x.ApprenticeshipLocations);
                     
-                    tribalProvider.Locations = _tribalHelper.ApprenticeshipLocationsToLocations(apprenticeshipLocations);
+                    tribalProvider.Locations = _tribalHelper.ApprenticeshipLocationsToLocations(apprenticeshipLocations.Where(x => x.RecordStatus == RecordStatus.Live));
                     tribalProvider.Standards = _tribalHelper.ApprenticeshipsToStandards(providerApprenticeships.Where(x => x.StandardCode.HasValue));
                     tribalProvider.Frameworks = _tribalHelper.ApprenticeshipsToFrameworks(providerApprenticeships.Where(x => x.FrameworkCode.HasValue));
                     providers.Add(tribalProvider);
@@ -310,15 +310,15 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
         public async Task<IEnumerable<IApprenticeship>> GetUpdatedApprenticeships()
         {
             IEnumerable<Apprenticeship> persisted = null;
-            DateTime dateToCheckAgainst = DateTime.Now.Subtract(TimeSpan.FromDays(1));
+            
             using (var client = _cosmosDbHelper.GetClient())
             {
                 await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
                 await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
 
                 var docs = _cosmosDbHelper.GetApprenticeshipCollection(client, _settings.ApprenticeshipCollectionId);
-                persisted = docs.Where(x => x.UpdatedDate.HasValue && x.UpdatedDate > dateToCheckAgainst ||
-                                       x.CreatedDate > dateToCheckAgainst && x.RecordStatus == RecordStatus.Live).ToList();
+                persisted = OnlyUpdatedCourses(docs);
+                persisted = RemoveNonLiveApprenticeships(persisted);
             }
 
             return persisted;
@@ -326,6 +326,25 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
         internal IEnumerable<Provider> GetProviderDetails(string UKPRN)
         {
             return new ProviderServiceWrapper(_providerServiceSettings).GetProviderByUKPRN(UKPRN);
+        }
+        internal IEnumerable<Apprenticeship> OnlyUpdatedCourses(IEnumerable<Apprenticeship> apprenticeships)
+        {
+            DateTime dateToCheckAgainst = DateTime.Now.Subtract(TimeSpan.FromDays(1));
+
+            return apprenticeships.Where(x => x.UpdatedDate.HasValue && x.UpdatedDate > dateToCheckAgainst ||
+                                       x.CreatedDate > dateToCheckAgainst && x.RecordStatus == RecordStatus.Live).ToList();
+        }
+        internal IEnumerable<Apprenticeship> RemoveNonLiveApprenticeships(IEnumerable<Apprenticeship> apprenticeships)
+        {
+            List<Apprenticeship> editedList = new List<Apprenticeship>();
+            foreach(var apprenticeship in apprenticeships)
+            {
+                if(apprenticeship.ApprenticeshipLocations.All(x => x.RecordStatus == RecordStatus.Live))
+                {
+                    editedList.Add(apprenticeship);
+                }
+            }
+            return editedList;
         }
 
     }
