@@ -11,12 +11,13 @@ using Dfc.ProviderPortal.Apprenticeships.Models;
 using Dfc.ProviderPortal.Packages.AzureFunctions.DependencyInjection;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Functions
 {
-    public static class GetApprenticeshipsAsProviderByUKPRN
+    public static class GetUpdatedApprenticeshipsAsProviderByUKPRN
     {
-        [FunctionName("GetApprenticeshipsAsProviderByUKPRN")]
+        [FunctionName("GetUpdatedApprenticeshipsAsProviderByUKPRN")]
         public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
                                                     ILogger log,
                                                     [Inject] IApprenticeshipService apprenticeshipService)
@@ -32,11 +33,11 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
 
             try
             {
-                persisted = (List<Apprenticeship>)await apprenticeshipService.GetApprenticeshipByUKPRN(UKPRN);
+                persisted = (List<Apprenticeship>)await apprenticeshipService.GetUpdatedApprenticeships();
                 if (persisted == null)
                     return new NotFoundObjectResult(UKPRN);
 
-                var providers = apprenticeshipService.ApprenticeshipsToTribalProviders(persisted);
+                var providers = apprenticeshipService.ApprenticeshipsToTribalProviders(persisted.Where(x => x.ProviderUKPRN == UKPRN).ToList());
                 return new OkObjectResult(providers);
 
             }

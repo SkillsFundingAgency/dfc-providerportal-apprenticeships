@@ -147,13 +147,13 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
         {
             return Ok();
         }
-        [Route("GetApprenticeshipsAsProviderByUKPRN")]
+        [Route("GetUpdatedApprenticeshipsAsProviderByUKPRN")]
         [HttpPost]
         [ProducesResponseType(typeof(IEnumerable<TribalProvider>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetApprenticeshipsAsProviderByUKPRN(int UKPRN)
+        public IActionResult GetUpdatedApprenticeshipsAsProviderByUKPRN(int UKPRN)
         {
             return Ok();
         }
