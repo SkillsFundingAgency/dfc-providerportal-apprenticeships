@@ -52,6 +52,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                             Name = location.Name,
                             Phone = location.Phone,
                             Website = location.Address != null ? location.Address.Website : string.Empty
+                            
                         });
                     }
 
@@ -65,7 +66,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             List<Standard> standards = new List<Standard>();
             foreach (var apprenticeship in apprenticeships)
             {
-                if(AllLiveApprenticeshipLocations(apprenticeship.ApprenticeshipLocations))
+                if (AllLiveApprenticeshipLocations(apprenticeship.ApprenticeshipLocations))
                 {
                     standards.Add(new Standard
                     {
@@ -90,7 +91,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
 
             foreach (var apprenticeship in apprenticeships)
             {
-                if(AllLiveApprenticeshipLocations(apprenticeship.ApprenticeshipLocations))
+                if (AllLiveApprenticeshipLocations(apprenticeship.ApprenticeshipLocations))
                 {
                     frameworks.Add(new Framework
                     {
@@ -130,7 +131,9 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                         Address1 = region.SubRegionName,
                         Latitude = region.Latitude,
                         Longitude = region.Longitude
+                        
                     },
+                    
 
                 };
                 apprenticeshipLocations.Add(location);
@@ -151,8 +154,8 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                         {
                             ID = subRegionItemModels.Where(x => x.Id == region).Select(y => y.ApiLocationId.Value).FirstOrDefault(),
                             DeliveryModes = ConvertToApprenticeshipDeliveryModes(location.DeliveryModes),
-                            Radius = location.Radius.HasValue ? location.Radius.Value : 0
-                        }) ;
+                            Radius = 10
+                        });
                     }
                 }
                 else
