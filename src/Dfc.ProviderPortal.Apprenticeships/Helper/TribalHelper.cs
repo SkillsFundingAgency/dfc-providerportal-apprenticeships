@@ -65,20 +65,22 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             List<Standard> standards = new List<Standard>();
             foreach (var apprenticeship in apprenticeships)
             {
-
-                standards.Add(new Standard
+                if(AllLiveApprenticeshipLocations(apprenticeship.ApprenticeshipLocations))
                 {
-                    StandardCode = apprenticeship.StandardCode.Value,
-                    MarketingInfo = apprenticeship.MarketingInformation,
-                    StandardInfoUrl = apprenticeship.Url,
-                    Contact = new Contact
+                    standards.Add(new Standard
                     {
-                        ContactUsUrl = apprenticeship.Url,
-                        Email = apprenticeship.ContactEmail,
-                        Phone = apprenticeship.ContactTelephone
-                    },
-                    Locations = CreateLocationRef(apprenticeship.ApprenticeshipLocations)
-                });
+                        StandardCode = apprenticeship.StandardCode.Value,
+                        MarketingInfo = apprenticeship.MarketingInformation,
+                        StandardInfoUrl = apprenticeship.Url,
+                        Contact = new Contact
+                        {
+                            ContactUsUrl = apprenticeship.Url,
+                            Email = apprenticeship.ContactEmail,
+                            Phone = apprenticeship.ContactTelephone
+                        },
+                        Locations = CreateLocationRef(apprenticeship.ApprenticeshipLocations)
+                    });
+                }
             }
             return standards;
         }
@@ -88,26 +90,31 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
 
             foreach (var apprenticeship in apprenticeships)
             {
-                frameworks.Add(new Framework
+                if(AllLiveApprenticeshipLocations(apprenticeship.ApprenticeshipLocations))
                 {
-                    FrameworkCode = apprenticeship.FrameworkCode.Value,
-                    FrameworkInfoUrl = apprenticeship.Url,
-                    Level = !string.IsNullOrEmpty(apprenticeship.NotionalNVQLevelv2) ? int.Parse(apprenticeship.NotionalNVQLevelv2) : (int?)null,
-                    //Locations
-                    MarketingInfo = apprenticeship.MarketingInformation,
-                    PathwayCode = apprenticeship.PathwayCode.HasValue ? apprenticeship.PathwayCode.Value : (int?)null,
-                    ProgType = apprenticeship.ProgType.HasValue ? apprenticeship.ProgType.Value : (int?)null,
-                    Contact = new Contact
+                    frameworks.Add(new Framework
                     {
-                        ContactUsUrl = apprenticeship.ContactWebsite,
-                        Email = apprenticeship.ContactEmail,
-                        Phone = apprenticeship.ContactTelephone
-                    },
-                    Locations = CreateLocationRef(apprenticeship.ApprenticeshipLocations)
-                });
+                        FrameworkCode = apprenticeship.FrameworkCode.Value,
+                        FrameworkInfoUrl = apprenticeship.Url,
+                        Level = !string.IsNullOrEmpty(apprenticeship.NotionalNVQLevelv2) ? int.Parse(apprenticeship.NotionalNVQLevelv2) : (int?)null,
+                        //Locations
+                        MarketingInfo = apprenticeship.MarketingInformation,
+                        PathwayCode = apprenticeship.PathwayCode.HasValue ? apprenticeship.PathwayCode.Value : (int?)null,
+                        ProgType = apprenticeship.ProgType.HasValue ? apprenticeship.ProgType.Value : (int?)null,
+                        Contact = new Contact
+                        {
+                            ContactUsUrl = apprenticeship.ContactWebsite,
+                            Email = apprenticeship.ContactEmail,
+                            Phone = apprenticeship.ContactTelephone
+                        },
+                        Locations = CreateLocationRef(apprenticeship.ApprenticeshipLocations)
+                    });
+                }
+
             }
             return frameworks;
         }
+
         public List<Location> RegionsToLocations(string[] regionCodes)
         {
             List<Location> apprenticeshipLocations = new List<Location>();
@@ -193,6 +200,13 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             }
             tribalList.Sort();
             return tribalList;
+        }
+        internal bool AllLiveApprenticeshipLocations(IEnumerable<ApprenticeshipLocation> locations)
+        {
+            if (locations.Any(x => x.RecordStatus != RecordStatus.Live))
+                return false;
+            else
+                return true;
         }
     }
 }
