@@ -55,6 +55,12 @@
       },
       "providerServiceSettingsApiKey": {
         "value": "__providerServiceSettingsApiKey__"
+      },
+      "referenceDataServiceApiUrl": {
+        "value": "__referenceDataApiUrl__"
+      },
+      "referenceDataServiceApiKey": {
+        "value": "__apimKey__"
       }
     }
   }

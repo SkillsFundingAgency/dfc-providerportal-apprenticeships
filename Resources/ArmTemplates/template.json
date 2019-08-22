@@ -110,6 +110,18 @@
         "metadata": {
           "description": "Provider API service key"
         }
+      },
+      "referenceDataServiceApiUrl": {
+        "type": "string",
+        "metadata": {
+          "description": "Reference Data API url"
+        }
+      },
+      "referenceDataServiceApiKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Reference Data API service key"
+        }
       }
     },
     "variables": {
@@ -213,6 +225,14 @@
                 {
                   "name": "ProviderServiceSettings__ApiKey",
                   "value": "[parameters('providerServiceSettingsApiKey')]"
+                },
+                {
+                  "name": "ReferenceDataServiceSettings__ApiUrl",
+                  "value": "[parameters('referenceDataServiceApiUrl')]"
+                },
+                {
+                  "name": "ReferenceDataServiceSettings__ApiKey",
+                  "value": "[parameters('referenceDataServiceApiKey')]"
                 }
               ]
             },
