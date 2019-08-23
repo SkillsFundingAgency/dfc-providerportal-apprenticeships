@@ -52,6 +52,12 @@
       },
       "providerServiceSettingsApiKey": {
         "value": "not-a-real-api-key"
+      },
+      "referenceDataServiceApiUrl": {
+        "value": "https://apim-instance/referencedata/api/"
+      },
+      "referenceDataServiceApiKey": {
+        "value": "not-a-real-api-key"
       }
     }
   }
