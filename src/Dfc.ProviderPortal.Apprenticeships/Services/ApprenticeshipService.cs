@@ -331,8 +331,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
         {
             DateTime dateToCheckAgainst = DateTime.Now.Subtract(TimeSpan.FromDays(1));
 
-            return apprenticeships.Where(x => x.UpdatedDate.HasValue && x.UpdatedDate > dateToCheckAgainst ||
-                                       x.CreatedDate > dateToCheckAgainst && x.RecordStatus == RecordStatus.Live).ToList();
+            return apprenticeships.Where(x => x.UpdatedDate.HasValue && x.UpdatedDate > dateToCheckAgainst && x.RecordStatus == RecordStatus.Live).ToList();
         }
         internal IEnumerable<Apprenticeship> RemoveNonLiveApprenticeships(IEnumerable<Apprenticeship> apprenticeships)
         {
