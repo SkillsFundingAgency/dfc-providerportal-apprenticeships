@@ -4,6 +4,7 @@ using Dfc.ProviderPortal.Apprenticeships.Models;
 using Dfc.ProviderPortal.Apprenticeships.Models.Enums;
 using Dfc.ProviderPortal.Apprenticeships.Models.Providers;
 using Dfc.ProviderPortal.Apprenticeships.Models.Tribal;
+using Dfc.ProviderPortal.Packages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,16 +14,22 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
 {
     public class TribalHelper : ITribalHelper
     {
+        private readonly IReferenceDataServiceWrapper _referenceDataServiceWrapper;
+        public TribalHelper(IReferenceDataServiceWrapper referenceDataServiceWrapper)
+        {
+            Throw.IfNull(referenceDataServiceWrapper, nameof(referenceDataServiceWrapper));
+            _referenceDataServiceWrapper = referenceDataServiceWrapper;
+        }
         public TribalProvider CreateTribalProviderFromProvider(Provider provider)
         {
             var contactDetails = provider.ProviderContact.FirstOrDefault();
-
+            var feChoice = _referenceDataServiceWrapper.GetFeChoicesByUKPRN(provider.UnitedKingdomProviderReferenceNumber).FirstOrDefault();
             return new TribalProvider
             {
                 Id = int.Parse(provider.UnitedKingdomProviderReferenceNumber),
                 Email = contactDetails != null ? contactDetails.ContactEmail : string.Empty,
-                EmployerSatisfaction = 0.0,
-                LearnerSatisfaction = 0.0,
+                EmployerSatisfaction = feChoice.EmployerSatisfaction ?? 0.0,
+                LearnerSatisfaction = feChoice.LearnerSatisfaction ?? 0.0,
                 MarketingInfo = provider.MarketingInformation,
                 Name = provider.ProviderName,
                 NationalProvider = provider.NationalApprenticeshipProvider,
