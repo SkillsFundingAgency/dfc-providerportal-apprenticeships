@@ -26,5 +26,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Helper
         Task<List<string>> DeleteDocumentsByUKPRN(DocumentClient client, string collectionId, int UKPRN);
         List<Apprenticeship> GetApprenticeshipCollection(DocumentClient client, string collectionId);
         List<StandardsAndFrameworks> GetStandardByCode(DocumentClient client, string collectionId, int standardCode, int version);
+        List<StandardsAndFrameworks> GetFrameworkByCode(DocumentClient client, string collectionId, int frameworkCode, int progType, int pathwayCode);
     }
 }

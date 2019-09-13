@@ -27,5 +27,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Services
         Task<IEnumerable<IApprenticeship>> GetUpdatedApprenticeships();
         IEnumerable<IStandardsAndFrameworks> CheckForDuplicateApprenticeships(IEnumerable<IStandardsAndFrameworks> standardsAndFrameworks, int UKPRN);
         Task<List<StandardsAndFrameworks>> GetStandardByCode(int standardCode, int standardVersion);
+        Task<List<StandardsAndFrameworks>> GetFrameworkByCode(int frameworkCode, int progType, int pathwayCode);
     }
 }

@@ -192,6 +192,22 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
             return persisted;
         }
 
+        public async Task<List<StandardsAndFrameworks>> GetFrameworkByCode(int frameworkCode, int progType, int pathwayCode)
+        {
+
+            List<StandardsAndFrameworks> persisted = null;
+
+            using (var client = _cosmosDbHelper.GetClient())
+            {
+                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
+                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.StandardsCollectionId);
+                var doc = _cosmosDbHelper.GetFrameworkByCode(client, _settings.FrameworksCollectionId, frameworkCode, progType, pathwayCode);
+                persisted = doc;
+            }
+
+            return persisted;
+        }
+
         public async Task<IEnumerable<IApprenticeship>> GetApprenticeshipByUKPRN(int UKPRN)
         {
             Throw.IfNull<int>(UKPRN, nameof(UKPRN));
