@@ -211,7 +211,36 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             }
             return docs;
         }
+        public List<StandardsAndFrameworks> GetStandardByCode(DocumentClient client, string collectionId, int standardCode, int version)
+        {
+            Throw.IfNull(client, nameof(client));
+            Throw.IfNullOrWhiteSpace(collectionId, nameof(collectionId));
 
+            Uri uri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, collectionId);
+            FeedOptions options = new FeedOptions { EnableCrossPartitionQuery = true, MaxItemCount = -1 };
+
+            List<StandardsAndFrameworks> docs = client.CreateDocumentQuery<StandardsAndFrameworks>(uri, options)
+                                             .Where(x => x.StandardCode == standardCode && x.Version == version)
+                                             .ToList();
+
+            return docs;
+        }
+        public List<StandardsAndFrameworks> GetFrameworkByCode(DocumentClient client, string collectionId, int frameworkCode, int progType, int pathwayCode)
+        {
+            Throw.IfNull(client, nameof(client));
+            Throw.IfNullOrWhiteSpace(collectionId, nameof(collectionId));
+
+            Uri uri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, collectionId);
+            FeedOptions options = new FeedOptions { EnableCrossPartitionQuery = true, MaxItemCount = -1 };
+
+            List<StandardsAndFrameworks> docs = client.CreateDocumentQuery<StandardsAndFrameworks>(uri, options)
+                                             .Where(x => x.FrameworkCode == frameworkCode 
+                                                        && x.ProgType == progType 
+                                                        && x.PathwayCode == pathwayCode)
+                                             .ToList();
+
+            return docs;
+        }
         public async Task<List<string>> DeleteBulkUploadApprenticeships(DocumentClient client, string collectionId, int UKPRN)
         {
             Throw.IfNull(client, nameof(client));

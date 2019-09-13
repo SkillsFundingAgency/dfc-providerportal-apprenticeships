@@ -102,7 +102,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
                     {
                         var anyApprenticeshipForStandards = apprenticeships.Where(x => x.StandardCode.HasValue && 
                                                                       x.StandardCode == item.StandardCode && 
-                                                                      x.Version.ToString() == item.Version);
+                                                                      x.Version == item.Version);
                         if (anyApprenticeshipForStandards.Any())
                         {
                             item.AlreadyCreated = true;
@@ -172,6 +172,37 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
                         }
                 }
                 
+            }
+
+            return persisted;
+        }
+        public async Task<List<StandardsAndFrameworks>> GetStandardByCode(int standardCode, int standardVersion)
+        {
+
+            List<StandardsAndFrameworks> persisted = null;
+
+            using (var client = _cosmosDbHelper.GetClient())
+            {
+                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
+                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.StandardsCollectionId);
+                var doc = _cosmosDbHelper.GetStandardByCode(client, _settings.StandardsCollectionId, standardCode, standardVersion);
+                persisted = doc;
+            }
+
+            return persisted;
+        }
+
+        public async Task<List<StandardsAndFrameworks>> GetFrameworkByCode(int frameworkCode, int progType, int pathwayCode)
+        {
+
+            List<StandardsAndFrameworks> persisted = null;
+
+            using (var client = _cosmosDbHelper.GetClient())
+            {
+                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
+                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.StandardsCollectionId);
+                var doc = _cosmosDbHelper.GetFrameworkByCode(client, _settings.FrameworksCollectionId, frameworkCode, progType, pathwayCode);
+                persisted = doc;
             }
 
             return persisted;

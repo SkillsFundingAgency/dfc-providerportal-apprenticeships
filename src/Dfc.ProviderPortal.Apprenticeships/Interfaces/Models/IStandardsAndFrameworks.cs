@@ -10,7 +10,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Models
 
         //Standard Model
         int? StandardCode { get; set; }
-        string Version { get; set; }
+        int? Version { get; set; }
         string StandardName { get; set; }
         string StandardSectorCode { get; set; }
         string URLLink { get; set; }

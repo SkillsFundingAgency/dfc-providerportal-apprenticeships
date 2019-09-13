@@ -157,5 +157,25 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
         {
             return Ok();
         }
+        [Route("GetStandardByCode")]
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<StandardsAndFrameworks>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GetStandardByCode(string standardCode, string version)
+        {
+            return Ok();
+        }
+        [Route("GetFrameworkByCode")]
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<StandardsAndFrameworks>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GetFrameworkByCode(int frameworkCode, int progType, int pathwayCode)
+        {
+            return Ok();
+        }
     }
 }
