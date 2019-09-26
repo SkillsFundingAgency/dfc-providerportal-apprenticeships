@@ -43,5 +43,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Models
         public string UpdatedBy { get; set; }
 
         public string NotionalNVQLevelv2 { get; set; }
+        public List<BulkUploadError> BulkUploadErrors { get; set; }
     }
 }

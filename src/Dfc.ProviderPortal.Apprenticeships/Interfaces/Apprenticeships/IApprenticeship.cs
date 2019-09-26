@@ -41,7 +41,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Apprenticeships
         string CreatedBy { get; set; }
         DateTime? UpdatedDate { get; set; }
         string UpdatedBy { get; set; }
-
+        List<BulkUploadError> BulkUploadErrors { get; set; }
         string NotionalNVQLevelv2 { get; set; }
     }
 }
