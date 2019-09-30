@@ -88,13 +88,13 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
             return Ok();
         }
 
-        [Route("DeleteBulkUploadCourses")]
+        [Route("DeleteBulkUploadApprenticeships")]
         [HttpGet]
         [ProducesResponseType(typeof(DeleteBulkUploadApprenticeships), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult DeleteBulkUploadCourses(int UKPRN)
+        public IActionResult DeleteBulkUploadApprenticeships(int UKPRN)
         {
             return Ok();
         }
