@@ -26,7 +26,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Apprenticeships
         int? PathwayCode { get; set; }
         int? StandardCode { get; set; }
         int? Version { get; set; }
-
         // Common properties for Standard & Framework
         string MarketingInformation { get; set; }
         string Url { get; set; }
@@ -34,14 +33,16 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Apprenticeships
         string ContactEmail { get; set; }
         string ContactWebsite { get; set; }
 
-        IEnumerable<ApprenticeshipLocation> ApprenticeshipLocations { get; set; }
+        List<ApprenticeshipLocation> ApprenticeshipLocations { get; set; }
+
         // Standard auditing properties 
         RecordStatus RecordStatus { get; set; }
         DateTime CreatedDate { get; set; }
         string CreatedBy { get; set; }
         DateTime? UpdatedDate { get; set; }
         string UpdatedBy { get; set; }
-        List<BulkUploadError> BulkUploadErrors { get; set; }
+
         string NotionalNVQLevelv2 { get; set; }
+        List<BulkUploadError> BulkUploadErrors { get; set; }
     }
 }
