@@ -11,6 +11,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Models
 
         public int? ApprenticeshipId { get; set; } // For backwards compatibility with Tribal
         public int? TribalProviderId { get; set; } // For backwards compatibility with Tribal
+
         public string ApprenticeshipTitle { get; set; }
         public Guid ProviderId { get; set; } // ???
         public int ProviderUKPRN { get; set; } // As we are trying to inforce unique UKPRN per Provider
@@ -33,7 +34,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Models
         public string ContactTelephone { get; set; }
         public string ContactEmail { get; set; }
         public string ContactWebsite { get; set; }
-        public IEnumerable<ApprenticeshipLocation> ApprenticeshipLocations { get; set; }
+        public List<ApprenticeshipLocation> ApprenticeshipLocations { get; set; }
 
         // Standard auditing properties 
         public RecordStatus RecordStatus { get; set; }
@@ -42,7 +43,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Models
         public DateTime? UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
 
-        public string NotionalNVQLevelv2 { get; set; }
         public List<BulkUploadError> BulkUploadErrors { get; set; }
+        public string NotionalNVQLevelv2 { get; set; }
     }
 }
