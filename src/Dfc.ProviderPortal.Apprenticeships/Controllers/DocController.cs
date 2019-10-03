@@ -79,7 +79,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
         }
 
         [Route("ChangeApprenticeshipStatusForUKPRNSelection")]
-        [HttpPost]
+        [HttpGet]
         [ProducesResponseType(typeof(ChangeApprenticeshipStatusForUKPRNSelection), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
