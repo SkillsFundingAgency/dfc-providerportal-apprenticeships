@@ -259,7 +259,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             foreach (var doc in docs)
             {
                 Uri docUri = UriFactory.CreateDocumentUri(_settings.DatabaseId, collectionId, doc.id.ToString());
-                var result = await client.DeleteDocumentAsync(docUri);
+                var result = await client.DeleteDocumentAsync(docUri, new RequestOptions(){PartitionKey = new PartitionKey(doc.ProviderUKPRN)});
 
                 if (result.StatusCode == HttpStatusCode.NoContent)
                 {
