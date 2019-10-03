@@ -83,7 +83,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
         [ProducesResponseType(typeof(ChangeApprenticeshipStatusForUKPRNSelection), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult ChangeApprenticeshipStatusForUKPRNSelection(int UKPRN)
+        public IActionResult ChangeApprenticeshipStatusForUKPRNSelection(int UKPRN, int CurrentStatus, int StatusToBeChangedTo)
         {
             return Ok();
         }
