@@ -16,7 +16,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
     public static class ChangeApprenticeshipStatusForUKPRNSelection
     {
         [FunctionName("ChangeApprenticeshipStatusForUKPRNSelection")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequestMessage req,
+        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequestMessage req,
             ILogger log,
             [Inject] IApprenticeshipService apprenticeshipService)
         {
