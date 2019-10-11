@@ -45,5 +45,8 @@ namespace Dfc.ProviderPortal.Apprenticeships.Models
 
         public List<BulkUploadError> BulkUploadErrors { get; set; }
         public string NotionalNVQLevelv2 { get; set; }
+        public List<ApprenticeshipQaCompliance> ApprenticeshipQaCompliance { get; set; }
+        public List<ApprenticeshipQaStyle> ApprenticeshipQaStyles { get; set; }
+
     }
 }
