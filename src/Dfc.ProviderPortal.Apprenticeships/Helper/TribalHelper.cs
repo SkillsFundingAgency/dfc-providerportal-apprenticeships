@@ -24,18 +24,21 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
         {
             var contactDetails = provider.ProviderContact.FirstOrDefault();
             var feChoice = _referenceDataServiceWrapper.GetFeChoicesByUKPRN(provider.UnitedKingdomProviderReferenceNumber).FirstOrDefault();
+
             return new TribalProvider
             {
                 Id = int.Parse(provider.UnitedKingdomProviderReferenceNumber),
-                Email = contactDetails != null ? contactDetails.ContactEmail : string.Empty,
-                EmployerSatisfaction = feChoice.EmployerSatisfaction ?? 0.0,
-                LearnerSatisfaction = feChoice.LearnerSatisfaction ?? 0.0,
-                MarketingInfo = provider.MarketingInformation,
-                Name = provider.ProviderName,
+                Email = contactDetails?.ContactEmail ?? string.Empty,
+                EmployerSatisfaction = feChoice?.EmployerSatisfaction ?? 0.0,
+                LearnerSatisfaction = feChoice?.LearnerSatisfaction ?? 0.0,
+                MarketingInfo = provider.MarketingInformation ?? string.Empty,
+                Name = provider.ProviderName ?? string.Empty,
                 NationalProvider = provider.NationalApprenticeshipProvider,
                 UKPRN = int.Parse(provider.UnitedKingdomProviderReferenceNumber),
-                Website = contactDetails != null ? contactDetails.ContactWebsiteAddress : string.Empty
+                Website = contactDetails?.ContactWebsiteAddress ?? string.Empty
             };
+            
+
 
         }
         public List<Location> ApprenticeshipLocationsToLocations(IEnumerable<ApprenticeshipLocation> locations)
