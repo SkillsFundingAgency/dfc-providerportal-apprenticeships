@@ -41,7 +41,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
             if (string.IsNullOrWhiteSpace(pathwayCodeFromQuery))
                 return new BadRequestObjectResult($"Empty or missing Pathway code value.");
 
-            if (!int.TryParse(progTypeFromQuery, out int pathwayCode))
+            if (!int.TryParse(pathwayCodeFromQuery, out int pathwayCode))
                 return new BadRequestObjectResult($"Invalid Pathway code value, expected a valid integer");
 
             try
