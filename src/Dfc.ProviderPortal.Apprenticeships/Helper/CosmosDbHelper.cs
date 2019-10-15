@@ -15,11 +15,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Dfc.ProviderPortal.Apprenticeships.Models.Enums;
 using Microsoft.Azure.Documents.Linq;
+using System.Text.RegularExpressions;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Helper
 {
     public class CosmosDbHelper : ICosmosDbHelper
     {
+        private static readonly Regex _searchableChars = new Regex("[^a-z0-9]", RegexOptions.IgnoreCase);
+
         private readonly ICosmosDbSettings _settings;
 
         public CosmosDbHelper(IOptions<CosmosDbSettings> settings)
@@ -158,11 +161,11 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                 case "standards":
                     {
                         docs = (from string s in formattedSearch
-                                           from StandardsAndFrameworks saf
-                                           in allDocs where saf.StandardName.ToLower().Contains(s)
-                                           group saf by saf.StandardName into grouped
-                                           where grouped.Count() == formattedSearch.Count
-                                           select grouped.FirstOrDefault()).ToList();
+                                from StandardsAndFrameworks saf
+                                in allDocs
+                                let searchWords = FormatSearchTerm(saf.StandardName)
+                                where IsMatch(formattedSearch, searchWords)
+                                select saf).ToList();
                         docs.Select(x => { x.ApprenticeshipType = Models.Enums.ApprenticeshipType.StandardCode; return x; }).ToList();
                         break;
                     }
@@ -171,17 +174,24 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                         docs = (from string s in formattedSearch
                                 from StandardsAndFrameworks saf
                                 in allDocs
-                                where saf.NasTitle.ToLower().Contains(s)
-                                group saf by saf.NasTitle into grouped
-                                where grouped.Count() == formattedSearch.Count
-                                select grouped.FirstOrDefault()).ToList();
+                                let searchWords = FormatSearchTerm(saf.NasTitle)
+                                where IsMatch(formattedSearch, searchWords)
+                                select saf).ToList();
                         docs.Select(x => { x.ApprenticeshipType = Models.Enums.ApprenticeshipType.FrameworkCode; return x; }).ToList();
-
-
                         break;
                     }
             }
             return docs;
+
+            bool IsMatch(IEnumerable<string> searchWords, IEnumerable<string> referenceWords)
+            {
+                // Match whenever any search term is found in reference words using a prefix match
+                // i.e. search for 'retail' should match 'retail' & 'retailer'
+                // but search for 'etail' should not match either
+                // *unless* the search term is a number in which case the entire word must match
+
+                return searchWords.Any(s => referenceWords.Any(r => s.All(Char.IsDigit) ? r.Equals(s) : r.StartsWith(s)));
+            }
         }
 
         public List<StandardsAndFrameworks> GetProgTypesForFramework(DocumentClient client, string collectionId, List<StandardsAndFrameworks> docs)
@@ -322,11 +332,9 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
         {
             Throw.IfNullOrWhiteSpace(searchTerm, nameof(searchTerm));
 
-            var split = searchTerm
+            var split = _searchableChars.Replace(searchTerm, " ")
                 .ToLower()
-                .Split(' ')
-                .Select(x => x.Trim())
-                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries)
                 .ToList();
 
             return split;
