@@ -126,6 +126,20 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             return docs;
         }
 
+        public IList<T> GetDocumentsByUKPRN<T>(DocumentClient client, string collectionId, int UKPRN)
+        {
+            Throw.IfNull(client, nameof(client));
+            Throw.IfNullOrWhiteSpace(collectionId, nameof(collectionId));
+            Throw.IfNull(UKPRN, nameof(UKPRN));
+
+            Uri uri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, collectionId);
+            FeedOptions options = new FeedOptions { EnableCrossPartitionQuery = true, MaxItemCount = -1 };
+
+
+            var docs = client.CreateDocumentQuery<T>(uri, $"SELECT * FROM c WHERE c.ProviderUKPRN = {UKPRN}");
+
+            return docs == null ? new List<T>() : docs.ToList();
+        }
 
         public async Task<Document> UpdateDocumentAsync(
             DocumentClient client,

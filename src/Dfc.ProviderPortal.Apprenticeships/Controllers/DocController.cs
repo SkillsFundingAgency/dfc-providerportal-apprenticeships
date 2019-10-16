@@ -24,6 +24,16 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
             return Ok();
         }
 
+        [Route("AddApprenticeshipMigrationReport")]
+        [HttpPost]
+        [ProducesResponseType(typeof(ApprenticeshipMigrationReport), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult AddApprenticeshipMigrationReport()
+        {
+            return Ok();
+        }
+
         [Route("GetApprenticeshipByUKPRN")]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<Apprenticeship>), StatusCodes.Status200OK)]
