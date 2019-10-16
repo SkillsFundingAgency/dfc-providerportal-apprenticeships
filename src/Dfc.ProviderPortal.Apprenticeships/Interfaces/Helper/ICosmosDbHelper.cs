@@ -27,5 +27,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Helper
         List<Apprenticeship> GetApprenticeshipCollection(DocumentClient client, string collectionId);
         List<StandardsAndFrameworks> GetStandardByCode(DocumentClient client, string collectionId, int standardCode, int version);
         List<StandardsAndFrameworks> GetFrameworkByCode(DocumentClient client, string collectionId, int frameworkCode, int progType, int pathwayCode);
+        IList<T> GetDocumentsByUKPRN<T>(DocumentClient client, string collectionId, int UKPRN);
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.Azure.WebJobs.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using Dfc.ProviderPortal.Apprenticeships.Interfaces.Apprenticeships;
 
 [assembly: WebJobsStartup(typeof(WebJobsExtensionStartup), "Web Jobs Extension Startup")]
 
@@ -36,6 +37,7 @@ namespace Dfc.ProviderPortal.Apprenticeships
             builder.Services.AddScoped<ICosmosDbHelper, CosmosDbHelper>();
             builder.Services.AddScoped<ITribalHelper, TribalHelper>();
             builder.Services.AddScoped<IApprenticeshipService, ApprenticeshipService>();
+            builder.Services.AddScoped<IApprenticeshipMigrationReportService, ApprenticeshipMigrationReportService>();
 
 
         }
