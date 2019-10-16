@@ -99,6 +99,12 @@
           "description": "Cosmos DB collection name for app settings"
         }
       },
+      "cosmosDbCollectionApprenticeshipReport": {
+        "type": "string",
+        "metadata": {
+          "description": "Cosmos DB collection name for app settings"
+        }
+      },
       "providerServiceSettingsApiUrl": {
         "type": "string",
         "metadata": {
@@ -233,6 +239,10 @@
                 {
                   "name": "ReferenceDataServiceSettings__ApiKey",
                   "value": "[parameters('referenceDataServiceApiKey')]"
+                },
+                {
+                  "name": "CosmosDbCollectionSettings__ApprenticeshipReportCollectionId",
+                  "value": "[parameters('cosmosDbCollectionApprenticeshipReport')]"
                 }
               ]
             },
