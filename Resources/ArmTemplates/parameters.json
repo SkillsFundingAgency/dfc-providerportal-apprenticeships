@@ -50,6 +50,9 @@
       "cosmosDbCollectionStandards": {
         "value": "__cosmosDbCollectionStandards__"
       },
+      "cosmosDbCollectionApprenticeshipReport": {
+        "value": "__cosmosDbCollectionApprenticeshipReport__"
+      },
       "providerServiceSettingsApiUrl": {
         "value": "__providerServiceSettingsApiUrl__"
       },

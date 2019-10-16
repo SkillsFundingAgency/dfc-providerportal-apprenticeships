@@ -47,6 +47,9 @@
       "cosmosDbCollectionStandards": {
         "value": "standards"
       },
+      "cosmosDbCollectionApprenticeshipReport": {
+        "value": "apprenticeshipReport"
+      },
       "providerServiceSettingsApiUrl": {
         "value": "https://apim-instance/some/path/to/api"
       },
