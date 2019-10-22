@@ -17,7 +17,7 @@
       "sharedResourceGroup": {
         "type": "string",
         "metadata": {
-          "description": "Resource group the app service plan is in"
+          "description": "Resource group the shared resources are in"
         }
       },
       "storageConnectionString": {
