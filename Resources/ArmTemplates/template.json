@@ -371,7 +371,7 @@
             }
           }
         }
-      },
+      }
     ],
     "outputs": {
       "functionAppName": {
