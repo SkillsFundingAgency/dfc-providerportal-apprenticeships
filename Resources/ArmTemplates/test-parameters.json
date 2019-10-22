@@ -8,7 +8,7 @@
       "appServicePlanName": {
         "value": "dfc-dev-ppapprentice-asp"
       },
-      "appServicePlanResourceGroup": {
+      "sharedResourceGroup": {
         "value": "dfc-test-template-rg"
       },
       "storageConnectionString": {
@@ -31,6 +31,9 @@
       },
       "cosmosDbKey": {
         "value": "not-a-real-key"
+      },
+      "cosmosDbAccount": {
+        "value": "myAccount"
       },
       "cosmosDbDatabase": {
         "value": "mydb"
