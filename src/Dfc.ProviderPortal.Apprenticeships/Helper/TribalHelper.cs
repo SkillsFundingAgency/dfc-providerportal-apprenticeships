@@ -24,10 +24,12 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
         {
             var contactDetails = provider.ProviderContact.FirstOrDefault();
             var feChoice = _referenceDataServiceWrapper.GetFeChoicesByUKPRN(provider.UnitedKingdomProviderReferenceNumber).FirstOrDefault();
-
+            TribalProvider tribalProvider = new TribalProvider();         
+            
             return new TribalProvider
-            {
-                Id = int.Parse(provider.UnitedKingdomProviderReferenceNumber),
+            {           
+                
+                Id = tribalProvider.Id ??  int.Parse(provider.UnitedKingdomProviderReferenceNumber),
                 Email = contactDetails?.ContactEmail ?? string.Empty,
                 EmployerSatisfaction = feChoice?.EmployerSatisfaction ?? 0.0,
                 LearnerSatisfaction = feChoice?.LearnerSatisfaction ?? 0.0,
