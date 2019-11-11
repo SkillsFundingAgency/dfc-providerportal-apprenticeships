@@ -146,6 +146,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                     
 
                 };
+                if(!apprenticeshipLocations.Contains(location))
                 apprenticeshipLocations.Add(location);
             }
             return apprenticeshipLocations;
