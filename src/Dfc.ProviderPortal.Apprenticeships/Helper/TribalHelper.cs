@@ -23,12 +23,11 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
         public TribalProvider CreateTribalProviderFromProvider(Provider provider)
         {
             var contactDetails = provider.ProviderContact.FirstOrDefault();
-            var feChoice = _referenceDataServiceWrapper.GetFeChoicesByUKPRN(provider.UnitedKingdomProviderReferenceNumber).FirstOrDefault();
-            var tribalProvider = new TribalProvider();
+            var feChoice = _referenceDataServiceWrapper.GetFeChoicesByUKPRN(provider.UnitedKingdomProviderReferenceNumber).FirstOrDefault();            
 
             return new TribalProvider
             {
-                Id = tribalProvider.Id ??  int.Parse(provider.UnitedKingdomProviderReferenceNumber),
+                Id = provider.ProviderId ??  int.Parse(provider.UnitedKingdomProviderReferenceNumber),
                 Email = contactDetails?.ContactEmail ?? string.Empty,
                 EmployerSatisfaction = feChoice?.EmployerSatisfaction ?? 0.0,
                 LearnerSatisfaction = feChoice?.LearnerSatisfaction ?? 0.0,
