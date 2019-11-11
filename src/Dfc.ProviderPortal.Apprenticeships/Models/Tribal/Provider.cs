@@ -7,7 +7,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Models.Tribal
 {
     public class TribalProvider : ITribalProvider
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string Email { get; set; }
         public double? EmployerSatisfaction { get; set; }
         public List<Framework> Frameworks { get; set; }
