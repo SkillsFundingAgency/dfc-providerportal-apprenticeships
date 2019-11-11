@@ -7,7 +7,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Tribal
 {
     public interface ITribalProvider
     {
-        int Id? { get; set; }
+        int? Id { get; set; }
         string Email { get; set; }
         double? EmployerSatisfaction { get; set; }
         List<Framework> Frameworks { get; set; }
