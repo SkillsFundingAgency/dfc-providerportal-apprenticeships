@@ -366,10 +366,10 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
                     results = new ApprenticeshipDashboardCounts
                     {
                         PublishedApprenticeshipCount = docs.Count(x => x.RecordStatus == RecordStatus.Live),
-
                         BulkUploadPendingCount = docs.Count(x => x.RecordStatus == RecordStatus.BulkUploadPending),
                         BulkUploadReadyToGoLiveCount =  docs.Count(x => x.RecordStatus == RecordStatus.BulkUploadReadyToGoLive),
                         BulkUploadTotalCount = docs.Count(x => x.RecordStatus == RecordStatus.BulkUploadReadyToGoLive || x.RecordStatus == RecordStatus.BulkUploadPending),
+                        TotalErrors = docs.Where(x => x.RecordStatus == RecordStatus.BulkUploadPending).SelectMany(x => x.BulkUploadErrors).Count()
                     
                     };
                 }
