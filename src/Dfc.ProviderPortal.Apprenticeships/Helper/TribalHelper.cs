@@ -54,16 +54,21 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                     }
                     else
                     {
-                        tribalLocations.Add(new Location
+                        var isLocationAdded = tribalLocations.FirstOrDefault(i => i.ID == location.LocationId);
+                        if (isLocationAdded == null)
                         {
-                            ID = location.TribalId ?? location.LocationId,
-                            Address = location.Address ?? null,
-                            Email = location.Address != null ? location.Address.Email : string.Empty,
-                            Name = location.Name,
-                            Phone = location.Phone,
-                            Website = location.Address != null ? location.Address.Website : string.Empty
-                            
-                        });
+
+                            tribalLocations.Add(new Location
+                            {
+                                ID = location.TribalId ?? location.LocationId,
+                                Address = location.Address ?? null,
+                                Email = location.Address != null ? location.Address.Email : string.Empty,
+                                Name = location.Name,
+                                Phone = location.Phone,
+                                Website = location.Address != null ? location.Address.Website : string.Empty
+
+                            });
+                        }
                     }
 
                 }
@@ -141,12 +146,11 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                         Address1 = region.SubRegionName,
                         Latitude = region.Latitude,
                         Longitude = region.Longitude
-                        
+
                     },
                     
-
                 };
-                if(!apprenticeshipLocations.Contains(location))
+            
                 apprenticeshipLocations.Add(location);
             }
             return apprenticeshipLocations;
