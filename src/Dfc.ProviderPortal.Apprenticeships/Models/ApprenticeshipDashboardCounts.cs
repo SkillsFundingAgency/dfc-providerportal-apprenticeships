@@ -10,5 +10,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Models
         public int? BulkUploadPendingCount { get; set; }
         public int? BulkUploadReadyToGoLiveCount { get; set; }
         public int? BulkUploadTotalCount { get; set; }
+        public int? TotalErrors { get; set; }
     }
 }
