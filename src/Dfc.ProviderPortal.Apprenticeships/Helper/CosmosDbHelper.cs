@@ -353,5 +353,28 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
 
             return split;
         }
+
+        public async Task<List<ApprenticeshipDfcReportDocument>> GetAllDfcMigrationReports(DocumentClient client, string collectionId)
+        {
+            var reports = new List<ApprenticeshipDfcReportDocument>();
+
+            Uri uri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, collectionId);
+            FeedOptions options = new FeedOptions { EnableCrossPartitionQuery = true, MaxItemCount = -1 };
+
+            using (var queryable = client.CreateDocumentQuery<ApprenticeshipDfcReportDocument>(uri, options).AsDocumentQuery())
+            {
+                while (queryable.HasMoreResults)
+                {
+                    foreach (ApprenticeshipDfcReportDocument report in await queryable.ExecuteNextAsync<ApprenticeshipDfcReportDocument>())
+                    {
+                        //Some Providers have ',' in there name which is breaking the CSV
+                        report.ProviderName = report.ProviderName.Replace(",", "");
+                        reports.Add(report);
+                    }
+                }
+            }
+
+            return reports;
+        }
     }
 }

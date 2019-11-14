@@ -38,6 +38,7 @@ namespace Dfc.ProviderPortal.Apprenticeships
             builder.Services.AddScoped<ITribalHelper, TribalHelper>();
             builder.Services.AddScoped<IApprenticeshipService, ApprenticeshipService>();
             builder.Services.AddScoped<IApprenticeshipMigrationReportService, ApprenticeshipMigrationReportService>();
+            builder.Services.AddScoped<IDfcReportService, DfcReportService>();
 
 
         }
