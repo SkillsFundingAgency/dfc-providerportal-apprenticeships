@@ -10,5 +10,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Settings
         string FrameworksCollectionId { get; }
         string ApprenticeshipCollectionId { get; }
         string ProgTypesCollectionId { get; }
+        string ApprenticeshipDfcReportCollectionId { get; set; }
     }
 }
