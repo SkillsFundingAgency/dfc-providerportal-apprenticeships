@@ -249,6 +249,10 @@
                 {
                   "name": "CosmosDbCollectionSettings__ApprenticeshipReportCollectionId",
                   "value": "[parameters('cosmosDbCollectionApprenticeshipReport')]"
+                },
+                {
+                  "name": "ApprenticeshipDfcReportCollectionId",
+                  "value": "ApprenticeshipDfcReportCollection"
                 }
               ]
             },
