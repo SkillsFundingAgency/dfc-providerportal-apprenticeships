@@ -145,8 +145,9 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                     {
                         Address1 = region.SubRegionName,
                         Latitude = region.Latitude,
-                        Longitude = region.Longitude
-
+                        Longitude = region.Longitude,
+                        Postcode = region.Postcode
+                        
                     },
                     
                 };
