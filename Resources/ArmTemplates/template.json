@@ -251,7 +251,7 @@
                   "value": "[parameters('cosmosDbCollectionApprenticeshipReport')]"
                 },
                 {
-                  "name": "ApprenticeshipDfcReportCollectionId",
+                  "name": "CosmosDbCollectionSettings__ApprenticeshipDfcReportCollectionId",
                   "value": "ApprenticeshipDfcReportCollection"
                 }
               ]
