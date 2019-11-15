@@ -354,6 +354,29 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
             return persisted;
         }
+        public async Task<ApprenticeshipDashboardCounts> GetApprenticeshipDashboardCounts(int ukprn)
+        {
+            ApprenticeshipDashboardCounts results = null;
+            
+            using (var client = _cosmosDbHelper.GetClient())
+            {
+                var docs = _cosmosDbHelper.GetApprenticeshipByUKPRN(client, _settings.ApprenticeshipCollectionId, ukprn);
+                if (docs.Any())
+                {
+                    results = new ApprenticeshipDashboardCounts
+                    {
+                        PublishedApprenticeshipCount = docs.Count(x => x.RecordStatus == RecordStatus.Live),
+                        BulkUploadPendingCount = docs.Count(x => x.RecordStatus == RecordStatus.BulkUploadPending),
+                        BulkUploadReadyToGoLiveCount =  docs.Count(x => x.RecordStatus == RecordStatus.BulkUploadReadyToGoLive),
+                        BulkUploadTotalCount = docs.Count(x => x.RecordStatus == RecordStatus.BulkUploadReadyToGoLive || x.RecordStatus == RecordStatus.BulkUploadPending),
+                        TotalErrors = docs.Where(x => x.RecordStatus == RecordStatus.BulkUploadPending).SelectMany(x => x.BulkUploadErrors).Count()
+                    
+                    };
+                }
+            }
+
+            return results;
+        }
         internal IEnumerable<Provider> GetProviderDetails(string UKPRN)
         {
             return new ProviderServiceWrapper(_providerServiceSettings).GetProviderByUKPRN(UKPRN);
