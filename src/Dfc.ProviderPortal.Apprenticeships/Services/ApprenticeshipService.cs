@@ -377,6 +377,14 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
             return results;
         }
+		
+        public async Task<int> GetTotalLiveApprenticeships()
+        {
+            using (var documentClient = _cosmosDbHelper.GetClient())
+            {
+                return await _cosmosDbHelper.GetTotalLiveApprenticeships(documentClient, _settings.ApprenticeshipCollectionId);
+            }
+        }
         internal IEnumerable<Provider> GetProviderDetails(string UKPRN)
         {
             return new ProviderServiceWrapper(_providerServiceSettings).GetProviderByUKPRN(UKPRN);

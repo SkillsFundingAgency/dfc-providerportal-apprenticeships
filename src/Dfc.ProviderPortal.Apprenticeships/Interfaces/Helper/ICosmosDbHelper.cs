@@ -30,5 +30,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Helper
         IList<T> GetDocumentsByUKPRN<T>(DocumentClient client, string collectionId, int UKPRN);
         Task<List<ApprenticeshipDfcReportDocument>> GetAllDfcMigrationReports(DocumentClient client,
             string collectionId);
+        Task<int> GetTotalLiveApprenticeships(DocumentClient client, string collectionId);
     }
 }

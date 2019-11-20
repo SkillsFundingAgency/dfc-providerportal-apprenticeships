@@ -376,5 +376,16 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
 
             return reports;
         }
+		
+        public async Task<int> GetTotalLiveApprenticeships(DocumentClient client, string collectionId)
+        {
+            Uri uri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, collectionId);
+            FeedOptions options = new FeedOptions { EnableCrossPartitionQuery = true, MaxItemCount = -1 };
+
+            return await client.CreateDocumentQuery<Apprenticeship>(uri, options)
+                .SelectMany(a => a.ApprenticeshipLocations)
+                .Where(cr => cr.RecordStatus == RecordStatus.Live)
+                .CountAsync();
+        }
     }
 }
