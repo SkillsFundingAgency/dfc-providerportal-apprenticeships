@@ -383,7 +383,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             FeedOptions options = new FeedOptions { EnableCrossPartitionQuery = true, MaxItemCount = -1 };
 
             return await client.CreateDocumentQuery<Apprenticeship>(uri, options)
-                .SelectMany(a => a.ApprenticeshipLocations)
                 .Where(cr => cr.RecordStatus == RecordStatus.Live)
                 .CountAsync();
         }
