@@ -263,30 +263,6 @@
         }
       },
       {
-        "name": "ppapprenticeshipApimProduct",
-        "type": "Microsoft.Resources/deployments",
-        "apiVersion": "2017-05-10",
-        "resourceGroup": "[parameters('apimResourceGroup')]",
-        "properties": {
-          "mode": "Incremental",
-          "templateLink": {
-            "uri": "[concat(variables('deploymentUrlBase'), 'APIM/apim-product.json')]",
-            "contentVersion": "1.0.0.0"
-          },
-          "parameters": {
-            "allowAnonymousAccess": {
-              "value": false
-            },
-            "apimServiceName": {
-              "value": "[parameters('apimServiceName')]"
-            },
-            "productDisplayName": {
-              "value": "[parameters('apiProductDisplayName')]"
-            }
-          }
-        }
-      },
-      {
         "name": "ppapprenticeshipApimApi",
         "type": "Microsoft.Resources/deployments",
         "apiVersion": "2017-05-10",
@@ -302,7 +278,7 @@
           },
           "parameters": {
             "apimProductInstanceName": {
-              "value": "[reference('ppapprenticeshipApimProduct').outputs.ApimProductInstanceName.value]"
+              "value": "publish-to-the-course-directory"
             },
             "apimServiceName": {
               "value": "[parameters('apimServiceName')]"
