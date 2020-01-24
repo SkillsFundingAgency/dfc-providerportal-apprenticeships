@@ -16,6 +16,11 @@ using System.Threading.Tasks;
 using Dfc.ProviderPortal.Apprenticeships.Models.Enums;
 using Microsoft.Azure.Documents.Linq;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
+using System.Web.Http;
+using System.Net.Http;
+using System.IO;
+using System.Reflection;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Helper
 {
@@ -386,5 +391,69 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                 .Where(cr => cr.RecordStatus == RecordStatus.Live)
                 .CountAsync();
         }
+             
+      
+       public async Task<int> UpdateRecordStatuses(DocumentClient client, string collectionId, string procedureName, int UKPRN, int currentStatus, int statusToBeChangedTo, int partitionKey)
+        {          
+            RequestOptions requestOptions = new RequestOptions { PartitionKey = new PartitionKey(partitionKey), EnableScriptLogging = true };         
+
+            var response =  await client.ExecuteStoredProcedureAsync<int>(UriFactory.CreateStoredProcedureUri(_settings.DatabaseId, collectionId, "Apprenticeship_ChangeRecordStatus"), requestOptions, UKPRN, currentStatus, statusToBeChangedTo);
+                 
+            return response;
+
+        }
+        public async Task CreateStoredProcedures()
+        {       
+            string scriptFileName = @"Data/StoreProcedureApprenticeship_ChangeRecordStatus.js";
+            string StoredProcedureName = Path.GetFileNameWithoutExtension(scriptFileName);          
+
+            await UpdateRecordStatuses(GetClient(), _settings.DatabaseId, StoredProcedureName, scriptFileName);
+        }
+      
+        public async Task UpdateRecordStatuses(DocumentClient client, string collectionId, string procedureName, string procedurePath)
+        {
+            
+           
+            Throw.IfNull(client, nameof(client));
+            Throw.IfNullOrWhiteSpace(collectionId, nameof(collectionId));
+
+           // string scriptFileName = @"/Data/StoreProcedure/Apprenticeship_ChangeRecordStatus";
+            string StoredProcedureName = Path.GetFileNameWithoutExtension(procedurePath);
+          
+            var collectionLink = string.Join(@",", UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, "apprenticeship")  + "/sprocs/");
+
+            StoredProcedure isStoredProcedureExist = client.CreateStoredProcedureQuery(collectionLink)
+                                   .Where(sp => sp.Id == StoredProcedureName)
+                                   .AsEnumerable()
+                                   .FirstOrDefault();                        
+            try
+            {
+                if (isStoredProcedureExist == null)
+                {
+                    string sProcresult;
+                    Assembly assembly = this.GetType().Assembly;
+                    var resourceStream = assembly.GetManifestResourceStream(assembly.GetName().Name + "." + "Data.StoredProcedures" + ".UpdateRecordStatuses.js");
+                    using (var reader = new StreamReader(resourceStream, Encoding.UTF8))
+                    {
+                        sProcresult = await reader.ReadToEndAsync();
+                    }
+
+                    StoredProcedure sproc = await client.CreateStoredProcedureAsync(collectionLink, new StoredProcedure
+                    {
+                        Id = StoredProcedureName,
+                        Body = sProcresult
+                    });
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+              
+            }
+             
+            }
+           
+        }
+           
     }
-}
+

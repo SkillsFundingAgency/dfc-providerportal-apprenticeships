@@ -246,7 +246,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
             return updated;
 
         }
-
         public async Task<HttpResponseMessage> ChangeApprenticeshipStatusForUKPRNSelection(int UKPRN, RecordStatus CurrentStatus, RecordStatus StatusToBeChangedTo)
         {
             Throw.IfNull<int>(UKPRN, nameof(UKPRN));
@@ -257,16 +256,16 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
             try
             {
-                foreach (var apprenticeship in apprenticeshipsToBeChanged)
+                using (var client = _cosmosDbHelper.GetClient())
                 {
-                    apprenticeship.RecordStatus = StatusToBeChangedTo;
-                    var result = Update(apprenticeship);
+                    var spResults = await _cosmosDbHelper.UpdateRecordStatuses(client, _settings.ApprenticeshipCollectionId, "Apprenticeship_ChangeRecordStatus", UKPRN, (int)CurrentStatus, (int)StatusToBeChangedTo, UKPRN);
+                                    
+                    return new HttpResponseMessage(HttpStatusCode.OK);
                 }
-
-                return new HttpResponseMessage(HttpStatusCode.OK);
+                
             }
             catch (Exception ex)
-            {
+            { 
                 return new HttpResponseMessage(HttpStatusCode.ExpectationFailed);
             }
         }
