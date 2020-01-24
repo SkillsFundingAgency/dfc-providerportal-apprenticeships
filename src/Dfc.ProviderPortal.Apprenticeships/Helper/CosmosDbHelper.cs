@@ -404,7 +404,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
         }
         public async Task CreateStoredProcedures()
         {       
-            string scriptFileName = @"Data/StoreProcedureApprenticeship_ChangeRecordStatus.js";
+            string scriptFileName = @"Data/UpdateRecordStatuses.js";
             string StoredProcedureName = Path.GetFileNameWithoutExtension(scriptFileName);          
 
             await UpdateRecordStatuses(GetClient(), _settings.DatabaseId, StoredProcedureName, scriptFileName);
