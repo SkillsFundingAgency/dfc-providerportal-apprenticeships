@@ -246,31 +246,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
             return updated;
 
         }
-
-        //public async Task<HttpResponseMessage> ChangeApprenticeshipStatusForUKPRNSelection(int UKPRN, RecordStatus CurrentStatus, RecordStatus StatusToBeChangedTo)
-        //{
-        //    Throw.IfNull<int>(UKPRN, nameof(UKPRN));
-        //    Throw.IfLessThan(0, UKPRN, nameof(UKPRN));
-
-        //    var allApprenticeships = GetApprenticeshipByUKPRN(UKPRN).Result;
-        //    var apprenticeshipsToBeChanged = allApprenticeships.Where(x => x.RecordStatus == CurrentStatus).ToList();
-
-        //    try
-        //    {
-        //        foreach (var apprenticeship in apprenticeshipsToBeChanged)
-        //        {
-        //            apprenticeship.RecordStatus = StatusToBeChangedTo;
-        //            var result = Update(apprenticeship);
-        //        }
-
-        //        return new HttpResponseMessage(HttpStatusCode.OK);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return new HttpResponseMessage(HttpStatusCode.ExpectationFailed);
-        //    }
-        //}
-
         public async Task<HttpResponseMessage> ChangeApprenticeshipStatusForUKPRNSelection(int UKPRN, RecordStatus CurrentStatus, RecordStatus StatusToBeChangedTo)
         {
             Throw.IfNull<int>(UKPRN, nameof(UKPRN));
@@ -283,7 +258,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
             {
                 using (var client = _cosmosDbHelper.GetClient())
                 {
-                    var spResults = await _cosmosDbHelper.ExecuteStoredProcedureAsync(client, _settings.ApprenticeshipCollectionId, "Apprenticeship_ChangeRecordStatus", UKPRN, (int)CurrentStatus, (int)StatusToBeChangedTo, UKPRN);
+                    var spResults = await _cosmosDbHelper.UpdateRecordStatuses(client, _settings.ApprenticeshipCollectionId, "Apprenticeship_ChangeRecordStatus", UKPRN, (int)CurrentStatus, (int)StatusToBeChangedTo, UKPRN);
                                     
                     return new HttpResponseMessage(HttpStatusCode.OK);
                 }

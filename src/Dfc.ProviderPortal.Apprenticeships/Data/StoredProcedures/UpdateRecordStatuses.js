@@ -1,8 +1,7 @@
 ﻿
 function updateSproc(UKPRN, currentStatus, statusToBeChangedTo) {
     var collection = getContext().getCollection();
-    var collectionLink = collection.getSelfLink();
-    var response = getContext().getResponse();
+  
 
     var responseBody = {
         updated: 0,
@@ -29,12 +28,7 @@ function updateSproc(UKPRN, currentStatus, statusToBeChangedTo) {
 
 
         var requestOptions = { continuation: continuation };
-        var isAccepted = collection.queryDocuments(collectionLink, query, requestOptions, function (err, documents, responseOptions) {
-            if (err) {
-
-                responseBody.error = err;
-                throw err;
-            }
+   
             if (documents.length > 0) {
                 responseBody.log += "Found documents: " + documents.length;
                 // If the document is found, update it.
@@ -47,12 +41,9 @@ function updateSproc(UKPRN, currentStatus, statusToBeChangedTo) {
                 // It is highly unlikely for this to happen when performing a query by id; but is included to serve as an example for larger queries.
                 responseBody.log += "Continue query";
                 tryQueryAndUpdate(responseOptions.continuation);
-            } else {
-                // responseBody.log += "No documents found";
-                //responseBody.continuation = false;
-                // response.setBody(responseBody);
-                // response.setBody({ updated: updated });
-                response.setBody(updated)
+            } else
+            {              
+                response.setBody({ updated: updated });
             }
         });
         // If we hit execution bounds - throw an exception.

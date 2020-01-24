@@ -18,8 +18,7 @@ using Dfc.ProviderPortal.Apprenticeships.Interfaces.Settings;
 namespace Dfc.ProviderPortal.Apprenticeships
 {
     public class WebJobsExtensionStartup : IWebJobsStartup
-    {
-        private readonly ICosmosDbSettings _settings;
+    {       
         public void Configure(IWebJobsBuilder builder)
         {
             builder.AddDependencyInjection();
@@ -43,7 +42,7 @@ namespace Dfc.ProviderPortal.Apprenticeships
             builder.Services.AddScoped<IDfcReportService, DfcReportService>();
 
             var serviceProvider = builder.Services.BuildServiceProvider();
-            serviceProvider.GetService<ICosmosDbHelper>().Initialise_CreateStoreProc().Wait();
+            serviceProvider.GetService<ICosmosDbHelper>().CreateStoredProcedures().Wait();
         }
     }
 }

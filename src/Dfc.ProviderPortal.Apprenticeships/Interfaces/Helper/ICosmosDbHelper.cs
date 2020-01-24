@@ -16,8 +16,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Helper
         DocumentClient GetClient();
         Task<Database> CreateDatabaseIfNotExistsAsync(DocumentClient client);
         Task<DocumentCollection> CreateDocumentCollectionIfNotExistsAsync(DocumentClient client, string collectionId);
-        Task<Document> CreateDocumentAsync(DocumentClient client, string collectionId, object document);
-        Task CreateStoredProcedureIfNotExistsAsync(DocumentClient client, string collectionId, string procedureName, string procedurePath);
+        Task<Document> CreateDocumentAsync(DocumentClient client, string collectionId, object document);       
         T DocumentTo<T>(Document document);
         IEnumerable<T> DocumentsTo<T>(IEnumerable<Document> documents);
         List<Apprenticeship> GetApprenticeshipByUKPRN(DocumentClient client, string collectionId, int UKPRN);
@@ -34,9 +33,9 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Helper
         Task<List<ApprenticeshipDfcReportDocument>> GetAllDfcMigrationReports(DocumentClient client,
             string collectionId);
         Task<int> GetTotalLiveApprenticeships(DocumentClient client, string collectionId);
-        Task<int> ExecuteStoredProcedureAsync(DocumentClient client, string collectionId, string procedureName, int UKPRN, int currentStatus, int statusToBeChangedTo, int partitionKey);
-
-        Task Initialise_CreateStoreProc();
+        Task<int> UpdateRecordStatuses(DocumentClient client, string collectionId, string procedureName, int UKPRN, int currentStatus, int statusToBeChangedTo, int partitionKey);
+       
+        Task CreateStoredProcedures();
 
     }
 }
