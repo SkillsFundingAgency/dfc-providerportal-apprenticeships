@@ -4,8 +4,10 @@ using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Helper
 {
@@ -15,6 +17,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Helper
         Task<Database> CreateDatabaseIfNotExistsAsync(DocumentClient client);
         Task<DocumentCollection> CreateDocumentCollectionIfNotExistsAsync(DocumentClient client, string collectionId);
         Task<Document> CreateDocumentAsync(DocumentClient client, string collectionId, object document);
+        Task CreateStoredProcedureIfNotExistsAsync(DocumentClient client, string collectionId, string procedureName, string procedurePath);
         T DocumentTo<T>(Document document);
         IEnumerable<T> DocumentsTo<T>(IEnumerable<Document> documents);
         List<Apprenticeship> GetApprenticeshipByUKPRN(DocumentClient client, string collectionId, int UKPRN);
@@ -31,5 +34,9 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Helper
         Task<List<ApprenticeshipDfcReportDocument>> GetAllDfcMigrationReports(DocumentClient client,
             string collectionId);
         Task<int> GetTotalLiveApprenticeships(DocumentClient client, string collectionId);
+        Task<int> ExecuteStoredProcedureAsync(DocumentClient client, string collectionId, string procedureName, int UKPRN, int currentStatus, int statusToBeChangedTo, int partitionKey);
+
+        Task Initialise_CreateStoreProc();
+
     }
 }
