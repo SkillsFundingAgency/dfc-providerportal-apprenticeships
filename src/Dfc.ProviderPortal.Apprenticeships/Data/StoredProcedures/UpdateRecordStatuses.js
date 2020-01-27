@@ -1,7 +1,8 @@
 ﻿
 function updateSproc(UKPRN, currentStatus, statusToBeChangedTo) {
     var collection = getContext().getCollection();
-  
+    var collectionLink = collection.getSelfLink();
+    var response = getContext().getResponse();
 
     var responseBody = {
         updated: 0,
@@ -28,7 +29,7 @@ function updateSproc(UKPRN, currentStatus, statusToBeChangedTo) {
 
 
         var requestOptions = { continuation: continuation };
-   
+        var isAccepted = collection.queryDocuments(collectionLink, query, requestOptions, function (err, documents, responseOptions) {
             if (documents.length > 0) {
                 responseBody.log += "Found documents: " + documents.length;
                 // If the document is found, update it.
