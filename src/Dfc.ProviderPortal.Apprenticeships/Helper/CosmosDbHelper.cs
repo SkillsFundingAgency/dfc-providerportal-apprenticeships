@@ -397,7 +397,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
         {          
             RequestOptions requestOptions = new RequestOptions { PartitionKey = new PartitionKey(partitionKey), EnableScriptLogging = true };         
 
-            var response =  await client.ExecuteStoredProcedureAsync<int>(UriFactory.CreateStoredProcedureUri(_settings.DatabaseId, collectionId, "Apprenticeship_ChangeRecordStatus"), requestOptions, UKPRN, currentStatus, statusToBeChangedTo);
+            var response =  await client.ExecuteStoredProcedureAsync<int>(UriFactory.CreateStoredProcedureUri(_settings.DatabaseId, collectionId, "UpdateRecordStatuses"), requestOptions, UKPRN, currentStatus, statusToBeChangedTo);
                  
             return response;
 
