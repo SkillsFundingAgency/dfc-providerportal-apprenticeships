@@ -258,7 +258,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
             {
                 using (var client = _cosmosDbHelper.GetClient())
                 {
-                    var spResults = await _cosmosDbHelper.UpdateRecordStatuses(client, _settings.ApprenticeshipCollectionId, "Apprenticeship_ChangeRecordStatus", UKPRN, (int)CurrentStatus, (int)StatusToBeChangedTo, UKPRN);
+                    var spResults = await _cosmosDbHelper.UpdateRecordStatuses(client, _settings.ApprenticeshipCollectionId, "UpdateRecordStatuses", UKPRN, (int)CurrentStatus, (int)StatusToBeChangedTo, UKPRN);
                                     
                     return new HttpResponseMessage(HttpStatusCode.OK);
                 }
