@@ -178,7 +178,7 @@
             ],
             "output": {
               "type": "int",
-              "value": "if(equals(parameters('collectionSpecificRUs'), ''), parameters('defaultRUs'), int(parameters('collectionSpecificRUs')))"
+              "value": "[if(equals(parameters('collectionSpecificRUs'), ''), parameters('defaultRUs'), int(parameters('collectionSpecificRUs')))]"
             }
           }
         }
