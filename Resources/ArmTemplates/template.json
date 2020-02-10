@@ -134,6 +134,26 @@
         "metadata": {
           "description": "Reference Data API service key"
         }
+      },
+      "CourseDirectoryDefaultRequestsUnits": {
+        "type": "int",
+        "metadata": {
+          "description": "The request units to provision on collections by default"
+        }
+      },
+      "ApprenticeshipCollectionRequestUnits": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The request units to provision on the apprenticeship collection"
+        }
+      },
+      "ApprenticeshipReportCollectionRequestUnits": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The request units to provision on the ApprenticeshipReport collection"
+        }
       }
     },
     "variables": {
@@ -141,6 +161,29 @@
       "functionAppName": "[concat(parameters('functionAppPrefix'),'-fa')]",
       "appInsightName": "[concat(parameters('functionAppPrefix'),'-ai')]"
     },
+    "functions": [
+      {
+        "namespace": "dfc",
+        "members": {
+          "getCollectionRUs": {
+            "parameters":[
+              {
+                "name": "defaultRUs",
+                "type": "int"
+              },
+              {
+                "name": "collectionSpecificRUs",
+                "type": "string"
+              }
+            ],
+            "output": {
+              "type": "int",
+              "value": "if(equals(parameters('collectionSpecificRUs'), ''), parameters('defaultRUs'), int(parameters('collectionSpecificRUs')))"
+            }
+          }
+        }
+      }
+    ],
     "resources": [
       {
         "apiVersion": "2017-05-10",
@@ -338,7 +381,7 @@
                 "value": "apprenticeship"
             },
             "offerThroughput": {
-                "value": 400
+                "value": "[dfc.getCollectionRUs(parameters('CourseDirectoryDefaultRequestsUnits'), parameters('ApprenticeshipCollectionRequestUnits'))]"
             },
             "partitionKey": {
               "value": "/ProviderUKPRN"
@@ -368,7 +411,7 @@
                 "value": "apprenticeshipReport"
             },
             "offerThroughput": {
-                "value": 400
+                "value": "[dfc.getCollectionRUs(parameters('CourseDirectoryDefaultRequestsUnits'), parameters('ApprenticeshipReportCollectionRequestUnits'))]"
             },
             "partitionKey": {
               "value": "/ProviderUKPRN"

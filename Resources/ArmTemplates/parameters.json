@@ -67,6 +67,15 @@
       },
       "referenceDataServiceApiKey": {
         "value": "__apimKey__"
+      },
+      "CourseDirectoryDefaultRequestsUnits": {
+        "value": 400
+      },
+      "ApprenticeshipCollectionRequestUnits": {
+        "value": "__ApprenticeshipCollectionRequestUnits__"
+      },
+      "ApprenticeshipReportCollectionRequestUnits": {
+        "value": "__ApprenticeshipReportCollectionRequestUnits__"
       }
     }
   }
