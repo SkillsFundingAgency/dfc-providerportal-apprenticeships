@@ -67,6 +67,12 @@
       },
       "referenceDataServiceApiKey": {
         "value": "__apimKey__"
+      },
+      "ApprenticeshipCollectionRequestUnits": {
+        "value": __ApprenticeshipCollectionRequestUnits__
+      },
+      "ApprenticeshipReportCollectionRequestUnits": {
+        "value": __ApprenticeshipReportCollectionRequestUnits__
       }
     }
   }

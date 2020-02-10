@@ -134,7 +134,21 @@
         "metadata": {
           "description": "Reference Data API service key"
         }
-      }
+      },
+      "ApprenticeshipCollectionRequestUnits": {
+        "type": "int",
+        "defaultValue": 400,
+        "metadata": {
+          "description": "The request units to provision on the apprenticeship collection"
+        }
+      },
+      "ApprenticeshipReportCollectionRequestUnits": {
+        "type": "int",
+        "defaultValue": 400,
+        "metadata": {
+          "description": "The request units to provision on the ApprenticeshipReport collection"
+        }
+      },
     },
     "variables": {
       "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/dfc-devops/master/ArmTemplates/",
@@ -338,7 +352,7 @@
                 "value": "apprenticeship"
             },
             "offerThroughput": {
-                "value": 400
+                "value": "[parameters('ApprenticeshipCollectionRequestUnits')]"
             },
             "partitionKey": {
               "value": "/ProviderUKPRN"
@@ -368,7 +382,7 @@
                 "value": "apprenticeshipReport"
             },
             "offerThroughput": {
-                "value": 400
+                "value": "[parameters('ApprenticeshipReportCollectionRequestUnits')]"
             },
             "partitionKey": {
               "value": "/ProviderUKPRN"
