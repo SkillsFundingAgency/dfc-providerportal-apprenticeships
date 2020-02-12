@@ -73,6 +73,12 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
 
                 }
             }
+            //check and remove duplicate locations in list
+            tribalLocations = tribalLocations.GroupBy(s => s.ID)
+                                                 .Select(grp => grp.FirstOrDefault())
+                                                 .OrderBy(s => s.ID)
+                                                 .ToList();
+
 
             return tribalLocations;
         }
@@ -145,8 +151,9 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                     {
                         Address1 = region.SubRegionName,
                         Latitude = region.Latitude,
-                        Longitude = region.Longitude
-
+                        Longitude = region.Longitude,
+                        Postcode = region.Postcode
+                        
                     },
                     
                 };

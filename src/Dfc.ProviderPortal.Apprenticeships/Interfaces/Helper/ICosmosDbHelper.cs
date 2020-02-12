@@ -4,8 +4,10 @@ using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Helper
 {
@@ -14,7 +16,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Helper
         DocumentClient GetClient();
         Task<Database> CreateDatabaseIfNotExistsAsync(DocumentClient client);
         Task<DocumentCollection> CreateDocumentCollectionIfNotExistsAsync(DocumentClient client, string collectionId);
-        Task<Document> CreateDocumentAsync(DocumentClient client, string collectionId, object document);
+        Task<Document> CreateDocumentAsync(DocumentClient client, string collectionId, object document);       
         T DocumentTo<T>(Document document);
         IEnumerable<T> DocumentsTo<T>(IEnumerable<Document> documents);
         List<Apprenticeship> GetApprenticeshipByUKPRN(DocumentClient client, string collectionId, int UKPRN);
@@ -28,5 +30,12 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Helper
         List<StandardsAndFrameworks> GetStandardByCode(DocumentClient client, string collectionId, int standardCode, int version);
         List<StandardsAndFrameworks> GetFrameworkByCode(DocumentClient client, string collectionId, int frameworkCode, int progType, int pathwayCode);
         IList<T> GetDocumentsByUKPRN<T>(DocumentClient client, string collectionId, int UKPRN);
+        Task<List<ApprenticeshipDfcReportDocument>> GetAllDfcMigrationReports(DocumentClient client,
+            string collectionId);
+        Task<int> GetTotalLiveApprenticeships(DocumentClient client, string collectionId);
+        Task<int> UpdateRecordStatuses(DocumentClient client, string collectionId, string procedureName, int UKPRN, int currentStatus, int statusToBeChangedTo, int partitionKey);
+       
+        Task CreateStoredProcedures();
+
     }
 }
