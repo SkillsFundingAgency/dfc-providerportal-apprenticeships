@@ -187,6 +187,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
         {
             return Ok();
         }
+		
         [Route("GetApprenticeshipDashboardCounts")]
         [HttpGet]
         [ProducesResponseType(typeof(ApprenticeshipDashboardCounts), StatusCodes.Status200OK)]
@@ -194,6 +195,25 @@ namespace Dfc.ProviderPortal.Apprenticeships.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult GetApprenticeshipDashboardCounts(int ukprn)
+        {
+            return Ok();
+        }
+        [Route("GetAllDfcReports")]
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<StandardsAndFrameworks>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GetAllDfcReports()
+        {
+            return Ok();
+        }
+		
+        [Route("GetTotalLiveApprenticeships")]
+        [HttpGet]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GetTotalLiveApprenticeships()
         {
             return Ok();
         }

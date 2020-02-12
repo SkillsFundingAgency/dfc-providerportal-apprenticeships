@@ -11,13 +11,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Apprenticeships;
+using Dfc.ProviderPortal.Apprenticeships.Interfaces.Settings;
 
 [assembly: WebJobsStartup(typeof(WebJobsExtensionStartup), "Web Jobs Extension Startup")]
 
 namespace Dfc.ProviderPortal.Apprenticeships
 {
     public class WebJobsExtensionStartup : IWebJobsStartup
-    {
+    {       
         public void Configure(IWebJobsBuilder builder)
         {
             builder.AddDependencyInjection();
@@ -38,8 +39,10 @@ namespace Dfc.ProviderPortal.Apprenticeships
             builder.Services.AddScoped<ITribalHelper, TribalHelper>();
             builder.Services.AddScoped<IApprenticeshipService, ApprenticeshipService>();
             builder.Services.AddScoped<IApprenticeshipMigrationReportService, ApprenticeshipMigrationReportService>();
+            builder.Services.AddScoped<IDfcReportService, DfcReportService>();
 
-
+            var serviceProvider = builder.Services.BuildServiceProvider();
+            serviceProvider.GetService<ICosmosDbHelper>().CreateStoredProcedures().Wait();
         }
     }
 }
