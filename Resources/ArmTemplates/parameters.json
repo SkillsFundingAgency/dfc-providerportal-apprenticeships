@@ -14,21 +14,6 @@
       "storageConnectionString": {
         "value": "__providerPortalStorageConnectionStr__"
       },
-      "apimServiceName": {
-        "value": "__apimServiceName__"
-      },
-      "apimResourceGroup": {
-        "value": "__sharedResourceGroup__"
-      },
-      "apiProductDisplayName": {
-        "value": "__apiProductDisplayName__"
-      },
-      "apiName": {
-        "value": "__apiName__"
-      },
-      "apiSuffix": {
-        "value": "__apiSuffix__"
-      },
       "cosmosDbFqdn": {
         "value": "__providerPortalCosmosDbFqdn__"
       },
@@ -57,16 +42,25 @@
         "value": "__cosmosDbCollectionApprenticeshipReport__"
       },
       "providerServiceSettingsApiUrl": {
-        "value": "__providerServiceSettingsApiUrl__"
+        "value": "__providerApiUrl__"
       },
       "providerServiceSettingsApiKey": {
-        "value": "__providerServiceSettingsApiKey__"
+        "value": "__ApimPublishCourseDirectoryKey__"
       },
       "referenceDataServiceApiUrl": {
         "value": "__referenceDataApiUrl__"
       },
       "referenceDataServiceApiKey": {
-        "value": "__apimKey__"
+        "value": "__ApimPublishCourseDirectoryKey__"
+      },
+      "CourseDirectoryDefaultRequestsUnits": {
+        "value": 400
+      },
+      "ApprenticeshipCollectionRequestUnits": {
+        "value": "__ApprenticeshipCollectionRequestUnits__"
+      },
+      "ApprenticeshipReportCollectionRequestUnits": {
+        "value": "__ApprenticeshipReportCollectionRequestUnits__"
       }
     }
   }
