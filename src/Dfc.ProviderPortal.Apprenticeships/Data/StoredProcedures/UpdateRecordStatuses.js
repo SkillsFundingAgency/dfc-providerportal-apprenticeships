@@ -57,8 +57,8 @@ function updateSproc(UKPRN, currentStatus, statusToBeChangedTo) {
     function tryUpdate(document) {
         // DocumentDB supports optimistic concurrency control via HTTP ETag.
         var requestOptions = { etag: document._etag };
-       // document.RecordStatus = statusToBeChangedTo;
-        document.RecordStatus.forEach(doc => doc.RecordStatus = statusToBeChangedTo);
+        document.RecordStatus = statusToBeChangedTo;
+        document.ApprenticeshipLocations.forEach(l => l.RecordStatus = statusToBeChangedTo);
         // Update the document.
         var isAccepted = collection.replaceDocument(document._self, document, requestOptions, function (err, updatedDocument, responseOptions) {
             if (err) throw err;
