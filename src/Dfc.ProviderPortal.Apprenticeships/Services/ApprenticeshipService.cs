@@ -254,11 +254,15 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
             var allApprenticeships = GetApprenticeshipByUKPRN(UKPRN).Result;
             var apprenticeshipsToBeChanged = allApprenticeships.Where(x => x.RecordStatus == CurrentStatus).ToList();
 
+            int currentstatus = (int)CurrentStatus;
+
+            int statusTobeChangeTo = (int)StatusToBeChangedTo; 
+
             try
             {
                 using (var client = _cosmosDbHelper.GetClient())
                 {
-                    var spResults = await _cosmosDbHelper.UpdateRecordStatuses(client, _settings.ApprenticeshipCollectionId, "UpdateRecordStatuses", UKPRN, (int)CurrentStatus, (int)StatusToBeChangedTo, UKPRN);
+                    var spResults = await _cosmosDbHelper.UpdateRecordStatuses(client, _settings.ApprenticeshipCollectionId, "UpdateRecordStatuses", UKPRN, currentstatus, statusTobeChangeTo, UKPRN);
                                     
                     return new HttpResponseMessage(HttpStatusCode.OK);
                 }
