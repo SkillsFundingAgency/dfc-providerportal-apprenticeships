@@ -183,9 +183,10 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                                 from StandardsAndFrameworks saf
                                 in allDocs
                                 let searchWords = FormatSearchTerm(saf.StandardName)
-                                where IsMatch(formattedSearch, searchWords)
-                                select saf).ToList();
-                        docs.Select(x => { x.ApprenticeshipType = Models.Enums.ApprenticeshipType.StandardCode; return x; }).ToList();
+                                where IsMatch(formattedSearch, searchWords)                          
+                                select saf).Where(x => x.RecordStatusId == 2).ToList();
+                        docs.Select(x => {
+                            x.ApprenticeshipType = Models.Enums.ApprenticeshipType.StandardCode;  return x; }).ToList();
                         break;
                     }
                 case "frameworks":
@@ -195,7 +196,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                                 in allDocs
                                 let searchWords = FormatSearchTerm(saf.NasTitle)
                                 where IsMatch(formattedSearch, searchWords)
-                                select saf).ToList();
+                                select saf).Where(x => x.RecordStatusId == 2).ToList();
                         docs.Select(x => { x.ApprenticeshipType = Models.Enums.ApprenticeshipType.FrameworkCode; return x; }).ToList();
                         break;
                     }
