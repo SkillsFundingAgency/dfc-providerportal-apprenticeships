@@ -35,7 +35,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Helper
         Task<int> GetTotalLiveApprenticeships(DocumentClient client, string collectionId);
         Task<int> UpdateRecordStatuses(DocumentClient client, string collectionId, string procedureName, int UKPRN, int currentStatus, int statusToBeChangedTo, int partitionKey);
        
-        Task CreateStoredProcedures();
+        Task DeployStoredProcedures();
 
     }
 }

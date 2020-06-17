@@ -42,7 +42,7 @@ namespace Dfc.ProviderPortal.Apprenticeships
             builder.Services.AddScoped<IDfcReportService, DfcReportService>();
 
             var serviceProvider = builder.Services.BuildServiceProvider();
-            serviceProvider.GetService<ICosmosDbHelper>().CreateStoredProcedures().Wait();
+            serviceProvider.GetService<ICosmosDbHelper>().DeployStoredProcedures().Wait();
         }
     }
 }
