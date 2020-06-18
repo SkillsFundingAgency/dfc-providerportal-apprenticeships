@@ -70,11 +70,17 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             Throw.IfNullOrWhiteSpace(collectionId, nameof(collectionId));
 
             var uri = UriFactory.CreateDatabaseUri(_settings.DatabaseId);
-            var coll = new DocumentCollection { Id = collectionId, PartitionKey = new PartitionKeyDefinition(){Paths = new Collection<string>()
+            var coll = new DocumentCollection
+            {
+                Id = collectionId,
+                PartitionKey = new PartitionKeyDefinition()
+                {
+                    Paths = new Collection<string>()
             {
                 "/ProviderUKPRN"
             }
-            }};
+                }
+            };
 
             return await client.CreateDocumentCollectionIfNotExistsAsync(uri, coll);
         }
@@ -183,10 +189,12 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                                 from StandardsAndFrameworks saf
                                 in allDocs
                                 let searchWords = FormatSearchTerm(saf.StandardName)
-                                where IsMatch(formattedSearch, searchWords)                          
+                                where IsMatch(formattedSearch, searchWords)
                                 select saf).Where(x => x.RecordStatusId == 2).ToList();
-                        docs.Select(x => {
-                            x.ApprenticeshipType = Models.Enums.ApprenticeshipType.StandardCode;  return x; }).ToList();
+                        docs.Select(x =>
+                        {
+                            x.ApprenticeshipType = Models.Enums.ApprenticeshipType.StandardCode; return x;
+                        }).ToList();
                         break;
                     }
                 case "frameworks":
@@ -222,7 +230,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             Uri uri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, collectionId);
             FeedOptions options = new FeedOptions { EnableCrossPartitionQuery = true, MaxItemCount = -1 };
 
-            
+
 
             foreach (var doc in docs)
             {
@@ -264,8 +272,8 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             FeedOptions options = new FeedOptions { EnableCrossPartitionQuery = true, MaxItemCount = -1 };
 
             List<StandardsAndFrameworks> docs = client.CreateDocumentQuery<StandardsAndFrameworks>(uri, options)
-                                             .Where(x => x.FrameworkCode == frameworkCode 
-                                                        && x.ProgType == progType 
+                                             .Where(x => x.FrameworkCode == frameworkCode
+                                                        && x.ProgType == progType
                                                         && x.PathwayCode == pathwayCode)
                                              .ToList();
 
@@ -289,7 +297,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             foreach (var doc in docs)
             {
                 Uri docUri = UriFactory.CreateDocumentUri(_settings.DatabaseId, collectionId, doc.id.ToString());
-                var result = await client.DeleteDocumentAsync(docUri, new RequestOptions(){PartitionKey = new PartitionKey(doc.ProviderUKPRN)});
+                var result = await client.DeleteDocumentAsync(docUri, new RequestOptions() { PartitionKey = new PartitionKey(doc.ProviderUKPRN) });
 
                 if (result.StatusCode == HttpStatusCode.NoContent)
                 {
@@ -346,7 +354,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             FeedOptions options = new FeedOptions { EnableCrossPartitionQuery = true, MaxItemCount = -1 };
 
             return client.CreateDocumentQuery<Apprenticeship>(uri, options).ToList();
-            
+
         }
         internal static List<string> FormatSearchTerm(string searchTerm)
         {
@@ -382,7 +390,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
 
             return reports;
         }
-		
+
         public async Task<int> GetTotalLiveApprenticeships(DocumentClient client, string collectionId)
         {
             Uri uri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, collectionId);
@@ -392,69 +400,68 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
                 .Where(cr => cr.RecordStatus == RecordStatus.Live)
                 .CountAsync();
         }
-             
-      
-       public async Task<int> UpdateRecordStatuses(DocumentClient client, string collectionId, string procedureName, int UKPRN, int currentStatus, int statusToBeChangedTo, int partitionKey)
-        {          
-            RequestOptions requestOptions = new RequestOptions { PartitionKey = new PartitionKey(partitionKey), EnableScriptLogging = true };         
 
-            var response =  await client.ExecuteStoredProcedureAsync<int>(UriFactory.CreateStoredProcedureUri(_settings.DatabaseId, collectionId, "UpdateRecordStatuses"), requestOptions, UKPRN, currentStatus, statusToBeChangedTo);
-                 
+
+        public async Task<int> UpdateRecordStatuses(DocumentClient client, string collectionId, string procedureName, int UKPRN, int currentStatus, int statusToBeChangedTo, int partitionKey)
+        {
+            RequestOptions requestOptions = new RequestOptions { PartitionKey = new PartitionKey(partitionKey), EnableScriptLogging = true };
+
+            var response = await client.ExecuteStoredProcedureAsync<int>(UriFactory.CreateStoredProcedureUri(_settings.DatabaseId, collectionId, "UpdateRecordStatuses"), requestOptions, UKPRN, currentStatus, statusToBeChangedTo);
+
             return response;
 
         }
-        public async Task CreateStoredProcedures()
-        {       
-            string scriptFileName = @"Data/UpdateRecordStatuses.js";
-            string StoredProcedureName = Path.GetFileNameWithoutExtension(scriptFileName);          
 
-            await UpdateRecordStatuses(GetClient(), _settings.DatabaseId, StoredProcedureName, scriptFileName);
-        }
-      
-        public async Task UpdateRecordStatuses(DocumentClient client, string collectionId, string procedureName, string procedurePath)
+
+        public async Task DeployStoredProcedures()
         {
-            
-           
-            Throw.IfNull(client, nameof(client));
-            Throw.IfNullOrWhiteSpace(collectionId, nameof(collectionId));
-
-           // string scriptFileName = @"/Data/StoreProcedure/Apprenticeship_ChangeRecordStatus";
-            string StoredProcedureName = Path.GetFileNameWithoutExtension(procedurePath);
-          
-            var collectionLink = string.Join(@",", UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, "apprenticeship")  + "/sprocs/");
-
-            StoredProcedure isStoredProcedureExist = client.CreateStoredProcedureQuery(collectionLink)
-                                   .Where(sp => sp.Id == StoredProcedureName)
-                                   .AsEnumerable()
-                                   .FirstOrDefault();                        
-            try
+            using (var client = GetClient())
             {
-                if (isStoredProcedureExist == null)
-                {
-                    string sProcresult;
-                    Assembly assembly = this.GetType().Assembly;
-                    var resourceStream = assembly.GetManifestResourceStream(assembly.GetName().Name + "." + "Data.StoredProcedures" + ".UpdateRecordStatuses.js");
-                    using (var reader = new StreamReader(resourceStream, Encoding.UTF8))
-                    {
-                        sProcresult = await reader.ReadToEndAsync();
-                    }
+                await DeployStoredProcedureToCollection("apprenticeship", "UpdateRecordStatuses");
 
-                    StoredProcedure sproc = await client.CreateStoredProcedureAsync(collectionLink, new StoredProcedure
+                async Task DeployStoredProcedureToCollection(string collection, string storedProcedureName)
+                {
+                    var scriptFilePath = $"Dfc.ProviderPortal.Apprenticeships.Data.StoredProcedures.{storedProcedureName}.js";
+
+                    using (var stream = typeof(CosmosDbHelper).Assembly.GetManifestResourceStream(scriptFilePath))
                     {
-                        Id = StoredProcedureName,
-                        Body = sProcresult
-                    });
+                        if (stream == null)
+                        {
+                            throw new ArgumentException(
+                                $"Cannot find stored procedure '{scriptFilePath}'.",
+                                nameof(storedProcedureName));
+                        }
+
+                        string script;
+                        using (var reader = new StreamReader(stream))
+                        {
+                            script = reader.ReadToEnd();
+                        }
+
+                        var storedProcId = storedProcedureName;
+                        var collectionUri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, collection);
+
+                        var storedProcedure = new StoredProcedure()
+                        {
+                            Body = script,
+                            Id = storedProcId
+                        };
+
+                        try
+                        {
+                            await client.CreateStoredProcedureAsync(collectionUri, storedProcedure);
+                        }
+                        catch (DocumentClientException dex) when (dex.StatusCode == System.Net.HttpStatusCode.Conflict)
+                        {
+                            // Already exists - replace it
+
+                            var sprocUri = UriFactory.CreateStoredProcedureUri(_settings.DatabaseId, collection, storedProcId);
+                            await client.ReplaceStoredProcedureAsync(sprocUri, storedProcedure);
+                        }
+                    }
                 }
             }
-            catch(Exception ex)
-            {
-                throw ex;
-              
-            }
-             
-            }
-           
         }
-           
-    }
 
+    }
+}
