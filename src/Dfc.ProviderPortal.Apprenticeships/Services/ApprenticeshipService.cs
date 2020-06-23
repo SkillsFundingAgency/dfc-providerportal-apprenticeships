@@ -251,9 +251,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
             Throw.IfNull<int>(UKPRN, nameof(UKPRN));
             Throw.IfLessThan(0, UKPRN, nameof(UKPRN));
 
-            var allApprenticeships = GetApprenticeshipByUKPRN(UKPRN).Result;
-            var apprenticeshipsToBeChanged = allApprenticeships.Where(x => x.RecordStatus == CurrentStatus).ToList();
-
             int currentstatus = (int)CurrentStatus;
 
             int statusTobeChangeTo = (int)StatusToBeChangedTo; 
