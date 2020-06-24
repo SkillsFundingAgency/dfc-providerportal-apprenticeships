@@ -401,13 +401,18 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
         }
 
 
-        public async Task<int> UpdateRecordStatuses(DocumentClient client, string collectionId, string procedureName, int UKPRN, int currentStatus, int statusToBeChangedTo, int partitionKey)
+        public async Task<int> UpdateRecordStatuses(DocumentClient client, string collectionId, string procedureName, int UKPRN, int currentStatusMask, int newStatus, int partitionKey)
         {
             RequestOptions requestOptions = new RequestOptions { PartitionKey = new PartitionKey(partitionKey), EnableScriptLogging = true };
 
-            var response = await client.ExecuteStoredProcedureAsync<int>(UriFactory.CreateStoredProcedureUri(_settings.DatabaseId, collectionId, "UpdateRecordStatuses"), requestOptions, UKPRN, currentStatus, statusToBeChangedTo);
+            var response = await client.ExecuteStoredProcedureAsync<dynamic>(
+                UriFactory.CreateStoredProcedureUri(_settings.DatabaseId, collectionId, "UpdateRecordStatuses"),
+                requestOptions,
+                UKPRN,
+                currentStatusMask,
+                newStatus);
 
-            return response;
+            return response.Response.updated;
 
         }
 
