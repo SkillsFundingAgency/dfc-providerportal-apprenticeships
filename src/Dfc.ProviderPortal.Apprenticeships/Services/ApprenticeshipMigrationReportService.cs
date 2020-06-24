@@ -25,26 +25,24 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
         public async Task CreateApprenticeshipReport(ApprenticeshipMigrationReport report)
         {
-            using (var client = _cosmosDbHelper.GetClient())
+            var client = _cosmosDbHelper.GetClient();
+            await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
+            await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client,
+                _settings.ApprenticeshipReportCollectionId);
+
+            var result = _cosmosDbHelper.GetDocumentsByUKPRN<ApprenticeshipMigrationReport>(client, _settings.ApprenticeshipReportCollectionId,
+                report.ProviderUKPRN);
+
+            if (result.Any())
             {
-                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
-                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client,
-                    _settings.ApprenticeshipReportCollectionId);
+                report.Id = result.FirstOrDefault().Id;
 
-                var result = _cosmosDbHelper.GetDocumentsByUKPRN<ApprenticeshipMigrationReport>(client, _settings.ApprenticeshipReportCollectionId,
-                    report.ProviderUKPRN);
-
-                if (result.Any())
-                {
-                    report.Id = result.FirstOrDefault().Id;
-
-                    await _cosmosDbHelper.UpdateDocumentAsync(client, _settings.ApprenticeshipReportCollectionId,
-                        report);
-                }
-                else
-                {
-                    var doc = await _cosmosDbHelper.CreateDocumentAsync(client, _settings.ApprenticeshipReportCollectionId, report);
-                }
+                await _cosmosDbHelper.UpdateDocumentAsync(client, _settings.ApprenticeshipReportCollectionId,
+                    report);
+            }
+            else
+            {
+                var doc = await _cosmosDbHelper.CreateDocumentAsync(client, _settings.ApprenticeshipReportCollectionId, report);
             }
         }
     }
