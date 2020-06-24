@@ -55,13 +55,11 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
             Apprenticeship persisted;
 
-            using (var client = _cosmosDbHelper.GetClient())
-            {
-                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
-                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
-                var doc = await _cosmosDbHelper.CreateDocumentAsync(client, _settings.ApprenticeshipCollectionId, apprenticeship);
-                persisted = _cosmosDbHelper.DocumentTo<Apprenticeship>(doc);
-            }
+            var client = _cosmosDbHelper.GetClient();
+            await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
+            await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
+            var doc = await _cosmosDbHelper.CreateDocumentAsync(client, _settings.ApprenticeshipCollectionId, apprenticeship);
+            persisted = _cosmosDbHelper.DocumentTo<Apprenticeship>(doc);
 
             return persisted;
         }
@@ -69,22 +67,20 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
         {
             Throw.IfNullOrWhiteSpace(search, nameof(search));
             IEnumerable<IStandardsAndFrameworks> persisted = null;
-            using (var client = _cosmosDbHelper.GetClient())
-            {
-                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
-                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.StandardsCollectionId);
-                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.FrameworksCollectionId);
+            var client = _cosmosDbHelper.GetClient();
+            await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
+            await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.StandardsCollectionId);
+            await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.FrameworksCollectionId);
 
-                var standardDocs = _cosmosDbHelper.GetStandardsAndFrameworksBySearch(client, _settings.StandardsCollectionId, search);
-                var frameworkDocs = _cosmosDbHelper.GetStandardsAndFrameworksBySearch(client, _settings.FrameworksCollectionId, search);
-                if(frameworkDocs.Count > 0)
-                {
-                    frameworkDocs = _cosmosDbHelper.GetProgTypesForFramework(client, _settings.ProgTypesCollectionId, frameworkDocs);
-                }
-                var apprenticeshipsForUKPRN = 
-                
-                persisted = standardDocs.Concat(frameworkDocs);
+            var standardDocs = _cosmosDbHelper.GetStandardsAndFrameworksBySearch(client, _settings.StandardsCollectionId, search);
+            var frameworkDocs = _cosmosDbHelper.GetStandardsAndFrameworksBySearch(client, _settings.FrameworksCollectionId, search);
+            if(frameworkDocs.Count > 0)
+            {
+                frameworkDocs = _cosmosDbHelper.GetProgTypesForFramework(client, _settings.ProgTypesCollectionId, frameworkDocs);
             }
+            var apprenticeshipsForUKPRN = 
+                
+            persisted = standardDocs.Concat(frameworkDocs);
 
             return persisted;
         }
@@ -128,14 +124,12 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
             Apprenticeship persisted = null;
 
-            using (var client = _cosmosDbHelper.GetClient())
-            {
-                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
-                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
+            var client = _cosmosDbHelper.GetClient();
+            await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
+            await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
 
-                var doc = _cosmosDbHelper.GetDocumentById(client, _settings.ApprenticeshipCollectionId, id);
-                persisted = _cosmosDbHelper.DocumentTo<Apprenticeship>(doc);
-            }
+            var doc = _cosmosDbHelper.GetDocumentById(client, _settings.ApprenticeshipCollectionId, id);
+            persisted = _cosmosDbHelper.DocumentTo<Apprenticeship>(doc);
 
             return persisted;
         }
@@ -146,32 +140,29 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
             StandardsAndFrameworks persisted = null;
 
-            using (var client = _cosmosDbHelper.GetClient())
-            {
-                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
-                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.StandardsCollectionId);
-                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.FrameworksCollectionId);
+            var client = _cosmosDbHelper.GetClient();
+            await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
+            await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.StandardsCollectionId);
+            await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.FrameworksCollectionId);
 
-                Document doc = null;
-                switch((ApprenticeshipType)type)
-                {
-                    case ApprenticeshipType.StandardCode:
-                        {
-                            doc = _cosmosDbHelper.GetDocumentById(client, _settings.StandardsCollectionId, id);
-                            persisted = _cosmosDbHelper.DocumentTo<StandardsAndFrameworks>(doc);
-                            break;
-                        }
-                    case ApprenticeshipType.FrameworkCode:
-                        {
-                            doc = _cosmosDbHelper.GetDocumentById(client, _settings.FrameworksCollectionId, id);
-                            List<StandardsAndFrameworks> docs = new List<StandardsAndFrameworks>();
-                            docs.Add(_cosmosDbHelper.DocumentTo<StandardsAndFrameworks>(doc));
-                            docs = _cosmosDbHelper.GetProgTypesForFramework(client, _settings.ProgTypesCollectionId, docs);
-                            persisted = docs[0];
-                            break;
-                        }
-                }
-                
+            Document doc = null;
+            switch((ApprenticeshipType)type)
+            {
+                case ApprenticeshipType.StandardCode:
+                    {
+                        doc = _cosmosDbHelper.GetDocumentById(client, _settings.StandardsCollectionId, id);
+                        persisted = _cosmosDbHelper.DocumentTo<StandardsAndFrameworks>(doc);
+                        break;
+                    }
+                case ApprenticeshipType.FrameworkCode:
+                    {
+                        doc = _cosmosDbHelper.GetDocumentById(client, _settings.FrameworksCollectionId, id);
+                        List<StandardsAndFrameworks> docs = new List<StandardsAndFrameworks>();
+                        docs.Add(_cosmosDbHelper.DocumentTo<StandardsAndFrameworks>(doc));
+                        docs = _cosmosDbHelper.GetProgTypesForFramework(client, _settings.ProgTypesCollectionId, docs);
+                        persisted = docs[0];
+                        break;
+                    }
             }
 
             return persisted;
@@ -181,13 +172,11 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
             List<StandardsAndFrameworks> persisted = null;
 
-            using (var client = _cosmosDbHelper.GetClient())
-            {
-                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
-                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.StandardsCollectionId);
-                var doc = _cosmosDbHelper.GetStandardByCode(client, _settings.StandardsCollectionId, standardCode, standardVersion);
-                persisted = doc;
-            }
+            var client = _cosmosDbHelper.GetClient();
+            await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
+            await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.StandardsCollectionId);
+            var doc = _cosmosDbHelper.GetStandardByCode(client, _settings.StandardsCollectionId, standardCode, standardVersion);
+            persisted = doc;
 
             return persisted;
         }
@@ -197,13 +186,11 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
             List<StandardsAndFrameworks> persisted = null;
 
-            using (var client = _cosmosDbHelper.GetClient())
-            {
-                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
-                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.StandardsCollectionId);
-                var doc = _cosmosDbHelper.GetFrameworkByCode(client, _settings.FrameworksCollectionId, frameworkCode, progType, pathwayCode);
-                persisted = doc;
-            }
+            var client = _cosmosDbHelper.GetClient();
+            await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
+            await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.StandardsCollectionId);
+            var doc = _cosmosDbHelper.GetFrameworkByCode(client, _settings.FrameworksCollectionId, frameworkCode, progType, pathwayCode);
+            persisted = doc;
 
             return persisted;
         }
@@ -214,14 +201,12 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
             Throw.IfLessThan(0, UKPRN, nameof(UKPRN));
 
             IEnumerable<Apprenticeship> persisted = null;
-            using (var client = _cosmosDbHelper.GetClient())
-            {
-                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
-                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
+            var client = _cosmosDbHelper.GetClient();
+            await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
+            await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
 
-                var docs = _cosmosDbHelper.GetApprenticeshipByUKPRN(client, _settings.ApprenticeshipCollectionId, UKPRN);
-                persisted = docs;
-            }
+            var docs = _cosmosDbHelper.GetApprenticeshipByUKPRN(client, _settings.ApprenticeshipCollectionId, UKPRN);
+            persisted = docs;
 
             return persisted;
         }
@@ -234,14 +219,12 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
             Apprenticeship updated = null;
 
-            using (var client = _cosmosDbHelper.GetClient())
-            {
-                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
-                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
+            var client = _cosmosDbHelper.GetClient();
+            await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
+            await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
 
-                var updatedDocument = await _cosmosDbHelper.UpdateDocumentAsync(client, _settings.ApprenticeshipCollectionId, apprenticeship);
-                updated = _cosmosDbHelper.DocumentTo<Apprenticeship>(updatedDocument);
-            }
+            var updatedDocument = await _cosmosDbHelper.UpdateDocumentAsync(client, _settings.ApprenticeshipCollectionId, apprenticeship);
+            updated = _cosmosDbHelper.DocumentTo<Apprenticeship>(updatedDocument);
 
             return updated;
 
@@ -257,12 +240,10 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
             try
             {
-                using (var client = _cosmosDbHelper.GetClient())
-                {
-                    var spResults = await _cosmosDbHelper.UpdateRecordStatuses(client, _settings.ApprenticeshipCollectionId, "UpdateRecordStatuses", UKPRN, currentstatus, statusTobeChangeTo, UKPRN);
+                var client = _cosmosDbHelper.GetClient();
+                var spResults = await _cosmosDbHelper.UpdateRecordStatuses(client, _settings.ApprenticeshipCollectionId, "UpdateRecordStatuses", UKPRN, currentstatus, statusTobeChangeTo, UKPRN);
                                     
-                    return new HttpResponseMessage(HttpStatusCode.OK);
-                }
+                return new HttpResponseMessage(HttpStatusCode.OK);
                 
             }
             catch (Exception ex)
@@ -277,10 +258,8 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
             Throw.IfLessThan(0, UKPRN, nameof(UKPRN));
 
             List<string> results = null;
-            using (var client = _cosmosDbHelper.GetClient())
-            {
-                results = await _cosmosDbHelper.DeleteBulkUploadApprenticeships(client, _settings.ApprenticeshipCollectionId, UKPRN);
-            }
+            var client = _cosmosDbHelper.GetClient();
+            results = await _cosmosDbHelper.DeleteBulkUploadApprenticeships(client, _settings.ApprenticeshipCollectionId, UKPRN);
 
             return results;
         }
@@ -291,22 +270,18 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
             Throw.IfLessThan(0, UKPRN, nameof(UKPRN));
 
             List<string> results = null;
-            using (var client = _cosmosDbHelper.GetClient())
-            {
-                results = await _cosmosDbHelper.DeleteDocumentsByUKPRN(client, _settings.ApprenticeshipCollectionId, UKPRN);
-            }
+            var client = _cosmosDbHelper.GetClient();
+            results = await _cosmosDbHelper.DeleteDocumentsByUKPRN(client, _settings.ApprenticeshipCollectionId, UKPRN);
 
             return results;
         }
         public async Task<IEnumerable<IApprenticeship>> GetApprenticeshipCollection()
         {
-            using (var client = _cosmosDbHelper.GetClient())
-            {
-                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
-                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
+            var client = _cosmosDbHelper.GetClient();
+            await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
+            await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
 
-                return _cosmosDbHelper.GetApprenticeshipCollection(client, _settings.ApprenticeshipCollectionId);
-            }
+            return _cosmosDbHelper.GetApprenticeshipCollection(client, _settings.ApprenticeshipCollectionId);
 
             
         }
@@ -341,39 +316,35 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
         public async Task<IEnumerable<IApprenticeship>> GetUpdatedApprenticeships()
         {
             IEnumerable<Apprenticeship> persisted = null;
-            
-            using (var client = _cosmosDbHelper.GetClient())
-            {
-                await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
-                await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
 
-                var docs = _cosmosDbHelper.GetApprenticeshipCollection(client, _settings.ApprenticeshipCollectionId);
-                persisted = OnlyUpdatedCourses(docs);
-                persisted = RemoveNonLiveApprenticeships(persisted);
-            }
+            var client = _cosmosDbHelper.GetClient();
+            await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
+            await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
+
+            var docs = _cosmosDbHelper.GetApprenticeshipCollection(client, _settings.ApprenticeshipCollectionId);
+            persisted = OnlyUpdatedCourses(docs);
+            persisted = RemoveNonLiveApprenticeships(persisted);
 
             return persisted;
         }
         public async Task<ApprenticeshipDashboardCounts> GetApprenticeshipDashboardCounts(int ukprn)
         {
             ApprenticeshipDashboardCounts results = null;
-            
-            using (var client = _cosmosDbHelper.GetClient())
-            {
-                var docs = _cosmosDbHelper.GetApprenticeshipByUKPRN(client, _settings.ApprenticeshipCollectionId, ukprn);
-                if (docs.Any())
-                {
-                    results = new ApprenticeshipDashboardCounts
-                    {
-                        PublishedApprenticeshipCount = docs.Count(x => x.RecordStatus == RecordStatus.Live),
-                        BulkUploadPendingCount = docs.Count(x => x.RecordStatus == RecordStatus.BulkUploadPending),
-                        BulkUploadReadyToGoLiveCount = docs.Count(x => x.RecordStatus == RecordStatus.BulkUploadReadyToGoLive),
-                        BulkUploadTotalCount = docs.Count(x => x.RecordStatus == RecordStatus.BulkUploadReadyToGoLive || x.RecordStatus == RecordStatus.BulkUploadPending),
-                        TotalErrors = docs.Where(x => x.RecordStatus == RecordStatus.BulkUploadPending).SelectMany(x => x.BulkUploadErrors).Count(),
-                        FileUploadDate = docs.Select(x => x.CreatedDate.Date).SingleOrDefault(),
 
-                    };
-                }
+            var client = _cosmosDbHelper.GetClient();
+            var docs = _cosmosDbHelper.GetApprenticeshipByUKPRN(client, _settings.ApprenticeshipCollectionId, ukprn);
+            if (docs.Any())
+            {
+                results = new ApprenticeshipDashboardCounts
+                {
+                    PublishedApprenticeshipCount = docs.Count(x => x.RecordStatus == RecordStatus.Live),
+                    BulkUploadPendingCount = docs.Count(x => x.RecordStatus == RecordStatus.BulkUploadPending),
+                    BulkUploadReadyToGoLiveCount = docs.Count(x => x.RecordStatus == RecordStatus.BulkUploadReadyToGoLive),
+                    BulkUploadTotalCount = docs.Count(x => x.RecordStatus == RecordStatus.BulkUploadReadyToGoLive || x.RecordStatus == RecordStatus.BulkUploadPending),
+                    TotalErrors = docs.Where(x => x.RecordStatus == RecordStatus.BulkUploadPending).SelectMany(x => x.BulkUploadErrors).Count(),
+                    FileUploadDate = docs.Select(x => x.CreatedDate.Date).SingleOrDefault(),
+
+                };
             }
 
             return results;
@@ -381,10 +352,8 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 		
         public async Task<int> GetTotalLiveApprenticeships()
         {
-            using (var documentClient = _cosmosDbHelper.GetClient())
-            {
-                return await _cosmosDbHelper.GetTotalLiveApprenticeships(documentClient, _settings.ApprenticeshipCollectionId);
-            }
+            var documentClient = _cosmosDbHelper.GetClient();
+            return await _cosmosDbHelper.GetTotalLiveApprenticeships(documentClient, _settings.ApprenticeshipCollectionId);
         }
         internal IEnumerable<Provider> GetProviderDetails(string UKPRN)
         {
