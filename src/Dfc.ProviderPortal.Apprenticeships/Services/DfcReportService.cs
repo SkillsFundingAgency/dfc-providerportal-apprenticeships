@@ -25,12 +25,10 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
         {
             try
             {
-                using (var client = _cosmosDbHelper.GetClient())
-                {
-                    var result = await _cosmosDbHelper.GetAllDfcMigrationReports(client,
-                        _settings.ApprenticeshipDfcReportCollectionId);
-                    return result;
-                }
+                var client = _cosmosDbHelper.GetClient();
+                var result = await _cosmosDbHelper.GetAllDfcMigrationReports(client,
+                    _settings.ApprenticeshipDfcReportCollectionId);
+                return result;
             }
             catch (Exception e)
             {

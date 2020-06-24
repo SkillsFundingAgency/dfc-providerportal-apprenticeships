@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Apprenticeships;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Settings;
+using Microsoft.Azure.Documents.Client;
+using Microsoft.Extensions.Options;
 
 [assembly: WebJobsStartup(typeof(WebJobsExtensionStartup), "Web Jobs Extension Startup")]
 
@@ -40,6 +42,16 @@ namespace Dfc.ProviderPortal.Apprenticeships
             builder.Services.AddScoped<IApprenticeshipService, ApprenticeshipService>();
             builder.Services.AddScoped<IApprenticeshipMigrationReportService, ApprenticeshipMigrationReportService>();
             builder.Services.AddScoped<IDfcReportService, DfcReportService>();
+
+            builder.Services.AddSingleton<DocumentClient>(sp =>
+            {
+                var settings = sp.GetRequiredService<IOptions<CosmosDbSettings>>().Value;
+
+                return new DocumentClient(
+                    new Uri(settings.EndpointUri),
+                    settings.PrimaryKey,
+                    new ConnectionPolicy() { ConnectionMode = ConnectionMode.Direct });
+            });
 
             var serviceProvider = builder.Services.BuildServiceProvider();
             serviceProvider.GetService<ICosmosDbHelper>().DeployStoredProcedures().Wait();
