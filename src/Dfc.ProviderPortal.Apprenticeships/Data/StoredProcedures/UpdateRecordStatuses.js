@@ -22,11 +22,10 @@
 
         var requestOptions = { continuation: continuation };
         var isAccepted = collection.queryDocuments(collectionLink, query, requestOptions, function (err, documents, responseOptions) {
-            if (documents.length > 0) {
-                for (var i = 0; i < documents.length; i++)
-                    tryUpdate(documents[i]);
-                tryQueryAndUpdate(responseOptions.continuation);
-            } else if (responseOptions.continuation) {
+            for (var i = 0; i < documents.length; i++)
+                tryUpdate(documents[i]);
+
+            if (responseOptions.continuation) {
                 tryQueryAndUpdate(responseOptions.continuation);
             } else {
                 response.setBody({ updated: updated });
@@ -41,13 +40,17 @@
         var requestOptions = { etag: document._etag };
 
         document.ApprenticeshipLocations.forEach(l => {
-            if (l.RecordStatus & currentStatusMask !== 0)
+            if ((l.RecordStatus & currentStatusMask) !== 0)
                 l.RecordStatus = newStatus;
         });
 
-        document.RecordStatus = document.ApprenticeshipLocations.reduce(function (accumulator, currentValue) {
-            return currentValue | accumulator;
-        }, 0);
+        document.RecordStatus = document.ApprenticeshipLocations
+            .map(function (location) {
+                return location.RecordStatus;
+            })
+            .reduce(function (accumulator, currentValue) {
+                return currentValue | accumulator;
+            }, 0);
 
         var isAccepted = collection.replaceDocument(document._self, document, requestOptions, function (err, updatedDocument, responseOptions) {
             if (err) throw err;
