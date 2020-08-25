@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,9 +27,22 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
             {
                 var requestBody = await streamReader.ReadToEndAsync();
 
+                // Default to processing in parallel if query parameter is not supplied
+                var processInParallel = !req.Query["parallel"].ToString().Equals("false", StringComparison.OrdinalIgnoreCase);
+
                 var apprenticeships = JsonConvert.DeserializeObject<IEnumerable<Apprenticeship>>(requestBody);
 
-                await Task.WhenAll(apprenticeships.Select(a => apprenticeshipService.AddApprenticeship(a)));
+                if (processInParallel)
+                {
+                    await Task.WhenAll(apprenticeships.Select(a => apprenticeshipService.AddApprenticeship(a)));
+                }
+                else
+                {
+                    foreach (var app in apprenticeships)
+                    {
+                        await apprenticeshipService.AddApprenticeship(app);
+                    }
+                }
 
                 return new OkResult();
             }
