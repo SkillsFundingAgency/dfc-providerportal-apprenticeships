@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
 using Dfc.ProviderPortal.Apprenticeships.Models;
@@ -16,6 +17,8 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
 {
     public static class AddApprenticeships
     {
+        private const int AddApprenticeshipsConcurrencyLimit = 10;
+
         [FunctionName("AddApprenticeships")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
@@ -28,7 +31,22 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
 
                 var apprenticeships = JsonConvert.DeserializeObject<IEnumerable<Apprenticeship>>(requestBody);
 
-                await Task.WhenAll(apprenticeships.Select(a => apprenticeshipService.AddApprenticeship(a)));
+                using (var throttle = new SemaphoreSlim(AddApprenticeshipsConcurrencyLimit))
+                {
+                    await Task.WhenAll(apprenticeships.Select(async a =>
+                    {
+                        await throttle.WaitAsync();
+
+                        try
+                        {
+                            await apprenticeshipService.AddApprenticeship(a);
+                        }
+                        finally
+                        {
+                            throttle.Release();
+                        }
+                    }));
+                }
 
                 return new OkResult();
             }
