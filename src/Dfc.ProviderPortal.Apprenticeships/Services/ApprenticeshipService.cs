@@ -57,7 +57,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Services
 
             var client = _cosmosDbHelper.GetClient();
             await _cosmosDbHelper.CreateDatabaseIfNotExistsAsync(client);
-            await _cosmosDbHelper.CreateDocumentCollectionIfNotExistsAsync(client, _settings.ApprenticeshipCollectionId);
             var doc = await _cosmosDbHelper.CreateDocumentAsync(client, _settings.ApprenticeshipCollectionId, apprenticeship);
             persisted = _cosmosDbHelper.DocumentTo<Apprenticeship>(doc);
 
