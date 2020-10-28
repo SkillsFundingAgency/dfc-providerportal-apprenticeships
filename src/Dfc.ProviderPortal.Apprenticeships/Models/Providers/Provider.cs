@@ -55,8 +55,6 @@ namespace Dfc.ProviderPortal.Apprenticeships.Models.Providers
         [Description("F.E.")]
         Fe = 1,
         [Description("Apprenticeships")]
-        Apprenticeship = 2,
-        [Description("Both")]
-        Both = Fe | Apprenticeship
+        Apprenticeship = 2
     }
 }
