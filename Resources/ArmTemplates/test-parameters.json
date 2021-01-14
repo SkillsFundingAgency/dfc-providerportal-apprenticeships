@@ -55,6 +55,9 @@
       },
       "CourseDirectoryDefaultRequestsUnits": {
         "value": 400
+      },
+      "providerPortalApplicationInsights":{
+        "value": "dfc-dev-prov-as-ai"
       }
     }
   }
