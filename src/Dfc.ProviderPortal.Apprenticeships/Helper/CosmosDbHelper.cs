@@ -29,12 +29,14 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
         private static readonly Regex _searchableChars = new Regex("[^a-z0-9]", RegexOptions.IgnoreCase);
 
         private readonly ICosmosDbSettings _settings;
+        private readonly DocumentClient _client;
 
-        public CosmosDbHelper(IOptions<CosmosDbSettings> settings)
+        public CosmosDbHelper(IOptions<CosmosDbSettings> settings, DocumentClient documentClient)
         {
             Throw.IfNull(settings, nameof(settings));
 
             _settings = settings.Value;
+            _client = documentClient;
         }
 
         public async Task<Database> CreateDatabaseIfNotExistsAsync(DocumentClient client)
@@ -97,10 +99,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
             return (IEnumerable<T>)(IEnumerable<dynamic>)documents;
         }
 
-        public DocumentClient GetClient()
-        {
-            return new DocumentClient(new Uri(_settings.EndpointUri), _settings.PrimaryKey);
-        }
+        public DocumentClient GetClient() => _client;
 
         public Document GetDocumentById<T>(DocumentClient client, string collectionId, T id)
         {
@@ -402,62 +401,66 @@ namespace Dfc.ProviderPortal.Apprenticeships.Helper
         }
 
 
-        public async Task<int> UpdateRecordStatuses(DocumentClient client, string collectionId, string procedureName, int UKPRN, int currentStatus, int statusToBeChangedTo, int partitionKey)
+        public async Task<int> UpdateRecordStatuses(DocumentClient client, string collectionId, string procedureName, int UKPRN, int currentStatusMask, int newStatus, int partitionKey)
         {
             RequestOptions requestOptions = new RequestOptions { PartitionKey = new PartitionKey(partitionKey), EnableScriptLogging = true };
 
-            var response = await client.ExecuteStoredProcedureAsync<int>(UriFactory.CreateStoredProcedureUri(_settings.DatabaseId, collectionId, "UpdateRecordStatuses"), requestOptions, UKPRN, currentStatus, statusToBeChangedTo);
+            var response = await client.ExecuteStoredProcedureAsync<dynamic>(
+                UriFactory.CreateStoredProcedureUri(_settings.DatabaseId, collectionId, "UpdateRecordStatuses"),
+                requestOptions,
+                UKPRN,
+                currentStatusMask,
+                newStatus);
 
-            return response;
+            return response.Response.updated;
 
         }
 
 
         public async Task DeployStoredProcedures()
         {
-            using (var client = GetClient())
+            var client = GetClient();
+            
+            await DeployStoredProcedureToCollection("apprenticeship", "UpdateRecordStatuses");
+
+            async Task DeployStoredProcedureToCollection(string collection, string storedProcedureName)
             {
-                await DeployStoredProcedureToCollection("apprenticeship", "UpdateRecordStatuses");
+                var scriptFilePath = $"Dfc.ProviderPortal.Apprenticeships.Data.StoredProcedures.{storedProcedureName}.js";
 
-                async Task DeployStoredProcedureToCollection(string collection, string storedProcedureName)
+                using (var stream = typeof(CosmosDbHelper).Assembly.GetManifestResourceStream(scriptFilePath))
                 {
-                    var scriptFilePath = $"Dfc.ProviderPortal.Apprenticeships.Data.StoredProcedures.{storedProcedureName}.js";
-
-                    using (var stream = typeof(CosmosDbHelper).Assembly.GetManifestResourceStream(scriptFilePath))
+                    if (stream == null)
                     {
-                        if (stream == null)
-                        {
-                            throw new ArgumentException(
-                                $"Cannot find stored procedure '{scriptFilePath}'.",
-                                nameof(storedProcedureName));
-                        }
+                        throw new ArgumentException(
+                            $"Cannot find stored procedure '{scriptFilePath}'.",
+                            nameof(storedProcedureName));
+                    }
 
-                        string script;
-                        using (var reader = new StreamReader(stream))
-                        {
-                            script = reader.ReadToEnd();
-                        }
+                    string script;
+                    using (var reader = new StreamReader(stream))
+                    {
+                        script = reader.ReadToEnd();
+                    }
 
-                        var storedProcId = storedProcedureName;
-                        var collectionUri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, collection);
+                    var storedProcId = storedProcedureName;
+                    var collectionUri = UriFactory.CreateDocumentCollectionUri(_settings.DatabaseId, collection);
 
-                        var storedProcedure = new StoredProcedure()
-                        {
-                            Body = script,
-                            Id = storedProcId
-                        };
+                    var storedProcedure = new StoredProcedure()
+                    {
+                        Body = script,
+                        Id = storedProcId
+                    };
 
-                        try
-                        {
-                            await client.CreateStoredProcedureAsync(collectionUri, storedProcedure);
-                        }
-                        catch (DocumentClientException dex) when (dex.StatusCode == System.Net.HttpStatusCode.Conflict)
-                        {
-                            // Already exists - replace it
+                    try
+                    {
+                        await client.CreateStoredProcedureAsync(collectionUri, storedProcedure);
+                    }
+                    catch (DocumentClientException dex) when (dex.StatusCode == System.Net.HttpStatusCode.Conflict)
+                    {
+                        // Already exists - replace it
 
-                            var sprocUri = UriFactory.CreateStoredProcedureUri(_settings.DatabaseId, collection, storedProcId);
-                            await client.ReplaceStoredProcedureAsync(sprocUri, storedProcedure);
-                        }
+                        var sprocUri = UriFactory.CreateStoredProcedureUri(_settings.DatabaseId, collection, storedProcId);
+                        await client.ReplaceStoredProcedureAsync(sprocUri, storedProcedure);
                     }
                 }
             }

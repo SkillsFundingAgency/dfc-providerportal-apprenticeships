@@ -40,16 +40,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
             if (!int.TryParse(qryCurrentStatus, out int intCurrentStatus))
                 return new BadRequestObjectResult($"Invalid CurrentStatus value, expected a valid integer");
 
-            List<Apprenticeship> persisted = null;
-            RecordStatus CurrentStatus = RecordStatus.Undefined;
-            if (Enum.IsDefined(typeof(RecordStatus), intCurrentStatus))
-            {
-                CurrentStatus = (RecordStatus)Enum.ToObject(typeof(RecordStatus), intCurrentStatus);
-            }
-            else
-            {
-                return new BadRequestObjectResult($"CurrentStatus value cannot be parse into valid RecordStatus");
-            }
+            RecordStatus CurrentStatus = (RecordStatus)intCurrentStatus;
 
             if (string.IsNullOrWhiteSpace(qryStatusToBeChangedTo))
                 return new BadRequestObjectResult($"Empty or missing StatusToBeChangedTo value.");
@@ -72,16 +63,9 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
                 return new BadRequestObjectResult($"StatusToBeChangedTo value is not allowed to be with  Undefined RecordStatus");
             }
 
-            try
-            {
-                var returnCode = await apprenticeshipService.ChangeApprenticeshipStatusForUKPRNSelection(UKPRN, CurrentStatus, StatusToBeChangedTo);
+            await apprenticeshipService.ChangeApprenticeshipStatusForUKPRNSelection(UKPRN, CurrentStatus, StatusToBeChangedTo);
 
-                return new OkObjectResult(returnCode);
-            }
-            catch (Exception e)
-            {
-                return new InternalServerErrorObjectResult(e);
-            }
+            return new OkResult();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Interfaces.Services
         Task<IStandardsAndFrameworks> GetStandardsAndFrameworksById(Guid id, int type);
         Task<IEnumerable<IApprenticeship>> GetApprenticeshipByUKPRN(int UKPRN);
         Task<IApprenticeship> Update(IApprenticeship apprenticeship);
-        Task<HttpResponseMessage> ChangeApprenticeshipStatusForUKPRNSelection(int UKPRN, RecordStatus CurrentStatus, RecordStatus StatusToBeChangedTo);
+        Task ChangeApprenticeshipStatusForUKPRNSelection(int UKPRN, RecordStatus CurrentStatus, RecordStatus StatusToBeChangedTo);
         Task<List<string>> DeleteBulkUploadApprenticeships(int UKPRN);
         Task<List<string>> DeleteApprenticeshipsByUKPRN(int UKPRN);
         Task<IEnumerable<IApprenticeship>> GetApprenticeshipCollection();
