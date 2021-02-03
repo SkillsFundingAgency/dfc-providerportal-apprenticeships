@@ -6,25 +6,27 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
 using Dfc.ProviderPortal.Apprenticeships.Models;
-using Dfc.ProviderPortal.Packages.AzureFunctions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Functions
 {
-    public static class AddApprenticeships
+    public class AddApprenticeships
     {
         private const int MaxConcurrency = 10;
+        private readonly IApprenticeshipService _apprenticeshipService;
+
+        public AddApprenticeships(IApprenticeshipService apprenticeshipService)
+        {
+            _apprenticeshipService = apprenticeshipService;
+        }
 
         [FunctionName("AddApprenticeships")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
-            ILogger log,
-            [Inject] IApprenticeshipService apprenticeshipService)
+        public async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req)
         {
             using (var streamReader = new StreamReader(req.Body))
             {
@@ -45,7 +47,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
 
                             try
                             {
-                                await apprenticeshipService.AddApprenticeship(a);
+                                await _apprenticeshipService.AddApprenticeship(a);
                             }
                             finally
                             {
@@ -58,7 +60,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
                 {
                     foreach (var app in apprenticeships)
                     {
-                        await apprenticeshipService.AddApprenticeship(app);
+                        await _apprenticeshipService.AddApprenticeship(app);
                     }
                 }
 

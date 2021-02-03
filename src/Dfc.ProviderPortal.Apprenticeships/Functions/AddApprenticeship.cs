@@ -1,25 +1,28 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
+using Dfc.ProviderPortal.Apprenticeships.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Dfc.ProviderPortal.Apprenticeships.Models;
-using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
-using Dfc.ProviderPortal.Packages.AzureFunctions.DependencyInjection;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Functions
 {
-    public static class AddApprenticeship
+    public class AddApprenticeship
     {
+        private readonly IApprenticeshipService _apprenticeshipService;
+
+        public AddApprenticeship(IApprenticeshipService apprenticeshipService)
+        {
+            _apprenticeshipService = apprenticeshipService;
+        }
+
         [FunctionName("AddApprenticeship")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
-            ILogger log,
-            [Inject] IApprenticeshipService apprenticeshipService)
+        public async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req)
         {
             using (var streamReader = new StreamReader(req.Body))
             {
@@ -39,7 +42,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
 
                 try
                 {
-                    persisted = (Apprenticeship)await apprenticeshipService.AddApprenticeship(fromBody);
+                    persisted = (Apprenticeship)await _apprenticeshipService.AddApprenticeship(fromBody);
                 }
                 catch (Exception e)
                 {

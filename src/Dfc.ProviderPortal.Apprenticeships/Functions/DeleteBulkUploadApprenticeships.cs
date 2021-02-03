@@ -1,27 +1,28 @@
-﻿using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
-using Dfc.ProviderPortal.Apprenticeships.Models.Enums;
-using Dfc.ProviderPortal.Packages.AzureFunctions.DependencyInjection;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
+using Dfc.ProviderPortal.Apprenticeships.Models.Enums;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Http;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Functions
 {
-    public static class DeleteBulkUploadApprenticeships
+    public class DeleteBulkUploadApprenticeships
     {
-        [FunctionName("DeleteBulkUploadApprenticeships")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]
-            HttpRequestMessage req,
-            ILogger log,
-            [Inject] IApprenticeshipService coursesService)
-        {
-            log.LogInformation($"DeleteCoursesByUKPRN starting");
+        private readonly IApprenticeshipService _coursesService;
 
+        public DeleteBulkUploadApprenticeships(IApprenticeshipService coursesService)
+        {
+            _coursesService = coursesService;
+        }
+
+        [FunctionName("DeleteBulkUploadApprenticeships")]
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]
+            HttpRequestMessage req)
+        {
             string strUKPRN = req.RequestUri.ParseQueryString()["UKPRN"]?.ToString()
                               ?? (await (dynamic)req.Content.ReadAsAsync<object>())?.UKPRN;
 
@@ -35,12 +36,12 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
 
             try
             {
-                messagesList = await coursesService.DeleteBulkUploadApprenticeships(UKPRN);
+                messagesList = await _coursesService.DeleteBulkUploadApprenticeships(UKPRN);
 
-                await coursesService.ChangeApprenticeshipStatusForUKPRNSelection(UKPRN, RecordStatus.MigrationPending,
+                await _coursesService.ChangeApprenticeshipStatusForUKPRNSelection(UKPRN, RecordStatus.MigrationPending,
                     RecordStatus.Archived);
 
-                await coursesService.ChangeApprenticeshipStatusForUKPRNSelection(UKPRN,
+                await _coursesService.ChangeApprenticeshipStatusForUKPRNSelection(UKPRN,
                     RecordStatus.MigrationReadyToGoLive, RecordStatus.Archived);
 
                 if (messagesList == null)

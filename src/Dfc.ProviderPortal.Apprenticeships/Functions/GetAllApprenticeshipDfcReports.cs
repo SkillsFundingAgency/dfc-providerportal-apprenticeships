@@ -1,27 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Apprenticeships;
-using Dfc.ProviderPortal.Packages.AzureFunctions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Extensions.Logging;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Functions
 {
-    public static class GetAllApprenticeshipDfcReports
+    public class GetAllApprenticeshipDfcReports
     {
+        private readonly IDfcReportService _dfcReportService;
+
+        public GetAllApprenticeshipDfcReports(IDfcReportService dfcReportService)
+        {
+            _dfcReportService = dfcReportService;
+        }
+
         [FunctionName("GetAllDfcReports")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
-            ILogger log,
-            [Inject] IDfcReportService dfcReportService)
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
         {
             try
             {
-                var result = await dfcReportService.GetDfcReports();
+                var result = await _dfcReportService.GetDfcReports();
                 return new OkObjectResult(result);
 
             }

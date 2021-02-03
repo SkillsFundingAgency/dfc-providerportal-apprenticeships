@@ -1,26 +1,26 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
+using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
+using Dfc.ProviderPortal.Apprenticeships.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
-using Dfc.ProviderPortal.Packages.AzureFunctions.DependencyInjection;
-using Dfc.ProviderPortal.Apprenticeships.Models;
-using Dfc.ProviderPortal.Apprenticeships.Models.Enums;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Functions
 {
-    public static class GetStandardsAndFrameworkById
+    public class GetStandardsAndFrameworkById
     {
+        private readonly IApprenticeshipService _apprenticeshipService;
+
+        public GetStandardsAndFrameworkById(IApprenticeshipService apprenticeshipService)
+        {
+            _apprenticeshipService = apprenticeshipService;
+        }
+
         [FunctionName("GetStandardsAndFrameworksById")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
-            ILogger log,
-            [Inject] IApprenticeshipService apprenticeshipService)
+        public async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
         {
             string fromQueryId = req.Query["id"];
             string fromQueryType = req.Query["type"];
@@ -42,7 +42,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
 
             try
             {
-                persisted = (StandardsAndFrameworks)await apprenticeshipService.GetStandardsAndFrameworksById(id, apprenticeshipType);
+                persisted = (StandardsAndFrameworks)await _apprenticeshipService.GetStandardsAndFrameworksById(id, apprenticeshipType);
 
                 if (persisted == null)
                 {
