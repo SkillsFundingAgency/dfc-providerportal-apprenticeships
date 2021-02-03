@@ -1,25 +1,24 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
-using Dfc.ProviderPortal.Apprenticeships.Models;
-using Dfc.ProviderPortal.Packages.AzureFunctions.DependencyInjection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Functions
 {
-    public static class GetApprenticeshipDashboardCounts
+    public class GetApprenticeshipDashboardCounts
     {
+        private readonly IApprenticeshipService _apprenticeshipService;
+
+        public GetApprenticeshipDashboardCounts(IApprenticeshipService apprenticeshipService)
+        {
+            _apprenticeshipService = apprenticeshipService;
+        }
+
         [FunctionName("GetApprenticeshipDashboardCounts")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
-            ILogger log,
-            [Inject] IApprenticeshipService apprenticeshipService)
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
         {
             string fromQuery = req.Query["UKPRN"];
 
@@ -31,7 +30,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
 
             try
             {
-                var results = await apprenticeshipService.GetApprenticeshipDashboardCounts(UKPRN);
+                var results = await _apprenticeshipService.GetApprenticeshipDashboardCounts(UKPRN);
                 if (results == null)
                     return new NotFoundObjectResult(UKPRN);
 

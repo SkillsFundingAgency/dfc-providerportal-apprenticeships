@@ -1,24 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
-using Dfc.ProviderPortal.Apprenticeships.Models;
 using Dfc.ProviderPortal.Apprenticeships.Models.Enums;
-using Dfc.ProviderPortal.Packages.AzureFunctions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Extensions.Logging;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Functions
 {
-    public static class ChangeApprenticeshipStatusForUKPRNSelection
+    public class ChangeApprenticeshipStatusForUKPRNSelection
     {
+        private readonly IApprenticeshipService _apprenticeshipService;
+
+        public ChangeApprenticeshipStatusForUKPRNSelection(IApprenticeshipService apprenticeshipService)
+        {
+            _apprenticeshipService = apprenticeshipService;
+        }
+
         [FunctionName("ChangeApprenticeshipStatusForUKPRNSelection")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequestMessage req,
-            ILogger log,
-            [Inject] IApprenticeshipService apprenticeshipService)
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequestMessage req)
         {
 
             var qryUKPRN = req.RequestUri.ParseQueryString()["UKPRN"]?.ToString()
@@ -63,7 +64,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
                 return new BadRequestObjectResult($"StatusToBeChangedTo value is not allowed to be with  Undefined RecordStatus");
             }
 
-            await apprenticeshipService.ChangeApprenticeshipStatusForUKPRNSelection(UKPRN, CurrentStatus, StatusToBeChangedTo);
+            await _apprenticeshipService.ChangeApprenticeshipStatusForUKPRNSelection(UKPRN, CurrentStatus, StatusToBeChangedTo);
 
             return new OkResult();
         }

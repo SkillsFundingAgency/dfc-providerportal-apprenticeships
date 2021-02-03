@@ -1,47 +1,58 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Dfc.ProviderPortal.Apprenticeships;
+using Dfc.ProviderPortal.Apprenticeships.Helper;
+using Dfc.ProviderPortal.Apprenticeships.Interfaces.Apprenticeships;
+using Dfc.ProviderPortal.Apprenticeships.Interfaces.Helper;
+using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
+using Dfc.ProviderPortal.Apprenticeships.Services;
+using Dfc.ProviderPortal.Apprenticeships.Settings;
+using DFC.Swagger.Standard;
+using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
-using Newtonsoft.Json.Serialization;
+using Microsoft.Extensions.Options;
+[assembly: FunctionsStartup(typeof(Startup))]
 
 namespace Dfc.ProviderPortal.Apprenticeships
 {
-    public class Startup
+    public class Startup : FunctionsStartup
     {
-        public Startup(IConfiguration configuration)
+        public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
         {
-            Configuration = configuration;
+            builder.ConfigurationBuilder
+                .SetBasePath(Environment.CurrentDirectory)
+                .AddJsonFile("local.settings.json", optional: true);
         }
 
-        public IConfiguration Configuration { get; }
-
-        public void ConfigureServices(IServiceCollection services)
+        public override void Configure(IFunctionsHostBuilder builder)
         {
-            services
-                .AddMvcCore()
-                .SetCompatibilityVersion(CompatibilityVersion.Latest)
-                .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
-                .AddApiExplorer();
+            var configuration = builder.GetContext().Configuration;
 
-            services.AddSwaggerGen(c =>
+            builder.Services.Configure<CosmosDbSettings>(configuration.GetSection(nameof(CosmosDbSettings)));
+            builder.Services.Configure<CosmosDbCollectionSettings>(configuration.GetSection(nameof(CosmosDbCollectionSettings)));
+            builder.Services.Configure<ProviderServiceSettings>(configuration.GetSection(nameof(ProviderServiceSettings)));
+            builder.Services.Configure<ReferenceDataServiceSettings>(configuration.GetSection(nameof(ReferenceDataServiceSettings)));
+            builder.Services.AddScoped<IReferenceDataServiceWrapper, ReferenceDataServiceWrapper>();
+            builder.Services.AddScoped<ICosmosDbHelper, CosmosDbHelper>();
+            builder.Services.AddScoped<ITribalHelper, TribalHelper>();
+            builder.Services.AddScoped<IApprenticeshipService, ApprenticeshipService>();
+            builder.Services.AddScoped<IApprenticeshipMigrationReportService, ApprenticeshipMigrationReportService>();
+            builder.Services.AddScoped<IDfcReportService, DfcReportService>();
+            builder.Services.AddScoped<ISwaggerDocumentGenerator, SwaggerDocumentGenerator>();
+
+            builder.Services.AddSingleton<DocumentClient>(sp =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Course Directory Apprenticeships API", Version = "v1" });
-            });
-        }
+                var settings = sp.GetRequiredService<IOptions<CosmosDbSettings>>().Value;
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-            app.UseSwagger();
-
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Course Directory Couese  API");
+                return new DocumentClient(
+                    new Uri(settings.EndpointUri),
+                    settings.PrimaryKey,
+                    new ConnectionPolicy() { ConnectionMode = ConnectionMode.Direct });
             });
 
-            app.UseMvc();
+            var serviceProvider = builder.Services.BuildServiceProvider();
+            serviceProvider.GetService<ICosmosDbHelper>().DeployStoredProcedures().Wait();
         }
     }
 }

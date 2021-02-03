@@ -1,25 +1,26 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
+using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
+using Dfc.ProviderPortal.Apprenticeships.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Dfc.ProviderPortal.Packages.AzureFunctions.DependencyInjection;
-using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
-using Dfc.ProviderPortal.Apprenticeships.Models;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Functions
 {
-    public static class SearchApprenticeshipById
+    public class SearchApprenticeshipById
     {
+        private readonly IApprenticeshipService _apprenticeshipService;
+
+        public SearchApprenticeshipById(IApprenticeshipService apprenticeshipService)
+        {
+            _apprenticeshipService = apprenticeshipService;
+        }
+
         [FunctionName("GetApprenticeshipById")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
-            ILogger log,
-            [Inject] IApprenticeshipService apprenticeshipService)
+        public async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
         {
             string fromQuery = req.Query["id"];
             Apprenticeship persisted = null;
@@ -36,7 +37,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
 
             try
             {
-                persisted = (Apprenticeship)await apprenticeshipService.GetApprenticeshipById(id);
+                persisted = (Apprenticeship)await _apprenticeshipService.GetApprenticeshipById(id);
 
                 if (persisted == null)
                 {

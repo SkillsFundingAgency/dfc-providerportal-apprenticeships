@@ -1,25 +1,26 @@
 using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
+using Dfc.ProviderPortal.Apprenticeships.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
-using Dfc.ProviderPortal.Packages.AzureFunctions.DependencyInjection;
-using Dfc.ProviderPortal.Apprenticeships.Models;
-using System.Collections.Generic;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Functions
 {
-    public static class GetFrameworkByCode
+    public class GetFrameworkByCode
     {
+        private readonly IApprenticeshipService _apprenticeshipService;
+
+        public GetFrameworkByCode(IApprenticeshipService apprenticeshipService)
+        {
+            _apprenticeshipService = apprenticeshipService;
+        }
+
         [FunctionName("GetFrameworkByCode")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
-                                                    ILogger log,
-                                                    [Inject] IApprenticeshipService apprenticeshipService)
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
         {
             string codeFromQuery = req.Query["FrameworkCode"];
             string progTypeFromQuery = req.Query["ProgType"];
@@ -46,7 +47,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
 
             try
             {
-                persisted = await apprenticeshipService.GetFrameworkByCode(frameworkCode, progType, pathwayCode);
+                persisted = await _apprenticeshipService.GetFrameworkByCode(frameworkCode, progType, pathwayCode);
                 if (persisted == null)
                     return new NotFoundObjectResult(frameworkCode);
 

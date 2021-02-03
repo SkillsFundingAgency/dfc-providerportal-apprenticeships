@@ -1,25 +1,26 @@
 using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
+using Dfc.ProviderPortal.Apprenticeships.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Dfc.ProviderPortal.Apprenticeships.Interfaces.Services;
-using Dfc.ProviderPortal.Packages.AzureFunctions.DependencyInjection;
-using Dfc.ProviderPortal.Apprenticeships.Models;
-using System.Collections.Generic;
 
 namespace Dfc.ProviderPortal.Apprenticeships.Functions
 {
-    public static class GetStandardByCode
+    public class GetStandardByCode
     {
+        private readonly IApprenticeshipService _apprenticeshipService;
+
+        public GetStandardByCode(IApprenticeshipService apprenticeshipService)
+        {
+            _apprenticeshipService = apprenticeshipService;
+        }
+
         [FunctionName("GetStandardByCode")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
-                                                    ILogger log,
-                                                    [Inject] IApprenticeshipService apprenticeshipService)
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
         {
             string codeFromQuery = req.Query["StandardCode"];
             string versionFromQuery = req.Query["Version"];
@@ -39,7 +40,7 @@ namespace Dfc.ProviderPortal.Apprenticeships.Functions
 
             try
             {
-                persisted = await apprenticeshipService.GetStandardByCode(standardCode, standardVersion);
+                persisted = await _apprenticeshipService.GetStandardByCode(standardCode, standardVersion);
                 if (persisted == null)
                     return new NotFoundObjectResult(standardCode);
 
