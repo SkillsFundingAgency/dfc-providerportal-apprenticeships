@@ -22,7 +22,7 @@ namespace Dfc.ProviderPortal.Apprenticeships
             services
                 .AddMvcCore()
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
-                .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
+                .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
                 .AddApiExplorer();
 
             services.AddSwaggerGen(c =>
