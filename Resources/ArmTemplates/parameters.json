@@ -2,8 +2,9 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
     "contentVersion": "1.0.0.0",
     "parameters": {
-      "appInsightsInstrumentationKey":{
-        "type": "string"
+      "appInsightsInstrumentationKey": {
+        "type": "string",
+        "value": "__appInsightsInstrumentationKey__" 
       },
       "functionAppPrefix": {
         "type": "string",
@@ -23,12 +24,12 @@
           "description": "Resource group the shared resources are in"
         }
       },
-      "providerPortalApplicationInsights": {
-        "type": "string",
-        "metadata": {
-          "description": "Application Insights Reference for Course Directory i.e. dfc-<env>-prov-as-ai"
-        }
-      },
+//      "providerPortalApplicationInsights": {
+//        "type": "string",
+//        "metadata": {
+//          "description": "Application Insights Reference for Course Directory i.e. dfc-<env>-prov-as-ai"
+//        }
+//      },
       "storageConnectionString": {
         "type": "securestring",
         "metadata": {
