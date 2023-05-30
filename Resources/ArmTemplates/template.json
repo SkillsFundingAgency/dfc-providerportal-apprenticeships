@@ -23,12 +23,12 @@
           "description": "Resource group the shared resources are in"
         }
       },
-      "providerPortalApplicationInsights": {
-        "type": "string",
-        "metadata": {
-          "description": "Application Insights Reference for Course Directory i.e. dfc-<env>-prov-as-ai"
-        }
-      },
+      // "providerPortalApplicationInsights": {
+      //   "type": "string",
+      //   "metadata": {
+      //     "description": "Application Insights Reference for Course Directory i.e. dfc-<env>-prov-as-ai"
+      //   }
+      // },
       "storageConnectionString": {
         "type": "securestring",
         "metadata": {
@@ -136,7 +136,7 @@
     },
     "variables": {
       "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/dfc-devops/master/ArmTemplates/",
-//      "functionAppName": "[concat(parameters('functionAppPrefix'),'-fa')]",
+      "functionAppName": "[concat(parameters('functionAppPrefix'),'-fa')]"
 //      "appInsightName": "[concat(parameters('functionAppPrefix'),'-ai')]"
     },
     "functions": [
@@ -357,7 +357,7 @@
       "functionAppName": {
         "type": "string",
         "value": "[variables('functionAppName')]"
-      },
+      }
       // "appInsightName": {
       //   "type": "string",
       //   "value": "[variables('appInsightName')]"
