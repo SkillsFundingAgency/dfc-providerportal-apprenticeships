@@ -1,72 +1,347 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
     "contentVersion": "1.0.0.0",
     "parameters": {
+      "appInsightsInstrumentationKey":{
+        "type": "string"
+      },
       "functionAppPrefix": {
-        "value": "__functionAppPrefix__"
+        "type": "string",
+        "metadata": {
+          "description": "Prefix for the function app resources, in the form dfc-env-proj-fnapp"
+        }
       },
       "appServicePlanName": {
-        "value": "__providerPortalAppServicePlan__"
+        "type": "string",
+        "metadata": {
+          "description": "App service plan to run the function app under"
+        }
       },
       "sharedResourceGroup": {
-        "value": "__providerPortalResourceGroup__"
-      },
-      "storageConnectionString": {
-        "value": "__providerPortalStorageConnectionStr__"
-      },
-      "cosmosDbFqdn": {
-        "value": "__providerPortalCosmosDbFqdn__"
-      },
-      "cosmosDbKey": {
-        "value": "__providerPortalCosmosDBPrimaryKey__"
-      },
-      "cosmosDbAccount": {
-        "value": "__providerPortalCosmosDBName__"
-      },
-      "cosmosDbDatabase": {
-        "value": "__providerPortalCosmosDbAccDatabaseName__"
-      },
-      "cosmosDbCollectionApprenticeship": {
-        "value": "__cosmosDbCollectionApprenticeship__"
-      },
-      "cosmosDbCollectionFrameworks": {
-        "value": "__cosmosDbCollectionFrameworks__"
-      },
-      "cosmosDbCollectionProgTypes": {
-        "value": "__cosmosDbCollectionProgTypes__"
-      },
-      "cosmosDbCollectionStandards": {
-        "value": "__cosmosDbCollectionStandards__"
-      },
-      "cosmosDbCollectionApprenticeshipReport": {
-        "value": "__cosmosDbCollectionApprenticeshipReport__"
-      },
-      "providerServiceSettingsApiUrl": {
-        "value": "__providerApiUrl__"
-      },
-      "providerServiceSettingsApiKey": {
-        "value": "__ApimPublishCourseDirectoryKey__"
-      },
-      "referenceDataServiceApiUrl": {
-        "value": "__referenceDataApiUrl__"
-      },
-      "referenceDataServiceApiKey": {
-        "value": "__ApimPublishCourseDirectoryKey__"
-      },
-      "CourseDirectoryDefaultRequestsUnits": {
-        "value": 400
-      },
-      "ApprenticeshipCollectionRequestUnits": {
-        "value": "__ApprenticeshipCollectionRequestUnits__"
-      },
-      "ApprenticeshipReportCollectionRequestUnits": {
-        "value": "__ApprenticeshipReportCollectionRequestUnits__"
+        "type": "string",
+        "metadata": {
+          "description": "Resource group the shared resources are in"
+        }
       },
       "providerPortalApplicationInsights": {
-        "value": "__providerportalApplicationInsights__"
+        "type": "string",
+        "metadata": {
+          "description": "Application Insights Reference for Course Directory i.e. dfc-<env>-prov-as-ai"
+        }
       },
-      "appInsightsInstrumentationKey": {
-        "value": "__appInsightsInstrumentationKey__" 
-    }
+      "storageConnectionString": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Connection string for the storage account to store function app files"
+        }
+      },
+      "cosmosDBfqdn": {
+        "type": "string",
+        "metadata": {
+          "description": "Cosmos DB account name in the format https://dfc-xxx-xxx-cdb.documents.azure.com/ for app settings"
+        }
+      },
+      "cosmosDBkey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Cosmos DB access key for app settings"
+        }
+      },
+      "cosmosDbAccount": {
+        "type": "string",
+        "metadata": {
+          "description": "Cosmos DB database name for creating collections"
+        }
+      },
+      "cosmosDBdatabase": {
+        "type": "string",
+        "metadata": {
+          "description": "Cosmos DB database name for app settings"
+        }
+      },
+      "cosmosDbCollectionApprenticeship": {
+        "type": "string",
+        "metadata": {
+          "description": "Cosmos DB collection name for app settings"
+        }
+      },
+      "cosmosDbCollectionFrameworks": {
+        "type": "string",
+        "metadata": {
+          "description": "Cosmos DB collection name for app settings"
+        }
+      },
+      "cosmosDbCollectionProgTypes": {
+        "type": "string",
+        "metadata": {
+          "description": "Cosmos DB collection name for app settings"
+        }
+      },
+      "cosmosDbCollectionStandards": {
+        "type": "string",
+        "metadata": {
+          "description": "Cosmos DB collection name for app settings"
+        }
+      },
+      "cosmosDbCollectionApprenticeshipReport": {
+        "type": "string",
+        "metadata": {
+          "description": "Cosmos DB collection name for app settings"
+        }
+      },
+      "providerServiceSettingsApiUrl": {
+        "type": "string",
+        "metadata": {
+          "description": "Provider API service url"
+        }
+      },
+      "providerServiceSettingsApiKey": {
+        "type": "string",
+        "metadata": {
+          "description": "Provider API service key"
+        }
+      },
+      "referenceDataServiceApiUrl": {
+        "type": "string",
+        "metadata": {
+          "description": "Reference Data API url"
+        }
+      },
+      "referenceDataServiceApiKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Reference Data API service key"
+        }
+      },
+      "CourseDirectoryDefaultRequestsUnits": {
+        "type": "int",
+        "metadata": {
+          "description": "The request units to provision on collections by default"
+        }
+      },
+      "ApprenticeshipCollectionRequestUnits": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The request units to provision on the apprenticeship collection"
+        }
+      },
+      "ApprenticeshipReportCollectionRequestUnits": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The request units to provision on the ApprenticeshipReport collection"
+        }
+      }
+    },
+    "variables": {
+      "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/dfc-devops/master/ArmTemplates/",
+      "functionAppName": "[concat(parameters('functionAppPrefix'),'-fa')]",
+      "FunctionAppInsightInstrumentationKey":"[parameters('appInsightsInstrumentationKey')]"
+
+    },
+    "functions": [
+      {
+        "namespace": "dfc",
+        "members": {
+          "getCollectionRUs": {
+            "parameters":[
+              {
+                "name": "defaultRUs",
+                "type": "int"
+              },
+              {
+                "name": "collectionSpecificRUs",
+                "type": "string"
+              }
+            ],
+            "output": {
+              "type": "int",
+              "value": "[if(equals(parameters('collectionSpecificRUs'), ''), parameters('defaultRUs'), int(parameters('collectionSpecificRUs')))]"
+            }
+          }
+        }
+      }
+    ],
+    "resources": [
+      {
+        "apiVersion": "2017-05-10",
+        "name": "ppapprenticeshipAppService",
+        "type": "Microsoft.Resources/deployments",        
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[concat(variables('deploymentUrlBase'),'app-service.json')]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "appServiceName": {
+              "value": "[variables('functionAppName')]"
+            },
+            "appServicePlanName": {
+              "value": "[parameters('appServicePlanName')]"
+            },
+            "appServicePlanResourceGroup": {
+              "value": "[parameters('sharedResourceGroup')]"
+            },
+            "appServiceType": {
+              "value": "functionapp"
+            },
+            "appServiceAppSettings": {
+              "value": [
+                {
+                  "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                  "value": "[variables('FunctionAppInsightInstrumentationKey')]"
+                },
+                {
+                  "name": "FUNCTIONS_EXTENSION_VERSION",
+                  "value": "~3"
+                },
+                {
+                  "name": "AzureWebJobsStorage",
+                  "value": "[parameters('storageConnectionString')]"
+                },
+                { 
+                  "name": "WEBSITE_RUN_FROM_PACKAGE", 
+                  "value": "1" 
+                },
+                {
+                  "name": "FUNCTIONS_WORKER_RUNTIME",
+                  "value": "dotnet"
+                },
+                {
+                  "name": "CosmosDbSettings__EndpointUri",
+                  "value": "[parameters('cosmosDBfqdn')]"
+                },
+                {
+                  "name": "CosmosDbSettings__PrimaryKey",
+                  "value": "[parameters('cosmosDBkey')]"
+                },
+                {
+                  "name": "CosmosDbSettings__DatabaseId",
+                  "value": "[parameters('cosmosDBdatabase')]"
+                },
+                {
+                  "name": "CosmosDbCollectionSettings__ApprenticeshipCollectionId",
+                  "value": "[parameters('cosmosDbCollectionApprenticeship')]"
+                },
+                {
+                  "name": "CosmosDbCollectionSettings__FrameworksCollectionId",
+                  "value": "[parameters('cosmosDbCollectionFrameworks')]"
+                },
+                {
+                  "name": "CosmosDbCollectionSettings__StandardsCollectionId",
+                  "value": "[parameters('cosmosDbCollectionStandards')]"
+                },
+                {
+                  "name": "CosmosDbCollectionSettings__ProgTypesCollectionId",
+                  "value": "[parameters('cosmosDbCollectionProgTypes')]"
+                },
+                {
+                  "name": "ProviderServiceSettings__ApiUrl",
+                  "value": "[parameters('providerServiceSettingsApiUrl')]"
+                },
+                {
+                  "name": "ProviderServiceSettings__ApiKey",
+                  "value": "[parameters('providerServiceSettingsApiKey')]"
+                },
+                {
+                  "name": "ReferenceDataServiceSettings__ApiUrl",
+                  "value": "[parameters('referenceDataServiceApiUrl')]"
+                },
+                {
+                  "name": "ReferenceDataServiceSettings__ApiKey",
+                  "value": "[parameters('referenceDataServiceApiKey')]"
+                },
+                {
+                  "name": "CosmosDbCollectionSettings__ApprenticeshipReportCollectionId",
+                  "value": "[parameters('cosmosDbCollectionApprenticeshipReport')]"
+                },
+                {
+                  "name": "CosmosDbCollectionSettings__ApprenticeshipDfcReportCollectionId",
+                  "value": "ApprenticeshipDfcReportCollection"
+                }
+              ]
+            },
+            "deployStagingSlot": {
+              "value": true
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "name": "cosmosCollectionApprenticeship",
+        "type": "Microsoft.Resources/deployments",
+        "resourceGroup": "[parameters('sharedResourceGroup')]",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[concat(variables('deploymentUrlBase'),'CosmosDb/cosmos-collection.json')]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "accountName": {
+                "value": "[parameters('cosmosDbAccount')]"
+            },
+            "databaseName": {
+                "value": "[parameters('cosmosDBdatabase')]"
+            },
+            "collectionName": {
+                "value": "apprenticeship"
+            },
+            "offerThroughput": {
+                "value": "[dfc.getCollectionRUs(parameters('CourseDirectoryDefaultRequestsUnits'), parameters('ApprenticeshipCollectionRequestUnits'))]"
+            },
+            "partitionKey": {
+              "value": "/ProviderUKPRN"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "name": "cosmosCollectionApprenticeshipReport",
+        "type": "Microsoft.Resources/deployments",
+        "resourceGroup": "[parameters('sharedResourceGroup')]",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[concat(variables('deploymentUrlBase'),'CosmosDb/cosmos-collection.json')]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "accountName": {
+                "value": "[parameters('cosmosDbAccount')]"
+            },
+            "databaseName": {
+                "value": "[parameters('cosmosDBdatabase')]"
+            },
+            "collectionName": {
+                "value": "apprenticeshipReport"
+            },
+            "offerThroughput": {
+                "value": "[dfc.getCollectionRUs(parameters('CourseDirectoryDefaultRequestsUnits'), parameters('ApprenticeshipReportCollectionRequestUnits'))]"
+            },
+            "partitionKey": {
+              "value": "/ProviderUKPRN"
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "functionAppName": {
+        "type": "string",
+        "value": "[variables('functionAppName')]"
+      },
+      "appInsightName": {
+        "type": "string",
+        "value": "[parameters('providerPortalApplicationInsights')]"
+      },
+      "appInsightInstrumentationKey": {
+        "type": "string",
+        "value": "[variables('FunctionAppInsightInstrumentationKey')]"
+      }
     }
   }
