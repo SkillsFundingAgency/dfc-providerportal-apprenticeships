@@ -62,9 +62,9 @@
       "ApprenticeshipReportCollectionRequestUnits": {
         "value": "__ApprenticeshipReportCollectionRequestUnits__"
       },
-      "providerPortalApplicationInsights": {
-        "value": "__providerportalApplicationInsights__"
-      },
+ //     "providerPortalApplicationInsights": {
+ //       "value": "__providerportalApplicationInsights__"
+ //     },
       "appInsightsInstrumentationKey": {
         "value": "__appInsightsInstrumentationKey__" 
     }
