@@ -14,33 +14,6 @@
       "storageConnectionString": {
         "value": "__providerPortalStorageConnectionStr__"
       },
-      "cosmosDbFqdn": {
-        "value": "__providerPortalCosmosDbFqdn__"
-      },
-      "cosmosDbKey": {
-        "value": "__providerPortalCosmosDBPrimaryKey__"
-      },
-      "cosmosDbAccount": {
-        "value": "__providerPortalCosmosDBName__"
-      },
-      "cosmosDbDatabase": {
-        "value": "__providerPortalCosmosDbAccDatabaseName__"
-      },
-      "cosmosDbCollectionApprenticeship": {
-        "value": "__cosmosDbCollectionApprenticeship__"
-      },
-      "cosmosDbCollectionFrameworks": {
-        "value": "__cosmosDbCollectionFrameworks__"
-      },
-      "cosmosDbCollectionProgTypes": {
-        "value": "__cosmosDbCollectionProgTypes__"
-      },
-      "cosmosDbCollectionStandards": {
-        "value": "__cosmosDbCollectionStandards__"
-      },
-      "cosmosDbCollectionApprenticeshipReport": {
-        "value": "__cosmosDbCollectionApprenticeshipReport__"
-      },
       "providerServiceSettingsApiUrl": {
         "value": "__providerApiUrl__"
       },
