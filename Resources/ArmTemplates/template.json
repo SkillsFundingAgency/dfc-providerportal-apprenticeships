@@ -32,60 +32,6 @@
           "description": "Connection string for the storage account to store function app files"
         }
       },
-      "cosmosDBfqdn": {
-        "type": "string",
-        "metadata": {
-          "description": "Cosmos DB account name in the format https://dfc-xxx-xxx-cdb.documents.azure.com/ for app settings"
-        }
-      },
-      "cosmosDBkey": {
-        "type": "securestring",
-        "metadata": {
-          "description": "Cosmos DB access key for app settings"
-        }
-      },
-      "cosmosDbAccount": {
-        "type": "string",
-        "metadata": {
-          "description": "Cosmos DB database name for creating collections"
-        }
-      },
-      "cosmosDBdatabase": {
-        "type": "string",
-        "metadata": {
-          "description": "Cosmos DB database name for app settings"
-        }
-      },
-      "cosmosDbCollectionApprenticeship": {
-        "type": "string",
-        "metadata": {
-          "description": "Cosmos DB collection name for app settings"
-        }
-      },
-      "cosmosDbCollectionFrameworks": {
-        "type": "string",
-        "metadata": {
-          "description": "Cosmos DB collection name for app settings"
-        }
-      },
-      "cosmosDbCollectionProgTypes": {
-        "type": "string",
-        "metadata": {
-          "description": "Cosmos DB collection name for app settings"
-        }
-      },
-      "cosmosDbCollectionStandards": {
-        "type": "string",
-        "metadata": {
-          "description": "Cosmos DB collection name for app settings"
-        }
-      },
-      "cosmosDbCollectionApprenticeshipReport": {
-        "type": "string",
-        "metadata": {
-          "description": "Cosmos DB collection name for app settings"
-        }
-      },
       "providerServiceSettingsApiUrl": {
         "type": "string",
         "metadata": {
@@ -229,34 +175,6 @@
                   "value": "dotnet"
                 },
                 {
-                  "name": "CosmosDbSettings__EndpointUri",
-                  "value": "[parameters('cosmosDBfqdn')]"
-                },
-                {
-                  "name": "CosmosDbSettings__PrimaryKey",
-                  "value": "[parameters('cosmosDBkey')]"
-                },
-                {
-                  "name": "CosmosDbSettings__DatabaseId",
-                  "value": "[parameters('cosmosDBdatabase')]"
-                },
-                {
-                  "name": "CosmosDbCollectionSettings__ApprenticeshipCollectionId",
-                  "value": "[parameters('cosmosDbCollectionApprenticeship')]"
-                },
-                {
-                  "name": "CosmosDbCollectionSettings__FrameworksCollectionId",
-                  "value": "[parameters('cosmosDbCollectionFrameworks')]"
-                },
-                {
-                  "name": "CosmosDbCollectionSettings__StandardsCollectionId",
-                  "value": "[parameters('cosmosDbCollectionStandards')]"
-                },
-                {
-                  "name": "CosmosDbCollectionSettings__ProgTypesCollectionId",
-                  "value": "[parameters('cosmosDbCollectionProgTypes')]"
-                },
-                {
                   "name": "ProviderServiceSettings__ApiUrl",
                   "value": "[parameters('providerServiceSettingsApiUrl')]"
                 },
@@ -271,79 +189,11 @@
                 {
                   "name": "ReferenceDataServiceSettings__ApiKey",
                   "value": "[parameters('referenceDataServiceApiKey')]"
-                },
-                {
-                  "name": "CosmosDbCollectionSettings__ApprenticeshipReportCollectionId",
-                  "value": "[parameters('cosmosDbCollectionApprenticeshipReport')]"
-                },
-                {
-                  "name": "CosmosDbCollectionSettings__ApprenticeshipDfcReportCollectionId",
-                  "value": "ApprenticeshipDfcReportCollection"
                 }
               ]
             },
             "deployStagingSlot": {
               "value": true
-            }
-          }
-        }
-      },
-      {
-        "apiVersion": "2017-05-10",
-        "name": "cosmosCollectionApprenticeship",
-        "type": "Microsoft.Resources/deployments",
-        "resourceGroup": "[parameters('sharedResourceGroup')]",
-        "properties": {
-          "mode": "Incremental",
-          "templateLink": {
-              "uri": "[concat(variables('deploymentUrlBase'),'CosmosDb/cosmos-collection.json')]",
-              "contentVersion": "1.0.0.0"
-          },
-          "parameters": {
-            "accountName": {
-                "value": "[parameters('cosmosDbAccount')]"
-            },
-            "databaseName": {
-                "value": "[parameters('cosmosDBdatabase')]"
-            },
-            "collectionName": {
-                "value": "apprenticeship"
-            },
-            "offerThroughput": {
-                "value": "[dfc.getCollectionRUs(parameters('CourseDirectoryDefaultRequestsUnits'), parameters('ApprenticeshipCollectionRequestUnits'))]"
-            },
-            "partitionKey": {
-              "value": "/ProviderUKPRN"
-            }
-          }
-        }
-      },
-      {
-        "apiVersion": "2017-05-10",
-        "name": "cosmosCollectionApprenticeshipReport",
-        "type": "Microsoft.Resources/deployments",
-        "resourceGroup": "[parameters('sharedResourceGroup')]",
-        "properties": {
-          "mode": "Incremental",
-          "templateLink": {
-              "uri": "[concat(variables('deploymentUrlBase'),'CosmosDb/cosmos-collection.json')]",
-              "contentVersion": "1.0.0.0"
-          },
-          "parameters": {
-            "accountName": {
-                "value": "[parameters('cosmosDbAccount')]"
-            },
-            "databaseName": {
-                "value": "[parameters('cosmosDBdatabase')]"
-            },
-            "collectionName": {
-                "value": "apprenticeshipReport"
-            },
-            "offerThroughput": {
-                "value": "[dfc.getCollectionRUs(parameters('CourseDirectoryDefaultRequestsUnits'), parameters('ApprenticeshipReportCollectionRequestUnits'))]"
-            },
-            "partitionKey": {
-              "value": "/ProviderUKPRN"
             }
           }
         }

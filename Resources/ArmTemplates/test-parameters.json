@@ -14,33 +14,6 @@
       "storageConnectionString": {
         "value": "DefaultEndpointsProtocol=https;AccountName=dfcfooppapprenticestr;AccountKey=this_is_not_a_real_account==;EndpointSuffix=core.windows.net"
       },
-      "cosmosDbFqdn": {
-        "value": "https://dfc-foo-ppapprentice-cdb.documents.azure.com/"
-      },
-      "cosmosDbKey": {
-        "value": "not-a-real-key"
-      },
-      "cosmosDbAccount": {
-        "value": "myAccount"
-      },
-      "cosmosDbDatabase": {
-        "value": "mydb"
-      },
-      "cosmosDbCollectionApprenticeship": {
-        "value": "apprenticeship"
-      },
-      "cosmosDbCollectionFrameworks": {
-        "value": "frameworks"
-      },
-      "cosmosDbCollectionProgTypes": {
-        "value": "progtypes"
-      },
-      "cosmosDbCollectionStandards": {
-        "value": "standards"
-      },
-      "cosmosDbCollectionApprenticeshipReport": {
-        "value": "apprenticeshipReport"
-      },
       "providerServiceSettingsApiUrl": {
         "value": "https://apim-instance/some/path/to/api"
       },
